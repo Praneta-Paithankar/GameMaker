@@ -1,4 +1,4 @@
-package com.gamemaker.gamemaker;
+package com.gamemaker;
 
 import static org.junit.jupiter.api.Assertions.*;
 
