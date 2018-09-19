@@ -1,0 +1,14 @@
+bin/
+log/
+
+*.log
+*.class
+/target/
+
+# Eclipse
+.classpath
+.project
+.settings/
+  
+# Mac
+.DS_Store
