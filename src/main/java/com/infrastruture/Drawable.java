@@ -1,8 +1,7 @@
 package com.infrastruture;
 
-import com.components.GameElement;
+import java.awt.Graphics;
 
 public interface Drawable {
-
-	void draw(GameElement element);
+	public void draw(GameElement element, Graphics g);
 }
