@@ -21,8 +21,7 @@ import org.apache.log4j.Logger;
 //import com.behavior.FlowLayoutBehavior;
 //import com.behavior.GridBagLayoutBehavior;
 import com.controller.MainController;
-//import com.infrastruture.AbstractPanel;
-//import com.infrastruture.Constants;
+import com.infrastruture.Constants;
 import com.infrastruture.Element;
 
 @SuppressWarnings("serial")
@@ -45,10 +44,10 @@ public class GUI extends JFrame implements Element{
 	// Removed Timer panel
 	public GUI(MainPanel mainPanel, GamePanel boardPanel, DesignPanel designPanel, ControlPanel controlPanel) {
 		super("Breakout Game");
-		this.mainPanel = mainPanel;
-		this.boardPanel = boardPanel;
-		this.designPanel = designPanel;
-		this.controlPanel = controlPanel;
+		this.mainPanel = mainPanel; // The panel everything is placed on
+		this.boardPanel = boardPanel; // The panel user drops items on
+		this.designPanel = designPanel; // The panel user creates objects
+		this.controlPanel = controlPanel; // The panel user places control buttons
 		toggleLayout = false;
 		initializeUI();
 		elementList = new ArrayList<>();

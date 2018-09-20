@@ -15,7 +15,7 @@ public abstract class AbstractPanel extends JPanel {
 	}
 	
 	public void setLayoutBehavior(LayoutBehavior layoutBehavior) {
-		//this.layoutBehavior = layoutBehavior; 
+		this.layoutBehavior = layoutBehavior; 
 	}
 	
 	public void performUpdateLayout(AbstractPanel abstractPanel, int width, int height) {

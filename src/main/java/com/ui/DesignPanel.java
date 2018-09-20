@@ -20,26 +20,26 @@ import javax.swing.JLabel;
 
 import org.apache.log4j.Logger;
 
-import com.behavior.BoxLayoutXAxisBehavior;
-import com.behavior.BoxLayoutYAxisBehavior;
-import com.behavior.GridBagLayoutBehavior;
+//import com.behavior.BoxLayoutXAxisBehavior;
+//import com.behavior.BoxLayoutYAxisBehavior;
+//import com.behavior.GridBagLayoutBehavior;
 import com.component.Clock;
-import com.controller.GameController;
+import com.controller.MainController;
 import com.infrastruture.AbstractPanel;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
 
 
 @SuppressWarnings("serial")
-public class StaticPanel extends AbstractPanel implements Element{
-	protected static Logger log = Logger.getLogger(StaticPanel.class);
+public class DesignPanel extends AbstractPanel implements Element{
+	protected static Logger log = Logger.getLogger(DesignPanel.class);
 	private JLabel score;
-	private GameController driver;
+	private MainController driver;
 	private ArrayList<Element> elements;
 	
-	public StaticPanel() {
+	public DesignPanel() {
 		setBorder(BorderFactory.createLoweredBevelBorder());
-		setLayoutBehavior(new BoxLayoutYAxisBehavior());
+		//setLayoutBehavior(new BoxLayoutYAxisBehavior());
 		performUpdateLayout(this, Constants.TIMER_PANEL_WIDTH,Constants.TIMER_PANEL_HEIGHT);
         elements = new ArrayList<>();
 	}
@@ -47,7 +47,7 @@ public class StaticPanel extends AbstractPanel implements Element{
 		return elements;
 	}
 	
-	public void createButtons(GameController driver)
+	public void createButtons(MainController driver)
 	{
 		this.driver = driver;
 	    createReplay();
