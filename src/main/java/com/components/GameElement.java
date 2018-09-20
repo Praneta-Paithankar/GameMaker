@@ -17,9 +17,27 @@ public class GameElement {
 	private Action action;
 	private Drawable draw;
 	private boolean isVisible; 
+	private int velX;
+	private int velY;
 	
 	public GameElement() {
 		
+	}
+	
+	public int getVelX() {
+		return velX;
+	}
+
+	public void setVelX(int velX) {
+		this.velX = velX;
+	}
+
+	public int getVelY() {
+		return velY;
+	}
+
+	public void setVelY(int velY) {
+		this.velY = velY;
 	}
 
 	public Coordinate getCoordinate() {
@@ -29,7 +47,23 @@ public class GameElement {
 	public void setCoordinate(Coordinate coordinate) {
 		this.coordinate = coordinate;
 	}
-
+	
+	public int getX() {
+		return coordinate.getX();
+	}
+	
+	public void setX(int x) {
+		this.coordinate.setX(x);
+	}
+	
+	public int getY() {
+		return coordinate.getY();
+	}
+	
+	public void setY(int y) {
+		this.coordinate.setY(y);
+	}
+	
 	public boolean isVisible() {
 		return isVisible;
 	}
