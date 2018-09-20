@@ -16,13 +16,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.log4j.Logger;
 
-import com.behavior.BoxLayoutXAxisBehavior;
-import com.behavior.BoxLayoutYAxisBehavior;
-import com.behavior.FlowLayoutBehavior;
-import com.behavior.GridBagLayoutBehavior;
-import com.controller.GameController;
-import com.infrastruture.AbstractPanel;
-import com.infrastruture.Constants;
+//import com.behavior.BoxLayoutXAxisBehavior;
+//import com.behavior.BoxLayoutYAxisBehavior;
+//import com.behavior.FlowLayoutBehavior;
+//import com.behavior.GridBagLayoutBehavior;
+import com.controller.MainController;
+//import com.infrastruture.AbstractPanel;
+//import com.infrastruture.Constants;
 import com.infrastruture.Element;
 
 @SuppressWarnings("serial")
@@ -31,24 +31,23 @@ public class GUI extends JFrame implements Element{
 	private GamePanel boardPanel;
 	private ArrayList<Element> elementList;
 
-	private GameController driver;
+	private MainController driver;
 	private MainPanel mainPanel;
 	private JFileChooser c;
 	private FileWriter fileWriter;
 	private String filePath;
 	private FileReader fileReader;
 
-	private StaticPanel staticPanel;
-	private TimerPanel timerPanel;
+	private DesignPanel designPanel;
 	private ControlPanel controlPanel;
 	private boolean toggleLayout;
 	
-	public GUI(MainPanel mainPanel, GamePanel boardPanel, StaticPanel staticPanel, TimerPanel timerPanel, ControlPanel controlPanel) {
+	// Removed Timer panel
+	public GUI(MainPanel mainPanel, GamePanel boardPanel, DesignPanel designPanel, ControlPanel controlPanel) {
 		super("Breakout Game");
 		this.mainPanel = mainPanel;
 		this.boardPanel = boardPanel;
-		this.staticPanel = staticPanel;
-		this.timerPanel = timerPanel;
+		this.designPanel = designPanel;
 		this.controlPanel = controlPanel;
 		toggleLayout = false;
 		initializeUI();
@@ -65,7 +64,7 @@ public class GUI extends JFrame implements Element{
 	public void removeKeyListner() {
 		mainPanel.removeKeyListener(driver);
 	}
-	public void addDriver(GameController driver){
+	public void addDriver(MainController driver){
 		this.driver = driver;
 		mainPanel.addKeyListener(driver);
         controlPanel.createButtons(driver);

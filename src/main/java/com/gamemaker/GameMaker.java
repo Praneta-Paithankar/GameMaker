@@ -7,12 +7,12 @@ import org.apache.log4j.Logger;
  * Hello world!
  *
  */
-public class App 
+public class GameMaker 
 {
     public static void main( String[] args )
     {
     	BasicConfigurator.configure();
-    	Logger logger = Logger.getLogger(App.class);
+    	Logger logger = Logger.getLogger(GameMaker.class);
     	logger.debug("Application started");
         System.out.println( "Hello World!" );
     }
