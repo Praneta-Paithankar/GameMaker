@@ -1,15 +1,17 @@
 package com.components;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+
+import com.dimension.Coordinate;
+import com.dimension.Dimension;
 import com.infrastruture.Action;
 import com.infrastruture.Drawable;
 
 public class GameElement {
-	private int width;
-	private int height;
+
 	private Dimension position;
+	private Coordinate coordinate;
 	private Color color;
 	private BufferedImage image;
 	private Action action;
@@ -20,22 +22,22 @@ public class GameElement {
 		
 	}
 
-	public int getWidth() {
-		return width;
+	public Coordinate getCoordinate() {
+		return coordinate;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
+	public void setCoordinate(Coordinate coordinate) {
+		this.coordinate = coordinate;
 	}
 
-	public int getHeight() {
-		return height;
+	public boolean isVisible() {
+		return isVisible;
 	}
 
-	public void setHeight(int height) {
-		this.height = height;
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
 	}
-
+	
 	public Dimension getPosition() {
 		return position;
 	}
