@@ -1,9 +1,8 @@
 package com.components;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-
-import com.dimension.Dimension;
 import com.infrastruture.Action;
 import com.infrastruture.Drawable;
 
@@ -11,10 +10,11 @@ public class GameElement {
 	private int width;
 	private int height;
 	private Dimension position;
-	Color color;
+	private Color color;
 	private BufferedImage image;
 	private Action action;
 	private Drawable draw;
+	private boolean isVisible; 
 	
 	public GameElement() {
 		
