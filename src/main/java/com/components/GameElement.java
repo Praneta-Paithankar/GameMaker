@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
@@ -15,11 +16,12 @@ import com.infrastruture.Action;
 import com.infrastruture.Drawable;
 import com.infrastruture.Element;
 
-public class GameElement implements Element{
+public class GameElement implements Element,Serializable{
 
 	protected static Logger log = Logger.getLogger(GameElement.class);
-	private Dimension position;
+	private Dimension dimension;
 	private Coordinate coordinate;
+	private Coordinate startingPosition;
 	private Color color;
 	private BufferedImage image;
 	private Action action;
@@ -28,8 +30,11 @@ public class GameElement implements Element{
 	private int velX;
 	private int velY;
 	
-	public GameElement() {
-		
+	public GameElement(Dimension dimension, Coordinate coordinate, Coordinate startingPosition) {
+		this.dimension = dimension;
+		this.coordinate = coordinate;
+		this.startingPosition = startingPosition;
+		this.color = Color.BLACK;
 	}
 	
 	public int getVelX() {
@@ -81,11 +86,11 @@ public class GameElement implements Element{
 	}
 	
 	public Dimension getPosition() {
-		return position;
+		return dimension;
 	}
 
 	public void setPosition(Dimension position) {
-		this.position = position;
+		this.dimension = position;
 	}
 
 	public Color getColor() {
@@ -127,8 +132,8 @@ public class GameElement implements Element{
 	}
 
 	@Override
-	public void resetCoor(Coordinate c) {
-		coordinate= c;
+	public void reset() {
+		coordinate= startingPosition;
 	}
 
 	@Override
@@ -163,9 +168,4 @@ public class GameElement implements Element{
 		return null;
 	}
 
-	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-		
-	}
 }
