@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 
 import com.behavior.FlowLayoutBehavior;
 import com.controller.MainController;
+import com.dimension.Coordinate;
 import com.infrastruture.AbstractPanel;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
@@ -106,5 +107,11 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	public Element load(ObjectInputStream ip) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void reset(Coordinate c) {
+		// TODO Auto-generated method stub
+		
 	}
 }
