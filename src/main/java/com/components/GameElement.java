@@ -19,6 +19,7 @@ import com.infrastruture.Element;
 public class GameElement implements Element,Serializable{
 
 	protected static Logger log = Logger.getLogger(GameElement.class);
+	private String name;
 	private Dimension dimension;
 	private Coordinate coordinate;
 	private Coordinate startingPosition;
@@ -30,11 +31,12 @@ public class GameElement implements Element,Serializable{
 	private int velX;
 	private int velY;
 	
-	public GameElement(Dimension dimension, Coordinate coordinate, Coordinate startingPosition) {
+	public GameElement(Dimension dimension, Coordinate coordinate, Coordinate startingPosition, String name) {
 		this.dimension = dimension;
 		this.coordinate = coordinate;
 		this.startingPosition = startingPosition;
 		this.color = Color.BLACK;
+		this.name = name;
 	}
 	
 	public int getVelX() {
@@ -78,19 +80,19 @@ public class GameElement implements Element,Serializable{
 	}
 	
 	public int getWidth() {
-		return position.getWidth();
+		return dimension.getWidth();
 	}
 	
 	public void setWidth(int width) {
-		this.position.setWidth(width);
+		this.dimension.setWidth(width);
 	}
 	
 	public int getHeight() {
-		return position.getHeight();
+		return dimension.getHeight();
 	}
 	
 	public void setHeight(int height) {
-		this.position.setHeight(height);
+		this.dimension.setHeight(height);
 	}
 	
 	public boolean isVisible() {
@@ -182,6 +184,14 @@ public class GameElement implements Element,Serializable{
 			log.error(e.getMessage());
 		}
 		return null;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
