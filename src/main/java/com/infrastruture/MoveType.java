@@ -1,5 +1,5 @@
 package com.infrastruture;
 
-public enum Behaviour {
-	FREE, FIXED, LEFTRIGHT, UPDOWN
+public enum MoveType {
+	FREE, FIXED, LEFTRIGHT, UPDOWN, FOURWAY
 }
