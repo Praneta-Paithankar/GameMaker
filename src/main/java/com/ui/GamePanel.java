@@ -2,6 +2,7 @@
  *This panel holds all the graphic objects like brick, ball and paddle*/
 package com.ui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -23,6 +24,10 @@ import com.ui.AbstractPanel;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
 
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+
 
 @SuppressWarnings("serial")
 public class GamePanel extends AbstractPanel implements Element {
@@ -32,7 +37,7 @@ public class GamePanel extends AbstractPanel implements Element {
 	
 	public GamePanel()
 	{
-
+		setBorder("Game Board");
 	    elementList = new ArrayList<Element>();
         try {
             image = ImageIO.read(new File("./src/com/image/nature.jpg"));
@@ -43,7 +48,17 @@ public class GamePanel extends AbstractPanel implements Element {
         }
         setLayout();
 	}
-
+	public void setBorder(String title) {
+		Border raisedbevel = BorderFactory.createRaisedBevelBorder();
+		this.setBorder(raisedbevel);
+		TitledBorder titledBorder = BorderFactory.createTitledBorder(title);
+	    titledBorder.setTitleJustification(TitledBorder.CENTER);
+	    
+	    titledBorder.setTitlePosition(TitledBorder.BELOW_TOP);
+	    Border compound = BorderFactory.createCompoundBorder(
+                raisedbevel, titledBorder);
+	    this.setBorder(compound);
+	}
 	
 	
 	public void setLayout() {

@@ -16,6 +16,10 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.*;
+
 import javax.swing.JLabel;
 
 import org.apache.log4j.Logger;
@@ -31,6 +35,7 @@ import com.infrastruture.Element;
 import com.dimension.Coordinate;
 
 
+
 @SuppressWarnings("serial")
 public class DesignPanel extends AbstractPanel implements Element{
 	protected static Logger log = Logger.getLogger(DesignPanel.class);
@@ -39,12 +44,38 @@ public class DesignPanel extends AbstractPanel implements Element{
 	private ArrayList<Element> elements;
 	
 	public DesignPanel() {
-		setBorder(BorderFactory.createLoweredBevelBorder());
+		setBorder("Design Center"); // Method call for setting the border
 		setLayoutBehavior(new BoxLayoutYAxisBehavior());
 		setBackground(Color.DARK_GRAY);
+		
+		JPanel graphic = new JPanel();
+		graphic.setBackground(Color.LIGHT_GRAY);
+		JPanel control  = new JPanel();
+		control.setBackground(Color.LIGHT_GRAY);
+		JPanel preview = new JPanel();
+		preview.setSize(Constants.DESIGN_PANEL_WIDTH, 10);
+		
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.addTab("Graphic", null, graphic, null);
+		tabbedPane.addTab("Control", null, control, null);
+		this.add(tabbedPane);
+		this.add(preview);
 		performUpdateLayout(this, Constants.DESIGN_PANEL_WIDTH,Constants.DESIGN_PANEL_HEIGHT);
         elements = new ArrayList<>();
+        
 	}
+	
+	public void setBorder(String title) {
+		Border blackline = BorderFactory.createLineBorder(Color.black);
+		TitledBorder border = BorderFactory.createTitledBorder(
+                blackline, title);
+	    border.setTitleJustification(TitledBorder.LEFT);
+	    border.setTitleColor(Color.white);
+	    border.setTitlePosition(TitledBorder.BELOW_TOP);
+	    this.setBorder(border);
+		
+	}
+	
 	public ArrayList<Element> getElements(){
 		return elements;
 	}

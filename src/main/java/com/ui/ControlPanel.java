@@ -7,6 +7,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+
 import com.behavior.FlowLayoutBehavior;
 import com.controller.MainController;
 import com.dimension.Coordinate;
@@ -21,9 +25,23 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	private ArrayList<Element> elementList;
 	
 	public ControlPanel() {
+		setBorder("ControlPanel");
 		setLayoutBehavior(new FlowLayoutBehavior());
 		performUpdateLayout(this, Constants.CONTROL_PANEL_WIDTH,Constants.CONTROL_PANEL_HEIGHT);
 	}
+	
+	public void setBorder(String title) {
+		Border raisedbevel = BorderFactory.createRaisedBevelBorder();
+		this.setBorder(raisedbevel);
+		TitledBorder titledBorder = BorderFactory.createTitledBorder(title);
+	    titledBorder.setTitleJustification(TitledBorder.LEFT);
+	    
+	    titledBorder.setTitlePosition(TitledBorder.BELOW_TOP);
+	    Border compound = BorderFactory.createCompoundBorder(
+                raisedbevel, titledBorder);
+	    this.setBorder(compound);
+	}
+	
 	
 	public void createButtons(MainController driver)
 	{
