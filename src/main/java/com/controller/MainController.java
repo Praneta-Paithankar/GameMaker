@@ -22,8 +22,6 @@ public class MainController implements Observer, KeyListener,ActionListener{
     private Deque<Command> commandQueue;
 		
 	public MainController(GUI gui,GameTimer observable) { // Might keep CollisionChecker collisionChecker) {
-		
-		
 		this.gui = gui;
 		this.observable = observable;
 		// this.collisionChecker = collisionChecker;
@@ -62,7 +60,9 @@ public class MainController implements Observer, KeyListener,ActionListener{
 		// TODO Auto-generated method stub
 		
 	}	
-	
+	public void  addCommand(Command command) {
+		commandQueue.add(command);
+	}
 	public void pause() {
 		isGamePaused = true;
 		if(!observable.isObserverListEmpty()) {

@@ -9,7 +9,7 @@ import com.ui.GUI;
 public class DesignController {
 	private List<GameElement> elements;
 	private GUI mainJframe;
-	
+	private List<GameElement> timerElements;
 	public DesignController(GUI gui) {
 		elements = new ArrayList<>();
 		mainJframe = gui;
