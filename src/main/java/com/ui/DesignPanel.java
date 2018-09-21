@@ -16,18 +16,24 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.*;
+
 import javax.swing.JLabel;
 
 import org.apache.log4j.Logger;
 
-//import com.behavior.BoxLayoutXAxisBehavior;
-//import com.behavior.BoxLayoutYAxisBehavior;
-//import com.behavior.GridBagLayoutBehavior;
-import com.component.Clock;
+import com.behavior.BoxLayoutXAxisBehavior;
+import com.behavior.BoxLayoutYAxisBehavior;
+import com.behavior.GridBagLayoutBehavior;
+import com.components.Clock;
 import com.controller.MainController;
-import com.infrastruture.AbstractPanel;
+import com.ui.AbstractPanel;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
+import com.dimension.Coordinate;
+
 
 
 @SuppressWarnings("serial")
@@ -38,11 +44,43 @@ public class DesignPanel extends AbstractPanel implements Element{
 	private ArrayList<Element> elements;
 	
 	public DesignPanel() {
-		setBorder(BorderFactory.createLoweredBevelBorder());
-		//setLayoutBehavior(new BoxLayoutYAxisBehavior());
-		performUpdateLayout(this, Constants.TIMER_PANEL_WIDTH,Constants.TIMER_PANEL_HEIGHT);
+		setBorder("Design Center"); // Method call for setting the border
+		setLayoutBehavior(new BoxLayoutYAxisBehavior());
+		setBackground(Color.DARK_GRAY);
+		
+		JPanel graphic = new JPanel();
+		graphic.setBackground(Color.LIGHT_GRAY);
+		JPanel control  = new JPanel();
+		control.setBackground(Color.LIGHT_GRAY);
+		
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.addTab("Graphic", null, graphic, null);
+		tabbedPane.addTab("Control", null, control, null);
+		tabbedPane.setSize(new Dimension(100,100));
+		this.add(tabbedPane);
+		
+		JPanel preview = new JPanel();
+		Border redline = BorderFactory.createLineBorder(Color.red);
+		preview.setBorder(redline);
+		preview.setPreferredSize(new Dimension(400, 40));
+		
+		this.add(preview);
+		performUpdateLayout(this, Constants.DESIGN_PANEL_WIDTH,Constants.DESIGN_PANEL_HEIGHT);
         elements = new ArrayList<>();
+        
 	}
+	
+	public void setBorder(String title) {
+		Border blackline = BorderFactory.createLineBorder(Color.black);
+		TitledBorder border = BorderFactory.createTitledBorder(
+                blackline, title);
+	    border.setTitleJustification(TitledBorder.LEFT);
+	    border.setTitleColor(Color.white);
+	    border.setTitlePosition(TitledBorder.BELOW_TOP);
+	    this.setBorder(border);
+		
+	}
+	
 	public ArrayList<Element> getElements(){
 		return elements;
 	}
@@ -50,13 +88,13 @@ public class DesignPanel extends AbstractPanel implements Element{
 	public void createButtons(MainController driver)
 	{
 		this.driver = driver;
-	    createReplay();
-	    createUndo();
-	    createStart();
-	    createPause();
-	    createSave();
-	    createLoad();
-	    createLayout();
+//	    createReplay();
+//	    createUndo();
+//	    createStart();
+//	    createPause();
+//	    createSave();
+//	    createLoad();
+//	    createLayout();
 	}
 	
 	
@@ -166,6 +204,14 @@ public class DesignPanel extends AbstractPanel implements Element{
 			element.reset();
 		}
 	}
+	
+	@Override
+	public void resetCoor(Coordinate c) {
+		for(Element element : elements) {
+			element.resetCoor(c);
+		}
+	}
+	
 	@Override
 	public void save(ObjectOutputStream op) {
 		for (Element element : elements) {

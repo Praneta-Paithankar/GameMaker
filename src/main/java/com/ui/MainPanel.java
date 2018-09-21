@@ -15,7 +15,8 @@ import javax.swing.BorderFactory;
 
 import com.behavior.BoxLayoutXAxisBehavior;
 import com.behavior.BoxLayoutYAxisBehavior;
-import com.infrastruture.AbstractPanel;
+import com.dimension.Coordinate;
+import com.ui.AbstractPanel;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
 
@@ -50,13 +51,6 @@ public class MainPanel extends AbstractPanel implements Element {
 	}
 
 	@Override
-	public void reset() {
-		for(Element element : elements) {
-			element.reset();
-		}
-	}
-
-	@Override
 	public void addComponent(Element e) {
 		elements.add(e);
 		this.add((AbstractPanel)e);
@@ -80,5 +74,21 @@ public class MainPanel extends AbstractPanel implements Element {
 			element.load(ip);
 		}
 		return null;
+	}
+
+	@Override
+	public void resetCoor(Coordinate c) {
+		// TODO Auto-generated method stub
+		for(Element element : elements){
+			element.resetCoor(c);
+		}
+	}
+	
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		for(Element element : elements) {
+			element.reset();
+		}
 	}
 }

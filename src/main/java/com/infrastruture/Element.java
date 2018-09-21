@@ -12,9 +12,11 @@ import com.dimension.Coordinate;
 
 public interface Element extends Serializable {
 	 void draw(Graphics g);
-	 void reset(Coordinate c);  
+	 void reset();
 	 void addComponent(Element e);
 	 void removeComponent(Element e);
 	 void save(ObjectOutputStream op);
 	 Element load(ObjectInputStream ip);
+
+	
 }

@@ -24,4 +24,9 @@ public abstract class AbstractPanel extends JPanel {
 		abstractPanel.setMinimumSize(new Dimension(width, height));
 		abstractPanel.setPreferredSize(new Dimension(width, height));
 	}
+
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
 }

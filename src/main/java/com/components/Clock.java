@@ -11,9 +11,10 @@ import javax.swing.JComponent;
 
 import org.apache.log4j.Logger;
 
+import com.dimension.Coordinate;
 import com.infrastruture.Element;
 
-public class Clock implements Element,Serializable{
+public class Clock implements Element, Serializable{
 
 	protected static Logger log = Logger.getLogger(Clock.class);
 	private long milisecondsElapsed;
@@ -47,9 +48,7 @@ public class Clock implements Element,Serializable{
 	public void reset() {
 		milisecondsElapsed = 0;	
 	}
-	public void reset(Clock c) {
-		milisecondsElapsed = c.milisecondsElapsed;	
-	}
+	
 	public long getMilisecondsElapsed() {
 		return milisecondsElapsed;
 	}
@@ -96,4 +95,6 @@ public class Clock implements Element,Serializable{
 		}
 		return null;
 	}
+
+	
 }
