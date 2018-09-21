@@ -82,7 +82,6 @@ public class GamePanel extends AbstractPanel implements Element {
 	
 	@Override
 	public void paintComponent(Graphics g){
-
 		super.paintComponent(g);
 		if (image != null) {
 	        g.drawImage(image, 0, 0, this);
@@ -97,15 +96,8 @@ public class GamePanel extends AbstractPanel implements Element {
 
 	@Override
 	public void draw(Graphics g) {
+		
 		repaint();
-	}
-
-	@Override
-	public void resetCoor(Coordinate c) {
-		// TODO Auto-generated method stub
-		for(Element element : elementList) {
-			element.resetCoor(c);
-		}
 	}
 	
 	@Override

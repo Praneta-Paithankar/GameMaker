@@ -1,6 +1,7 @@
 package com.components;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -156,7 +157,6 @@ public class GameElement implements Element,Serializable{
 	@Override
 	public void draw(Graphics g) {
 		drawable.draw(this, g);
-		
 	}
 
 	@Override

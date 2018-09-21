@@ -20,15 +20,17 @@ public class GridBagLayoutBehaviorDesign implements LayoutBehavior {
 		GridBagConstraints c = new GridBagConstraints();
 		Component[] comp = abstractPanel.getComponents();
 		int padding = 7;
-		int[] x = new int[] {0, 1, 2, 0, 1, 2, 1, 0, 2};
-		int[] y = new int[] {0, 0, 0, 2, 2, 2, 1, 1, 1};
+		int[] x = new int[] {0, 1};
+		int[] y = new int[] {0, 0};
+		int[] h = new int[] {50, 25};
 		
 		for (int i = 0;i<comp.length;i++) {
 			c.weightx = 0.5;
 			c.insets = new Insets(padding, padding, padding, padding);
-			c.fill = GridBagConstraints.HORIZONTAL;
+			c.fill = GridBagConstraints.VERTICAL;
 			c.gridx = x[i];
 			c.gridy = y[i];
+			c.gridheight = h[i];
 			c.weightx = 0.5;
 			abstractPanel.add(comp[i], c);
 		}

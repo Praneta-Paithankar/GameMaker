@@ -125,14 +125,6 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	}
 
 	@Override
-	public void resetCoor(Coordinate c) {
-		// TODO Auto-generated method stub
-		for(Element element : elementList) {
-			element.resetCoor(c);
-		}
-	}
-	
-	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
 		for(Element element : elementList) {

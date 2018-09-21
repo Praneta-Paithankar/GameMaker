@@ -6,15 +6,17 @@ import java.awt.Color;
 
 public class Constants {
 	public final static int FRAME_WIDTH = 1200;
-	public final static int  FRAME_HEIGHT = 800;
+	public final static int  FRAME_HEIGHT = 850;
 	public final static int MAIN_PANEL_WIDTH =  1200;
-	public final static int MAIN_PANEL_HEIGHT =  800;
+	public final static int MAIN_PANEL_HEIGHT =  850;
 	public final static int DESIGN_PANEL_WIDTH =  300;
-	public final static int DESIGN_PANEL_HEIGHT =  750;
+	public final static int DESIGN_PANEL_HEIGHT =  800;
 	public final static int GAME_PANEL_WIDTH =  750;
-	public final static int GAME_PANEL_HEIGHT =  750;
+	public final static int GAME_PANEL_HEIGHT =  800;
 	public final static int CONTROL_PANEL_WIDTH =  150;
-	public final static int CONTROL_PANEL_HEIGHT =  750;
+	public final static int CONTROL_PANEL_HEIGHT =  800;
+	public static final int PREVIEW_PANEL_HEIGHT = 265;
+	
 
 	public final static int TIMER_COUNT = 25;
 	
@@ -41,5 +43,6 @@ public class Constants {
 	public final static int PADDLE_HEIGHT = 40;
 	public final static int PADDLE_DELTA_X = 20;
 	public final static Color PADDLE_COLOR = new Color(91,33,91);
+	
 	
 }

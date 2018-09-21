@@ -205,13 +205,6 @@ public class GUI extends JFrame implements Element{
 	public GamePanel getGamePanel() {
 		return gamePanel;
 	}
-	@Override
-	public void resetCoor(Coordinate c) {
-		// TODO Auto-generated method stub
-		for(Element element : elementList) {
-			element.resetCoor(c);
-		}
-	}
 	
 	@Override
 	public void reset() {
