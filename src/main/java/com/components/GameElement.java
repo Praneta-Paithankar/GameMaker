@@ -15,6 +15,7 @@ import com.dimension.Dimension;
 import com.infrastruture.Action;
 import com.infrastruture.Drawable;
 import com.infrastruture.Element;
+import com.infrastruture.MoveType;
 
 public class GameElement implements Element,Serializable{
 
@@ -30,13 +31,22 @@ public class GameElement implements Element,Serializable{
 	private boolean isVisible; 
 	private int velX;
 	private int velY;
-	
+	private MoveType moveType;
+
 	public GameElement(Dimension dimension, Coordinate coordinate, Coordinate startingPosition, String name) {
 		this.dimension = dimension;
 		this.coordinate = coordinate;
 		this.startingPosition = startingPosition;
 		this.color = Color.BLACK;
 		this.name = name;
+	}
+	
+	public MoveType getMoveType() {
+		return moveType;
+	}
+
+	public void setMoveType(MoveType moveType) {
+		this.moveType = moveType;
 	}
 	
 	public int getVelX() {
