@@ -44,13 +44,11 @@ public class Clock implements Element, Serializable{
 		g.drawString(time, 25, 80);
 	}
 
-//	@Override
-//	public void reset() {
-//		milisecondsElapsed = 0;	
-//	}
-	public void reset(Clock c) {
-		milisecondsElapsed = c.milisecondsElapsed;	
+	@Override
+	public void reset() {
+		milisecondsElapsed = 0;	
 	}
+	
 	public long getMilisecondsElapsed() {
 		return milisecondsElapsed;
 	}
@@ -96,18 +94,6 @@ public class Clock implements Element, Serializable{
 			log.error(e.getMessage());
 		}
 		return null;
-	}
-
-	@Override
-	public void resetCoor(Coordinate c) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	

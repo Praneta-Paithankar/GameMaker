@@ -12,7 +12,6 @@ import com.dimension.Coordinate;
 
 public interface Element extends Serializable {
 	 void draw(Graphics g);
-	 void resetCoor(Coordinate c);  // Why is this here
 	 void reset();
 	 void addComponent(Element e);
 	 void removeComponent(Element e);
