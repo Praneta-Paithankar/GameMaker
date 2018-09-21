@@ -12,14 +12,17 @@ import java.io.Serializable;
 import org.apache.log4j.Logger;
 
 import com.dimension.Coordinate;
+import com.dimension.Dimensions;
 import com.infrastruture.Action;
 import com.infrastruture.Drawable;
 import com.infrastruture.Element;
+import com.infrastruture.MoveType;
 
 public class GameElement implements Element,Serializable{
 
 	protected static Logger log = Logger.getLogger(GameElement.class);
-	private Dimension dimension;
+	private String name;
+	private Dimensions dimension;
 	private Coordinate coordinate;
 	private Coordinate startingPosition;
 	private Color color;
@@ -29,12 +32,22 @@ public class GameElement implements Element,Serializable{
 	private boolean isVisible; 
 	private int velX;
 	private int velY;
-	
-	public GameElement(Dimension dimension, Coordinate coordinate, Coordinate startingPosition) {
+	private MoveType moveType;
+
+	public GameElement(Dimensions dimension, Coordinate coordinate, Coordinate startingPosition, String name) {
 		this.dimension = dimension;
 		this.coordinate = coordinate;
 		this.startingPosition = startingPosition;
 		this.color = Color.BLACK;
+		this.name = name;
+	}
+	
+	public MoveType getMoveType() {
+		return moveType;
+	}
+
+	public void setMoveType(MoveType moveType) {
+		this.moveType = moveType;
 	}
 	
 	public int getVelX() {
@@ -77,6 +90,22 @@ public class GameElement implements Element,Serializable{
 		this.coordinate.setY(y);
 	}
 	
+	public int getWidth() {
+		return dimension.getWidth();
+	}
+	
+	public void setWidth(int width) {
+		this.dimension.setWidth(width);
+	}
+	
+	public int getHeight() {
+		return dimension.getHeight();
+	}
+	
+	public void setHeight(int height) {
+		this.dimension.setHeight(height);
+	}
+	
 	public boolean isVisible() {
 		return isVisible;
 	}
@@ -85,11 +114,11 @@ public class GameElement implements Element,Serializable{
 		this.isVisible = isVisible;
 	}
 	
-	public Dimension getPosition() {
+	public Dimensions getPosition() {
 		return dimension;
 	}
 
-	public void setPosition(Dimension position) {
+	public void setPosition(Dimensions position) {
 		this.dimension = position;
 	}
 
@@ -165,6 +194,14 @@ public class GameElement implements Element,Serializable{
 			log.error(e.getMessage());
 		}
 		return null;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
