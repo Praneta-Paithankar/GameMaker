@@ -127,7 +127,7 @@ public class GameElement implements Element{
 	}
 
 	@Override
-	public void reset(Coordinate c) {
+	public void resetCoor(Coordinate c) {
 		coordinate= c;
 	}
 
@@ -161,5 +161,11 @@ public class GameElement implements Element{
 			log.error(e.getMessage());
 		}
 		return null;
+	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
 	}
 }

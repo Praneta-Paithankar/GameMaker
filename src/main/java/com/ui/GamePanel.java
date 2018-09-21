@@ -18,7 +18,8 @@ import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 
 import com.behavior.FlowLayoutBehavior;
-import com.infrastruture.AbstractPanel;
+import com.dimension.Coordinate;
+import com.ui.AbstractPanel;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
 
@@ -27,15 +28,15 @@ import com.infrastruture.Element;
 public class GamePanel extends AbstractPanel implements Element {
 	protected static Logger log = Logger.getLogger(GamePanel.class);
 	private BufferedImage image;
-	private ArrayList<Element> elements;
+	private ArrayList<Element> elementList;
 	
 	public GamePanel()
 	{
 
-	    elements = new ArrayList<Element>();
+	    elementList = new ArrayList<Element>();
         try {
             image = ImageIO.read(new File("./src/com/image/nature.jpg"));
-            image = resize(image, Constants.BOARD_PANEL_HEIGHT, Constants.BOARD_PANEL_WIDTH);
+            image = resize(image, Constants.GAME_PANEL_HEIGHT, Constants.GAME_PANEL_WIDTH);
         } catch (IOException e) {
             // TODO Auto-generated catch block
         	log.error(e.getMessage());
@@ -47,7 +48,7 @@ public class GamePanel extends AbstractPanel implements Element {
 	
 	public void setLayout() {
 		setLayoutBehavior(new FlowLayoutBehavior());
-		performUpdateLayout(this, Constants.BOARD_PANEL_WIDTH,Constants.BOARD_PANEL_HEIGHT);
+		performUpdateLayout(this, Constants.GAME_PANEL_WIDTH,Constants.GAME_PANEL_HEIGHT);
 	}
 	
 	private BufferedImage resize(BufferedImage img, int width, int height) {
@@ -60,7 +61,7 @@ public class GamePanel extends AbstractPanel implements Element {
     }
 	
 	public ArrayList<Element> getElements(){
-		return elements;
+		return elementList;
 	}
 
 	
@@ -71,7 +72,7 @@ public class GamePanel extends AbstractPanel implements Element {
 		if (image != null) {
 	        g.drawImage(image, 0, 0, this);
 	    }
-		for(Element element : elements)
+		for(Element element : elementList)
 		{
 			element.draw(g);
 		}
@@ -85,21 +86,30 @@ public class GamePanel extends AbstractPanel implements Element {
 	}
 
 	@Override
+	public void resetCoor(Coordinate c) {
+		// TODO Auto-generated method stub
+		for(Element element : elementList) {
+			element.resetCoor(c);
+		}
+	}
+	
+	@Override
 	public void reset() {
-		for(Element element : elements) {
+		// TODO Auto-generated method stub
+		for(Element element : elementList) {
 			element.reset();
 		}
 	}
 
 	public void addComponent(Element e) {
 		//this.add((Component)e);
-		elements.add(e);
+		elementList.add(e);
 	}
 	
 
 	@Override
 	public void removeComponent(Element e) {
-		elements.remove(e);
+		elementList.remove(e);
 	}
 
 
@@ -107,7 +117,7 @@ public class GamePanel extends AbstractPanel implements Element {
 	@Override
 	public void save(ObjectOutputStream op) {
 		// TODO Auto-generated method stub
-		for (Element element : elements) {
+		for (Element element : elementList) {
 			element.save(op);
 		}
 	}
@@ -116,11 +126,11 @@ public class GamePanel extends AbstractPanel implements Element {
 	public Element load(ObjectInputStream ip) {
 		// TODO Auto-generated method stub
 		ArrayList<Element> loadComponents = new ArrayList<>();
-		for (Element element : elements) {
+		for (Element element : elementList) {
 			loadComponents.add(element.load(ip));
 		}
-		elements.clear();
-		elements.addAll(loadComponents);
+		elementList.clear();
+		elementList.addAll(loadComponents);
 		return null;
 	}
 }

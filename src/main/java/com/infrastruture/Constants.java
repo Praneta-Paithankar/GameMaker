@@ -5,14 +5,16 @@ package com.infrastruture;
 import java.awt.Color;
 
 public class Constants {
-	public final static int FRAME_WIDTH = 900;
-	public final static int  FRAME_HEIGHT = 900;
-	public final static int MAIN_PANEL_WIDTH =  900;
-	public final static int MAIN_PANEL_HEIGHT =  750;
-	public final static int TIMER_PANEL_WIDTH =  150;
-	public final static int TIMER_PANEL_HEIGHT =  750;
-	public final static int BOARD_PANEL_WIDTH =  750;
-	public final static int BOARD_PANEL_HEIGHT =  750;
+	public final static int FRAME_WIDTH = 1200;
+	public final static int  FRAME_HEIGHT = 800;
+	public final static int MAIN_PANEL_WIDTH =  1200;
+	public final static int MAIN_PANEL_HEIGHT =  800;
+	public final static int DESIGN_PANEL_WIDTH =  300;
+	public final static int DESIGN_PANEL_HEIGHT =  750;
+	public final static int GAME_PANEL_WIDTH =  750;
+	public final static int GAME_PANEL_HEIGHT =  750;
+	public final static int CONTROL_PANEL_WIDTH =  150;
+	public final static int CONTROL_PANEL_HEIGHT =  750;
 
 	public final static int TIMER_COUNT = 25;
 	

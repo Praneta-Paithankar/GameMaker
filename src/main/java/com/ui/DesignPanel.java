@@ -20,14 +20,15 @@ import javax.swing.JLabel;
 
 import org.apache.log4j.Logger;
 
-//import com.behavior.BoxLayoutXAxisBehavior;
-//import com.behavior.BoxLayoutYAxisBehavior;
-//import com.behavior.GridBagLayoutBehavior;
-import com.component.Clock;
+import com.behavior.BoxLayoutXAxisBehavior;
+import com.behavior.BoxLayoutYAxisBehavior;
+import com.behavior.GridBagLayoutBehavior;
+import com.components.Clock;
 import com.controller.MainController;
-import com.infrastruture.AbstractPanel;
+import com.ui.AbstractPanel;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
+import com.dimension.Coordinate;
 
 
 @SuppressWarnings("serial")
@@ -39,8 +40,9 @@ public class DesignPanel extends AbstractPanel implements Element{
 	
 	public DesignPanel() {
 		setBorder(BorderFactory.createLoweredBevelBorder());
-		//setLayoutBehavior(new BoxLayoutYAxisBehavior());
-		performUpdateLayout(this, Constants.TIMER_PANEL_WIDTH,Constants.TIMER_PANEL_HEIGHT);
+		setLayoutBehavior(new BoxLayoutYAxisBehavior());
+		setBackground(Color.DARK_GRAY);
+		performUpdateLayout(this, Constants.DESIGN_PANEL_WIDTH,Constants.DESIGN_PANEL_HEIGHT);
         elements = new ArrayList<>();
 	}
 	public ArrayList<Element> getElements(){
@@ -50,13 +52,13 @@ public class DesignPanel extends AbstractPanel implements Element{
 	public void createButtons(MainController driver)
 	{
 		this.driver = driver;
-	    createReplay();
-	    createUndo();
-	    createStart();
-	    createPause();
-	    createSave();
-	    createLoad();
-	    createLayout();
+//	    createReplay();
+//	    createUndo();
+//	    createStart();
+//	    createPause();
+//	    createSave();
+//	    createLoad();
+//	    createLayout();
 	}
 	
 	
@@ -166,6 +168,14 @@ public class DesignPanel extends AbstractPanel implements Element{
 			element.reset();
 		}
 	}
+	
+	@Override
+	public void resetCoor(Coordinate c) {
+		for(Element element : elements) {
+			element.resetCoor(c);
+		}
+	}
+	
 	@Override
 	public void save(ObjectOutputStream op) {
 		for (Element element : elements) {
