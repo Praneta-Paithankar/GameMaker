@@ -1,18 +1,14 @@
 package com.helper;
 
-import java.util.ArrayList;
-
 import org.apache.log4j.Logger;
 
 import com.commands.ChangeVelXCommand;
 import com.commands.ChangeVelYCommand;
-import com.commands.DownMoveCommand;
-import com.commands.LeftMoveCommand;
+import com.commands.ExplodeCommand;
 import com.commands.MoveCommand;
-import com.commands.RightMoveCommand;
-import com.commands.UpMoveCommand;
+import com.commands.NullCommand;
 import com.components.GameElement;
-import com.infrastruture.MoveType;
+import com.controller.MainController;
 import com.infrastruture.CollisionType;
 import com.infrastruture.Command;
 import com.infrastruture.Direction;
@@ -33,31 +29,25 @@ public class Collider {
 		this.collisionChecker = collisionChecker;
 	}
 	
-	public void execute() {
+	public void execute(MainController controller) {
 		if(collisionChecker.checkIntersectionBetweenElements(element1, element2)) {
 			Command command = getCollisionAction(element1, collisionType1);
 			if (collisionType1 == CollisionType.BOUNCE) {
 				Direction direction = collisionChecker.checkCollisionBetweenGameElements(element1, element2);
-				changeDirectionsOnCollision(element1, direction);
+				changeDirectionsOnCollision(element1, direction,controller);
 			}
 			command.execute();
+			controller.addCommand(command);
 			command = getCollisionAction(element2, collisionType2);
 			if (collisionType2 == CollisionType.BOUNCE) {
 				Direction direction = collisionChecker.checkCollisionBetweenGameElements(element2, element1);
-				changeDirectionsOnCollision(element2, direction);
+				changeDirectionsOnCollision(element2, direction,controller);
 			}
 			command.execute();
+			controller.addCommand(command);
 		}
 	}
 	
-	public void checkCollisions(MoveType behaviour, GameElement element1, GameElement element2) {
-		if(collisionChecker.checkIntersectionBetweenElements(element1, element2)) {
-			Direction direction = collisionChecker.checkCollisionBetweenGameElements(element1, element2);
-			changeDirectionsOnCollision(element1, direction);
-			//saveloadCommandList.add(new MoveCommand(element1));
-		}
-	}
-	 
 	public Command getCollisionAction(GameElement gameElement, CollisionType collisionType) {
 		if(collisionType == CollisionType.BOUNCE) {
 			return new MoveCommand(gameElement);
@@ -65,12 +55,10 @@ public class Collider {
 		if(collisionType == CollisionType.EXPLODE) {
 			return new ExplodeCommand(gameElement);
 		}
-		if(collisionType == CollisionType.FIXED) {
-			return new FixedCommand(gameElement);
-		}
+		return new NullCommand(gameElement);
 	}
 	
-	public void changeDirectionsOnCollision(GameElement element, Direction direction) {
+	public void changeDirectionsOnCollision(GameElement element, Direction direction,MainController controller) {
 		Command changeVelXCommand = null;
 		Command changeVelYCommand = null;
 		if(direction == Direction.X) {
@@ -85,9 +73,11 @@ public class Collider {
 		}
 		if(changeVelXCommand != null) {
 			changeVelXCommand.execute();
+			controller.addCommand(changeVelXCommand);
 		}
 		if(changeVelYCommand != null) {
 			changeVelYCommand.execute();
+			controller.addCommand(changeVelYCommand);
 		}
 	}
 }
