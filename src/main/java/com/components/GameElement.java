@@ -72,6 +72,22 @@ public class GameElement implements Element{
 		this.coordinate.setY(y);
 	}
 	
+	public int getWidth() {
+		return position.getWidth();
+	}
+	
+	public void setWidth(int width) {
+		this.position.setWidth(width);
+	}
+	
+	public int getHeight() {
+		return position.getHeight();
+	}
+	
+	public void setHeight(int height) {
+		this.position.setHeight(height);
+	}
+	
 	public boolean isVisible() {
 		return isVisible;
 	}
