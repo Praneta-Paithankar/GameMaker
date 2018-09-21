@@ -52,13 +52,18 @@ public class DesignPanel extends AbstractPanel implements Element{
 		graphic.setBackground(Color.LIGHT_GRAY);
 		JPanel control  = new JPanel();
 		control.setBackground(Color.LIGHT_GRAY);
-		JPanel preview = new JPanel();
-		preview.setSize(Constants.DESIGN_PANEL_WIDTH, 10);
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Graphic", null, graphic, null);
 		tabbedPane.addTab("Control", null, control, null);
+		tabbedPane.setSize(new Dimension(100,100));
 		this.add(tabbedPane);
+		
+		JPanel preview = new JPanel();
+		Border redline = BorderFactory.createLineBorder(Color.red);
+		preview.setBorder(redline);
+		preview.setPreferredSize(new Dimension(400, 40));
+		
 		this.add(preview);
 		performUpdateLayout(this, Constants.DESIGN_PANEL_WIDTH,Constants.DESIGN_PANEL_HEIGHT);
         elements = new ArrayList<>();
