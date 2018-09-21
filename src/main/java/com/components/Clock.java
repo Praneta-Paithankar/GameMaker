@@ -18,6 +18,7 @@ public class Clock implements Element, Serializable{
 
 	protected static Logger log = Logger.getLogger(Clock.class);
 	private long milisecondsElapsed;
+	private Coordinate position;
 	public Clock() {
 		milisecondsElapsed = 0;
 	}
@@ -37,11 +38,9 @@ public class Clock implements Element, Serializable{
 	@Override
 	public void draw(Graphics g) {
 				
-		// TODO center box around the time 
-		g.drawRect(0, 150, 250, 100);
 		g.setFont(new Font("Arial", Font.BOLD, 40));
 		String time = getTime();
-		g.drawString(time, 25, 80);
+		g.drawString(time, position.getX(), position.getY());
 	}
 
 	@Override
