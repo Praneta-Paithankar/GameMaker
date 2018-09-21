@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 
 import com.components.GameElement;
 import com.dimension.Coordinate;
-import com.dimension.Dimension;
+import com.dimension.Dimensions;
 import com.infrastruture.Drawable;
 
 public class DrawRectangularImage implements Drawable{
@@ -17,7 +17,7 @@ public class DrawRectangularImage implements Drawable{
 	
 	@Override
 	public void draw(GameElement element, Graphics g) {
-		Dimension dimension = element.getPosition();
+		Dimensions dimension = element.getPosition();
 		Coordinate coordinate = element.getCoordinate();
 		
 		Image tmp = element.getImage();

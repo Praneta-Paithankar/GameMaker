@@ -1,16 +1,16 @@
 package com.dimension;
 
-public class Dimension {
+public class Dimensions {
 	
 	private int width;
 	private int height;
 	
-	public Dimension(int width, int height) {
+	public Dimensions(int width, int height) {
 		this.width = width;
 		this.height = height;
 	}
 	
-	public Dimension(int radius) {
+	public Dimensions(int radius) {
 		this.height = radius * 2;
 		this.width = radius * 2;
 	}

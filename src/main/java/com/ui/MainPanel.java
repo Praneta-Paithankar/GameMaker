@@ -75,14 +75,6 @@ public class MainPanel extends AbstractPanel implements Element {
 		}
 		return null;
 	}
-
-	@Override
-	public void resetCoor(Coordinate c) {
-		// TODO Auto-generated method stub
-		for(Element element : elements){
-			element.resetCoor(c);
-		}
-	}
 	
 	@Override
 	public void reset() {
