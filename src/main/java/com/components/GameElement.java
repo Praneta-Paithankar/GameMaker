@@ -11,7 +11,7 @@ import java.io.Serializable;
 import org.apache.log4j.Logger;
 
 import com.dimension.Coordinate;
-import com.dimension.Dimension;
+import com.dimension.Dimensions;
 import com.infrastruture.Action;
 import com.infrastruture.Drawable;
 import com.infrastruture.Element;
@@ -21,7 +21,7 @@ public class GameElement implements Element,Serializable{
 
 	protected static Logger log = Logger.getLogger(GameElement.class);
 	private String name;
-	private Dimension dimension;
+	private Dimensions dimension;
 	private Coordinate coordinate;
 	private Coordinate startingPosition;
 	private Color color;
@@ -33,7 +33,7 @@ public class GameElement implements Element,Serializable{
 	private int velY;
 	private MoveType moveType;
 
-	public GameElement(Dimension dimension, Coordinate coordinate, Coordinate startingPosition, String name) {
+	public GameElement(Dimensions dimension, Coordinate coordinate, Coordinate startingPosition, String name) {
 		this.dimension = dimension;
 		this.coordinate = coordinate;
 		this.startingPosition = startingPosition;
@@ -113,11 +113,11 @@ public class GameElement implements Element,Serializable{
 		this.isVisible = isVisible;
 	}
 	
-	public Dimension getPosition() {
+	public Dimensions getPosition() {
 		return dimension;
 	}
 
-	public void setPosition(Dimension position) {
+	public void setPosition(Dimensions position) {
 		this.dimension = position;
 	}
 
