@@ -259,7 +259,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	    CardLayout cl = (CardLayout)(cards.getLayout());
 	    cl.show(cards, (String)evt.getItem());
 	    if(evt.getItem() == CIRCLE) {
-	    	elements.add(new GameElement(new Dimensions(50,50), new Coordinate(30,30), new Coordinate(30,30), "a name"));
+	    	//elements.add(new GameElement(new Dimensions(50,50), new Coordinate(30,30), new Coordinate(30,30)));
 	    	System.out.println(elements);
 	    }
 	    this.revalidate();
