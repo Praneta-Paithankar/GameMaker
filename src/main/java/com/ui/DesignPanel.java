@@ -8,6 +8,9 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Color;
 import com.dimension.*;
+import com.helper.ActionType;
+import com.helper.ButtonFile;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -64,9 +67,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JPanel graphic;
 	private JPanel control;
 	private JPanel cards;
-	private JButton tendToAddButton;
+	private ButtonFile tendToAddButton;
 	private JLabel tendToAddLabel; 
 	private ArrayList<Element> elements;
+	private String [] actionType = ActionType.getActionTypes();
 	final static String CIRCLE = "Circle Shape";
     final static String SQUARE = "Square Shape";
 	
@@ -165,7 +169,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		 */
 		preview.removeAll();
 		
-		tendToAddButton = new JButton();
+		tendToAddButton = new ButtonFile();
 		JPanel newButtonPanel = new JPanel();
 		
 		
@@ -187,6 +191,13 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		buttonHeight.getDocument().addDocumentListener(this);
 		buttonHeight.getDocument().putProperty("owner", buttonHeight);
 		
+		JLabel buttonActionLable = new JLabel("Button Action : ");
+		JComboBox boxAction = new JComboBox(this.actionType);
+		boxAction.setName("boxAction");
+		boxAction.setActionCommand("boxActionChanged");
+		boxAction.addActionListener(this);
+
+		
 		
 		
 		
@@ -196,6 +207,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		newButtonPanel.add(buttonHeight);
 		newButtonPanel.add(buttonWidthLable);
 		newButtonPanel.add(buttonWidth);
+		newButtonPanel.add(buttonActionLable);
+		newButtonPanel.add(boxAction);
 		control.add(newButtonPanel);
 		preview.add(tendToAddButton);
 		this.validate();
@@ -395,6 +408,11 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		}
 		if (e.getActionCommand().equals("ElementButton")) {
 			this.controlElementButtonSelect();
+		}
+		if(e.getActionCommand().equals("boxActionChanged")) {
+			JComboBox boxAction = (JComboBox)e.getSource();
+			tendToAddButton.setActionType(ActionType.valueOf(boxAction.getSelectedItem().toString()));
+			System.out.println(tendToAddButton.getActionType().toString());
 		}
 	}
 
