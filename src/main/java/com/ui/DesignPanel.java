@@ -64,7 +64,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JPanel graphic;
 	private JPanel control;
 	private JPanel cards;
-	private JButton tendToAdd;
+	private JButton tendToAddButton;
+	private JLabel tendToAddLabel; 
 	private ArrayList<Element> elements;
 	final static String CIRCLE = "Circle Shape";
     final static String SQUARE = "Square Shape";
@@ -162,19 +163,41 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		 * 2 pass new elemnt to control panle 
 		 * 3 clear new panel , clear preview window ...... 
 		 */
-		tendToAdd = new JButton();
+		preview.removeAll();
+		
+		tendToAddButton = new JButton();
 		JPanel newButtonPanel = new JPanel();
+		
+		
 		JLabel buttonNameLable = new JLabel("Button Name : ");
 		JTextField buttonName = new JTextField("", 15);
+		buttonName.setName("buttonNameField");
 		buttonName.getDocument().addDocumentListener(this);
+		buttonName.getDocument().putProperty("owner", buttonName);
+		
+		JLabel buttonWidthLable = new JLabel("Button Width : ");
+		JTextField buttonWidth = new JTextField("", 15);
+		buttonWidth.setName("buttonWidthField");
+		buttonWidth.getDocument().addDocumentListener(this);
+		buttonWidth.getDocument().putProperty("owner", buttonWidth);
+		
 		JLabel buttonHeightLable = new JLabel("Button Height : ");
 		JTextField buttonHeight = new JTextField("", 15);
+		buttonHeight.setName("buttonHeightField");
+		buttonHeight.getDocument().addDocumentListener(this);
+		buttonHeight.getDocument().putProperty("owner", buttonHeight);
+		
+		
+		
+		
 		newButtonPanel.add(buttonNameLable);
 		newButtonPanel.add(buttonName);
 		newButtonPanel.add(buttonHeightLable);
 		newButtonPanel.add(buttonHeight);
+		newButtonPanel.add(buttonWidthLable);
+		newButtonPanel.add(buttonWidth);
 		control.add(newButtonPanel);
-		preview.add(tendToAdd);
+		preview.add(tendToAddButton);
 		this.validate();
 	}
 	
@@ -382,29 +405,37 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	
 	@Override
 	public void removeUpdate(DocumentEvent e) {
-		System.out.println("e");
-		Document d = e.getDocument();
-		try {
-			tendToAdd.setText(d.getText(0, d.getLength()));
-			tendToAdd.setName(d.getText(0, d.getLength()));
-		} catch (BadLocationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		this.validate();
+		documentExeute(e);
 	}
 	@Override
 	public void insertUpdate(DocumentEvent e) {
-		System.out.println("s");
+		documentExeute(e);
+	}
+	
+	public void documentExeute(DocumentEvent e) {
+		JComponent owner = (JComponent)e.getDocument().getProperty("owner");
 		Document d = e.getDocument();
+		String content = "";
 		try {
-			tendToAdd.setText(d.getText(0, d.getLength()));
-			tendToAdd.setName(d.getText(0, d.getLength()));
+			content = d.getText(0, d.getLength());
 		} catch (BadLocationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		if(owner.getName().equals("buttonNameField")) {
+				tendToAddButton.setText(content);
+		}
+		if(owner.getName().equals("buttonHeightField")) {
+				int height = Integer.parseInt(content);
+				Dimension dim = tendToAddButton.getPreferredSize();
+				tendToAddButton.setPreferredSize(new Dimension( (int)tendToAddButton.getPreferredSize().getWidth() , height));
+				tendToAddButton.revalidate();
+		}
+		if(owner.getName().equals("buttonWidthField")) {
+			int width = Integer.parseInt(content);
+			tendToAddButton.setPreferredSize(new Dimension(width , (int)tendToAddButton.getPreferredSize().getHeight()));
+			tendToAddButton.revalidate();
+		}
 		this.validate();
 	}
-	
 }
