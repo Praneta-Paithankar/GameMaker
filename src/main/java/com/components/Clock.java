@@ -23,9 +23,9 @@ public class Clock implements Element, Serializable{
 		milisecondsElapsed = 0;
 	}
 
-	public Clock(Clock c) {
-		this.milisecondsElapsed = c.milisecondsElapsed;
-	}
+//	public Clock(Clock c) {
+//		this.milisecondsElapsed = c.milisecondsElapsed;
+//	}
 	
 	public String getTime() {
 		if (getSeconds() >= 10) {

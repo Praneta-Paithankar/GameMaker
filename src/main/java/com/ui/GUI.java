@@ -224,5 +224,19 @@ public class GUI extends JFrame implements Element{
 		this.designPanel = designPanel;
 	}
 
+
+	public ControlPanel getControlPanel() {
+		return controlPanel;
+	}
+
+
+	public void setControlPanel(ControlPanel controlPanel) {
+		this.controlPanel = controlPanel;
+	}
+
+	public void setGamePanel(GamePanel gamePanel) {
+		this.gamePanel = gamePanel;
+	}
+	
 		
 }

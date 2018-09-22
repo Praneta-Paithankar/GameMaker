@@ -3,57 +3,44 @@
 package com.ui;
 
 import java.awt.BorderLayout;
-import com.components.*;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Color;
-import com.dimension.*;
-import com.helper.ActionType;
-import com.helper.ButtonFile;
-
-import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.ItemEvent;
 import java.awt.event.ActionEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.awt.FlowLayout;
-import java.awt.Font;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.border.*;
-
-import javax.swing.JLabel;
 
 import org.apache.log4j.Logger;
 
-import com.behavior.BoxLayoutXAxisBehavior;
-import com.behavior.BoxLayoutYAxisBehavior;
-import com.behavior.GridBagLayoutBehavior;
 import com.behavior.FlowLayoutBehavior;
-import com.components.Clock;
 import com.controller.MainController;
-import com.ui.AbstractPanel;
+//import com.helper.ActionType;
+import com.infrastruture.ActionType;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
-import com.dimension.*;
 
 
 
@@ -68,12 +55,12 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JPanel control;
 	private JPanel cards;
 	private ArrayList<Element> elements;
-	private String [] actionType = ActionType.getActionTypes();
 	final static String CIRCLE = "Circle Shape";
     final static String SQUARE = "Square Shape";
     
     //control tag var
-	private ButtonFile tendToAddButton;
+    
+	private CustomButton tendToAddButton;
 	private JLabel tendToAddLabel;
 	private JPanel buttonBuildPanel;
 	private JPanel controlElementPanel;
@@ -93,6 +80,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		control.setLayout(new BoxLayout(control,BoxLayout.Y_AXIS));
 		
 		// Tabbed pane holds the two different interfaces 
+		
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Graphic", null, graphic, null);
 		tabbedPane.addTab("Control", null, control, null);
@@ -134,7 +122,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		
 		
 		//control variable
-		tendToAddButton = new ButtonFile();
+		tendToAddButton = new CustomButton();
 		
 		buttonBuildPanel = new JPanel();
 		buttonBuildPanel.setAlignmentX(LEFT_ALIGNMENT);
@@ -178,39 +166,40 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		refresh(preview);
 		control.remove(buttonBuildPanel);
 		buttonBuildPanel.removeAll();
-		
-		JLabel buttonNameLable = new JLabel("Button Name : ");
+		ActionType action = ActionType.SAVE;
+		tendToAddButton.setActionType(action);
+		JLabel buttonNameLabel = new JLabel("Button Name : ");
 		JTextField buttonName = new JTextField("", 15);
 		buttonName.setName("buttonNameField");
 		buttonName.getDocument().addDocumentListener(this);
 		buttonName.getDocument().putProperty("owner", buttonName);
 		
-		JLabel buttonWidthLable = new JLabel("Button Width : ");
+		JLabel buttonWidthLabel = new JLabel("Button Width : ");
 		JTextField buttonWidth = new JTextField("", 15);
 		buttonWidth.setName("buttonWidthField");
 		buttonWidth.getDocument().addDocumentListener(this);
 		buttonWidth.getDocument().putProperty("owner", buttonWidth);
 		
-		JLabel buttonHeightLable = new JLabel("Button Height : ");
+		JLabel buttonHeightLabel = new JLabel("Button Height : ");
 		JTextField buttonHeight = new JTextField("", 15);
 		buttonHeight.setName("buttonHeightField");
 		buttonHeight.getDocument().addDocumentListener(this);
 		buttonHeight.getDocument().putProperty("owner", buttonHeight);
 		
-		JLabel buttonActionLable = new JLabel("Button Action : ");
-		JComboBox boxAction = new JComboBox(this.actionType);
+		JLabel buttonActionLabel = new JLabel("Button Action : ");
+		JComboBox boxAction = new JComboBox(ActionType.values());
 		boxAction.setName("boxAction");
 		boxAction.setActionCommand("boxActionChanged");
 		boxAction.addActionListener(this);
 
 		
-		buttonBuildPanel.add(buttonNameLable);
+		buttonBuildPanel.add(buttonNameLabel);
 		buttonBuildPanel.add(buttonName);
-		buttonBuildPanel.add(buttonHeightLable);
+		buttonBuildPanel.add(buttonHeightLabel);
 		buttonBuildPanel.add(buttonHeight);
-		buttonBuildPanel.add(buttonWidthLable);
+		buttonBuildPanel.add(buttonWidthLabel);
 		buttonBuildPanel.add(buttonWidth);
-		buttonBuildPanel.add(buttonActionLable);
+		buttonBuildPanel.add(buttonActionLabel);
 		buttonBuildPanel.add(boxAction);
 		control.add(buttonBuildPanel);
 		tendToAddButton.setAlignmentY(CENTER_ALIGNMENT);
@@ -222,10 +211,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		//Where the components controlled by the CardLayout are initialized:
 		
 		 //Create the "cards".
-       JPanel card1 = new JPanel();
-       card1.add(new JButton("Button 1"));
-       card1.add(new JButton("Button 2"));
-       card1.add(new JButton("Button 3"));
+        JPanel card1 = new JPanel();
+        card1.add(new JButton("Button 1"));
+        card1.add(new JButton("Button 2"));
+        card1.add(new JButton("Button 3"));
 		JPanel card2 = new JPanel();
 		card2.add(new JTextField("TextField", 20));
 
@@ -234,7 +223,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		
 		cards.setPreferredSize(new Dimension(250,200));
 		cards.add(card1, CIRCLE);
-       cards.add(card2, SQUARE);
+        cards.add(card2, SQUARE);
 		//Where the GUI is assembled:
 		//Put the JComboBox in a JPanel to get a nicer look.
 		JPanel comboBoxPane = new JPanel(); //use FlowLayout
@@ -273,7 +262,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	    cl.show(cards, (String)evt.getItem());
 	    if(evt.getItem() == CIRCLE) {
 	    	//elements.add(new GameElement(new Dimensions(50,50), new Coordinate(30,30), new Coordinate(30,30)));
-	    	System.out.println(elements);
 	    }
 	    this.revalidate();
 	    this.repaint();
@@ -372,10 +360,13 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.add(Box.createRigidArea(new Dimension(5,5)));
 	}
 
+	public JComponent getControlElement() {
+		return tendToAddButton;
+	}
+	
 	
 	
 	public void addComponent(Element e) {
-		this.add((AbstractPanel)e);
 		elements.add(e);
 	}
 
@@ -385,11 +376,17 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	}
 
 	@Override
-	public void draw(Graphics g) {
-
-	for(Element component : elements) {
-		component.draw(null);
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		for(Element element : elements)
+		{
+			element.draw(g);
+		}
 	}
+
+	@Override
+	public void draw(Graphics g) {
+		//repaint();
 	}
 	@Override
 	public void reset() {
@@ -400,16 +397,16 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 
 	@Override
 	public void save(ObjectOutputStream op) {
-		for (Element element : elements) {
-			element.save(op);
-		}
+//		for (Element element : elements) {
+//			element.save(op);
+//		}
 		
 	}
 	@Override
 	public Element load(ObjectInputStream ip) {
-		for (Element element : elements) {
-			element.load(ip);
-		}
+//		for (Element element : elements) {
+//			element.load(ip);
+//		}
 		return null;
 	}
 
@@ -423,12 +420,12 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 			this.controlElementButtonSelect();
 		}
 		if(e.getActionCommand().equals("boxActionChanged")) {
-			JComboBox boxAction = (JComboBox)e.getSource();
+			JComboBox boxAction = (JComboBox) e.getSource();
 			tendToAddButton.setActionType(ActionType.valueOf(boxAction.getSelectedItem().toString()));
-			//System.out.println(tendToAddButton.getActionType().toString());
 		}
 	}
 
+	
 	@Override
 	public void changedUpdate(DocumentEvent e) {
 		//System.out.println("changed");
