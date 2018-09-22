@@ -5,7 +5,6 @@ package com.ui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -71,8 +70,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		setBorder("Design Center"); // Method call for setting the border
 		setLayoutBehavior(new FlowLayoutBehavior());
 		setBackground(Color.DARK_GRAY);
-		
-		System.out.println(com.infrastruture.ActionType.values());
 		
 		// Build the Graphic Panel: used to create graphic objects, Control Panel: used to create control elements
 		graphic = new JPanel();
@@ -169,7 +166,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		refresh(preview);
 		control.remove(buttonBuildPanel);
 		buttonBuildPanel.removeAll();
-		
+		ActionType action = ActionType.SAVE;
+		tendToAddButton.setActionType(action);
 		JLabel buttonNameLabel = new JLabel("Button Name : ");
 		JTextField buttonName = new JTextField("", 15);
 		buttonName.setName("buttonNameField");
@@ -264,7 +262,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	    cl.show(cards, (String)evt.getItem());
 	    if(evt.getItem() == CIRCLE) {
 	    	//elements.add(new GameElement(new Dimensions(50,50), new Coordinate(30,30), new Coordinate(30,30)));
-	    	System.out.println(elements);
 	    }
 	    this.revalidate();
 	    this.repaint();
@@ -363,12 +360,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.add(Box.createRigidArea(new Dimension(5,5)));
 	}
 
-	public int getControlElement() {
-		return 0;
-	}
-	public CustomButton getButton() {
+	public JComponent getControlElement() {
 		return tendToAddButton;
 	}
+	
 	
 	
 	public void addComponent(Element e) {
@@ -383,7 +378,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		
 		for(Element element : elements)
 		{
 			element.draw(g);
@@ -392,8 +386,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 
 	@Override
 	public void draw(Graphics g) {
-		
-		repaint();
+		//repaint();
 	}
 	@Override
 	public void reset() {
@@ -427,9 +420,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 			this.controlElementButtonSelect();
 		}
 		if(e.getActionCommand().equals("boxActionChanged")) {
-			JComboBox boxAction = (JComboBox)e.getSource();
+			JComboBox boxAction = (JComboBox) e.getSource();
 			tendToAddButton.setActionType(ActionType.valueOf(boxAction.getSelectedItem().toString()));
-			System.out.println(tendToAddButton.getActionType());
 		}
 	}
 
