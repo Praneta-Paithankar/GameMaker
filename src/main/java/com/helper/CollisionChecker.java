@@ -59,6 +59,7 @@ public class CollisionChecker {
 	public Direction checkCollisionBetweenGameElements(GameElement element1, GameElement element2) {
 		int element1PrevOffsetX = element1.getX() - element1.getVelX();
 		int element1PrevOffsetY = element1.getVelY() - element1.getVelY(); 
+		
 		int element1BottomLeftY = element1.getY() + element1.getHeight();
 		int element1BottomLeftX =  element1.getX() + element1.getHeight();
 		int element1BottomRightY = element1.getY() + element1.getHeight() + element1.getWidth();
@@ -73,14 +74,23 @@ public class CollisionChecker {
 		int element2TopRightX = element2.getX() + element2.getWidth();
 		int element2TopRightY = element2.getY() + element2.getX() + element2.getWidth();
 		
-		//Approaching from 
-		if(element1BottomRightX > element2.getX() && element1BottomRightY < element2.getY()) {
+		//Approaching from top right and going towards 
+		if((element1BottomRightX >= element2.getX() && element1BottomRightY <= element2.getY()) ||
+				(element1BottomLeftX <= element2TopRightX && element1BottomLeftY <= element2TopRightY)) {
 			return Direction.Y;
 		}
-		else if(element1BottomRightX < element2.getX() && element1BottomRightY < element2.getY()) {
+		else if((element1BottomRightX <= element2.getX() && element1BottomRightY <= element2.getY()) || 
+				(element1TopRightX <= element2.getX() && element1TopRightY <= element2BottomLeftY)) {
 			return Direction.X;
 		}
-		
-		return Direction.NONE;
+		else if((element1TopRightX >= element2BottomLeftX && element1TopRightY >= element2BottomLeftY) ||
+				(element1.getX() <= element2BottomRightX && element1.getY() >= element2BottomRightY)) {
+			return Direction.Y;
+		}
+		else if((element1.getX() >= element2BottomRightX && element1.getY() <= element2BottomRightY) || 
+				(element1BottomLeftX >= element2TopRightX && element1BottomLeftY >= element2TopRightY)) {
+			return Direction.X;
+		}
+		return Direction.BOTH;
 	}
 }
