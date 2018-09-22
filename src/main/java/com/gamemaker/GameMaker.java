@@ -70,7 +70,7 @@ public class GameMaker {
 		// ! Not sure where this logic will end up
 		//CollisionChecker checker = new CollisionChecker();
 		
-		MainController driver = new MainController(gui,observable,null,new CollisionChecker()); // maybe keep this checker);
+		MainController driver = new MainController(gui,observable,new DesignController(gui),new CollisionChecker()); // maybe keep this checker);
 		
 		gui.addDriver(driver);
 		observable.startTimer();

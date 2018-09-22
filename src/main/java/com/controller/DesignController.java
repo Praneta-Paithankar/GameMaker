@@ -9,6 +9,7 @@ import com.components.GameElement;
 import com.helper.Collider;
 import com.infrastruture.ActionType;
 import com.infrastruture.Element;
+import com.ui.CustomButton;
 import com.ui.GUI;
 
 public class DesignController {
@@ -25,6 +26,9 @@ public class DesignController {
 		mainJframe = gui;
 		graphicsElements = new ArrayList<>();
 		timerElements  = new ArrayList<>();
+		keyboardElements = new HashMap<>();
+		controlElements = new HashMap<>();
+		colliders = new ArrayList<>();
 	}
 	
 	public List<GameElement> getKeyboardElementsBasedKeys(int key)
@@ -47,9 +51,15 @@ public class DesignController {
 	
 	public void addControlElement() {
 		
+		CustomButton button = mainJframe.getDesignPanel().getButton();
+	    controlElements.put(button.getActionCommand(), button.getActionType());
+	    mainJframe.getControlPanel().addComponent(button);
+	    mainJframe.getControlPanel().add(button);
+	    //		controlElements.put(button.getActionCommand(),button.getActionType());
 		// gui.getData();
 		// add element into elements
 		// add elements into controlPanel with actions
+	    mainJframe.getControlPanel().revalidate();
 	}
 
 	public List<GameElement> getTimerElements() {
