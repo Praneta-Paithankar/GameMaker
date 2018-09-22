@@ -15,10 +15,15 @@ import com.dimension.Dimensions;
 import com.infrastruture.Action;
 import com.infrastruture.Drawable;
 import com.infrastruture.Element;
+import com.infrastruture.MoveType;
 
 public class GameElement implements Element,Serializable{
 
 	protected static Logger log = Logger.getLogger(GameElement.class);
+<<<<<<< HEAD
+=======
+	private String name;
+>>>>>>> 87d76d8a7d09d29654f017ef079ae06a56a36c9a
 	private Dimensions dimension;
 	private Coordinate coordinate;
 	private Coordinate startingPosition;
@@ -29,12 +34,27 @@ public class GameElement implements Element,Serializable{
 	private boolean isVisible; 
 	private int velX;
 	private int velY;
+<<<<<<< HEAD
 	
 	public GameElement(Dimensions dimension, Coordinate coordinate, Coordinate startingPosition) {
+=======
+	private MoveType moveType;
+
+	public GameElement(Dimensions dimension, Coordinate coordinate, String name, MoveType moveType) {
+>>>>>>> 87d76d8a7d09d29654f017ef079ae06a56a36c9a
 		this.dimension = dimension;
 		this.coordinate = coordinate;
-		this.startingPosition = startingPosition;
 		this.color = Color.BLACK;
+		this.moveType = moveType;
+		this.name = name;
+	}
+	
+	public MoveType getMoveType() {
+		return moveType;
+	}
+
+	public void setMoveType(MoveType moveType) {
+		this.moveType = moveType;
 	}
 	
 	public int getVelX() {
@@ -75,6 +95,22 @@ public class GameElement implements Element,Serializable{
 	
 	public void setY(int y) {
 		this.coordinate.setY(y);
+	}
+	
+	public int getWidth() {
+		return dimension.getWidth();
+	}
+	
+	public void setWidth(int width) {
+		this.dimension.setWidth(width);
+	}
+	
+	public int getHeight() {
+		return dimension.getHeight();
+	}
+	
+	public void setHeight(int height) {
+		this.dimension.setHeight(height);
 	}
 	
 	public boolean isVisible() {
@@ -165,6 +201,14 @@ public class GameElement implements Element,Serializable{
 			log.error(e.getMessage());
 		}
 		return null;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

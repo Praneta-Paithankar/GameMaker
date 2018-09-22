@@ -1,6 +1,7 @@
 package com.gamemaker;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
@@ -10,6 +11,7 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.Logger;
 
+import com.components.GameElement;
 //import com.component.Ball;
 //import com.component.Brick;
 //import com.component.Clock;
@@ -17,9 +19,12 @@ import org.apache.log4j.Logger;
 import com.controller.*;
 import com.dimension.Circle;
 import com.dimension.Coordinate;
+import com.dimension.Dimensions;
 import com.dimension.Rectangle;
+import com.helper.CollisionChecker;
 //import com.helper.CollisionChecker;
 import com.infrastruture.*;
+import com.strategy.DrawOvalColor;
 import com.timer.GameTimer;
 import com.ui.GUI;
 import com.ui.GamePanel;
@@ -51,7 +56,7 @@ public class GameMaker {
 		mainPanel.addComponent(designPanel);
 		mainPanel.addComponent(boardPanel);
 		mainPanel.addComponent(controlPanel);
-	
+		
 		// Create the GUI class and pass all the panels
 		GUI gui = new GUI(mainPanel,designPanel, boardPanel, controlPanel);
 		
@@ -59,8 +64,9 @@ public class GameMaker {
 		
 		// ! Not sure where this logic will end up
 		//CollisionChecker checker = new CollisionChecker();
-		
-		MainController driver = new MainController(gui,observable); // maybe keep this checker);
+		DesignController designController = new DesignController(gui);
+		designController.addGameElement();
+		MainController driver = new MainController(gui,observable,designController,new CollisionChecker()); // maybe keep this checker);
 		
 		gui.addDriver(driver);
 		observable.startTimer();
@@ -68,10 +74,10 @@ public class GameMaker {
 
 		gui.draw(null);
 		gui.pack();
-		if(isRestart)
-			observable.registerObserver(driver);
-		else
-			driver.pause();
+		//if(isRestart)
+		observable.registerObserver(driver);
+		//else
+		//	driver.pause();
 	}
 	public static void main(String args[]) {
 		PropertyConfigurator.configure("log4j.properties");
