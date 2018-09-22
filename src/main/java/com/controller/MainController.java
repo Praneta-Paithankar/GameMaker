@@ -66,9 +66,11 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		if(commandText.equals("AddControlElement")) {
 			designController.addControlElement();
 		}
+		System.out.println(commandText);
 		ActionType actionType = designController.getActionTypeBasedOnButtonCommand(commandText);
 		if(actionType != null) {
 			if(actionType == ActionType.PLAY) {
+				System.out.println(ActionType.PLAY);
 				start();
 			}else if(actionType == ActionType.PAUSE) {
 				pause();
@@ -111,6 +113,14 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			for(Collider collider: designController.getColliders()) {
 				collider.execute(this);
 			}
+			List<GameElement> graphicsElements = designController.getTimerElements();
+			for(GameElement element: graphicsElements) {
+				Command command = createCommand(element);
+				command.execute();
+				System.out.println(element.getName() + " : X ="+ element.getX()+ " and Y : "+ element.getY());
+				addCommand(command);
+			}
+			gui.repaint();
 		}
 	}
 
@@ -159,8 +169,9 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		if(isGamePaused) {
 			unPause();
 		}
-		gui.dispose();
-		gui.revalidate();
+		System.out.println("play");
+//		gui.dispose();
+//		gui.revalidate();
 		observable.registerObserver(this);
 	}
 	

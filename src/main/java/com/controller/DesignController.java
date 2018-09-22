@@ -61,23 +61,30 @@ public class DesignController {
 	public void addGameElement() {
 
 		// gui.getData();
-		GameElement elementPaddle = new GameElement(new Dimensions(80,10), new Coordinate(100, 350), "Paddle", MoveType.LEFTRIGHT);
+		GameElement elementPaddle = new GameElement(new Dimensions(80,10), new Coordinate(300, 350), "Paddle", MoveType.LEFTRIGHT);
 		elementPaddle.setColor(Color.BLACK);
 		elementPaddle.setDraw(new DrawRectangularColorShape());
+		elementPaddle.setVelX(20);
+		elementPaddle.setVisible(true);
 		
 		GameElement elementBall =  new GameElement(new Dimensions(15), new Coordinate(50, 50), "Ball", MoveType.FREE);
 		elementBall.setColor(Color.RED);
 		elementBall.setDraw(new DrawOvalColor());
+		elementBall.setVelX(1);
+		elementBall.setVelY(1);
+		elementBall.setVisible(true);
 		
 		GameElement elementBrick1 = new GameElement(new Dimensions(50, 25), new Coordinate(250, 90), "Brick", MoveType.FIXED);
 		elementBrick1.setColor(Color.BLUE);
 		elementBrick1.setDraw(new DrawRectangularColorShape());
+		elementBrick1.setVisible(true);
 		
-		GameElement elementBrick2 = new GameElement(new Dimensions(50, 25), new Coordinate(370, 90), "Brick", MoveType.FIXED);
+		GameElement elementBrick2 = new GameElement(new Dimensions(50, 25), new Coordinate(563, 79), "Brick", MoveType.FIXED);
 		elementBrick2.setColor(Color.BLUE);
 		elementBrick2.setDraw(new DrawRectangularColorShape());
+		elementBrick2.setVisible(true);
 		
-		clock = new Clock();
+		clock = new Clock(new Coordinate(30, 60));
 		
 		
 		// add element into elements
@@ -88,10 +95,10 @@ public class DesignController {
 		
 		timerElements.add(elementBall);
 		
-//		keyboardElements.put(KeyEvent.VK_LEFT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
-//		keyboardElements.put(KeyEvent.VK_RIGHT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
-//		
-//		controlElements.put("START", ActionType.START);
+		keyboardElements.put(KeyEvent.VK_LEFT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
+		keyboardElements.put(KeyEvent.VK_RIGHT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
+		
+//		controlElements.put("START", ActionType.P);
 //		controlElements.put("PAUSE", ActionType.PAUSE);
 //		controlElements.put("UNDO", ActionType.UNDO);
 //		controlElements.put("SAVE", ActionType.SAVE);
