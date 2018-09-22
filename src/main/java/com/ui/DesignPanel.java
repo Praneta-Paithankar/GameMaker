@@ -21,6 +21,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.awt.FlowLayout;
+import java.awt.Font;
+
 import javax.swing.*;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -29,6 +31,10 @@ import javax.swing.JPanel;
 import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.border.*;
 
 import javax.swing.JLabel;
@@ -49,7 +55,7 @@ import com.dimension.*;
 
 
 @SuppressWarnings("serial")
-public class DesignPanel extends AbstractPanel implements Element, ItemListener, ActionListener {
+public class DesignPanel extends AbstractPanel implements DocumentListener , Element, ItemListener, ActionListener {
 	protected static Logger log = Logger.getLogger(DesignPanel.class);
 	private JLabel score;
 	private MainController driver;
@@ -58,6 +64,7 @@ public class DesignPanel extends AbstractPanel implements Element, ItemListener,
 	private JPanel graphic;
 	private JPanel control;
 	private JPanel cards;
+	private JButton tendToAdd;
 	private ArrayList<Element> elements;
 	final static String CIRCLE = "Circle Shape";
     final static String SQUARE = "Square Shape";
@@ -73,6 +80,7 @@ public class DesignPanel extends AbstractPanel implements Element, ItemListener,
 		
 		control  = new JPanel();
 		control.setBackground(Color.LIGHT_GRAY);
+		control.setLayout(new BoxLayout(control,BoxLayout.Y_AXIS));
 		
 		// Tabbed pane holds the two different interfaces 
 		tabbedPane = new JTabbedPane();
@@ -104,19 +112,66 @@ public class DesignPanel extends AbstractPanel implements Element, ItemListener,
 	public void init() {
 		// This button adds a new combo box to select basic shape of the 		
 		JButton addElementButton = new JButton("Add Element");
+
 		addElementButton.addActionListener(this);
 		addElementButton.setActionCommand("addElement");
 		addElementButton.setVisible(true);
 		addElementButton.setAlignmentX(LEFT_ALIGNMENT);
 		addElementButton.setAlignmentY(CENTER_ALIGNMENT);
-
-	
 		graphic.add(addElementButton);
 		graphic.add(Box.createRigidArea(new Dimension(5,5)));
+		
+		
+		// for control tab
+		JButton addControlElementButton = new JButton("AddControlElement");
+		addControlElementButton.addActionListener(this);
+		addControlElementButton.setActionCommand("AddControlElement");
+		addControlElementButton.setVisible(true);
+		addControlElementButton.setAlignmentX(LEFT_ALIGNMENT);
+		addControlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
+		control.add(addControlElementButton);
+		control.add(Box.createRigidArea(new Dimension(5,5)));
+			
+		JButton controlElementButton = new JButton("Button");
+		controlElementButton.setFont(new Font("Times", Font.PLAIN, 12));
+		controlElementButton.addActionListener(this);
+		controlElementButton.setActionCommand("ElementButton");
+		controlElementButton.setVisible(true);
+		controlElementButton.setAlignmentX(LEFT_ALIGNMENT);
+		controlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
+		control.add(controlElementButton);
+		control.add(Box.createRigidArea(new Dimension(5,5)));
+		
+		JButton controlElementLabel = new JButton("Label");
+		controlElementLabel.setFont(new Font("Times", Font.PLAIN, 12));
+		controlElementLabel.addActionListener(this);
+		controlElementLabel.setActionCommand("ElementLabel");
+		controlElementLabel.setVisible(true);
+		controlElementLabel.setAlignmentX(LEFT_ALIGNMENT);
+		controlElementLabel.setAlignmentY(BOTTOM_ALIGNMENT);
+		control.add(controlElementLabel);
+		control.add(Box.createRigidArea(new Dimension(5,5)));
 	}
 	
 	public ArrayList<Element> getElements(){
 		return elements;
+	}
+	
+	public void controlElementButtonSelect() {
+		tendToAdd = new JButton();
+		JPanel newButtonPanel = new JPanel();
+		JLabel buttonNameLable = new JLabel("Button Name : ");
+		JTextField buttonName = new JTextField("", 15);
+		buttonName.getDocument().addDocumentListener(this);
+		JLabel buttonHeightLable = new JLabel("Button Height : ");
+		JTextField buttonHeight = new JTextField("", 15);
+		newButtonPanel.add(buttonNameLable);
+		newButtonPanel.add(buttonName);
+		newButtonPanel.add(buttonHeightLable);
+		newButtonPanel.add(buttonHeight);
+		control.add(newButtonPanel);
+		preview.add(tendToAdd);
+		this.validate();
 	}
 	
 	public void addElementSelect() {
@@ -164,7 +219,7 @@ public class DesignPanel extends AbstractPanel implements Element, ItemListener,
 	    CardLayout cl = (CardLayout)(cards.getLayout());
 	    cl.show(cards, (String)evt.getItem());
 	    if(evt.getItem() == CIRCLE) {
-	    	elements.add(new GameElement(new Dimensions(50,50), new Coordinate(30,30), new Coordinate(30,30)));
+	    	elements.add(new GameElement(new Dimensions(50,50), new Coordinate(30,30), new Coordinate(30,30), "a name"));
 	    	System.out.println(elements);
 	    }
 	    this.revalidate();
@@ -311,6 +366,41 @@ public class DesignPanel extends AbstractPanel implements Element, ItemListener,
 		if (e.getActionCommand().equals("addElement")) {
 			this.addElementSelect();
 		}
+		if (e.getActionCommand().equals("ElementButton")) {
+			this.controlElementButtonSelect();
+		}
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		//System.out.println("changed");
+	}
+	
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+		System.out.println("e");
+		Document d = e.getDocument();
+		try {
+			tendToAdd.setText(d.getText(0, d.getLength()));
+			tendToAdd.setName(d.getText(0, d.getLength()));
+		} catch (BadLocationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		this.validate();
+	}
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+		System.out.println("s");
+		Document d = e.getDocument();
+		try {
+			tendToAdd.setText(d.getText(0, d.getLength()));
+			tendToAdd.setName(d.getText(0, d.getLength()));
+		} catch (BadLocationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		this.validate();
 	}
 	
 }
