@@ -14,13 +14,11 @@ import com.ui.GUI;
 public class DesignController {
 	
 	private List<GameElement> graphicsElements;
-	
 	private GUI mainJframe;
 	private List<GameElement> timerElements;
 	private HashMap<Integer,List<GameElement>> keyboardElements;
 	private HashMap <String,ActionType> controlElements;
 	private List<Collider> colliders;
-	private  boolean isClock ;
 	private Clock clock;
 	
 	public DesignController(GUI gui) {
@@ -75,6 +73,22 @@ public class DesignController {
 
 	public void setClock(Clock clock) {
 		this.clock = clock;
+	}
+
+	public HashMap <String,ActionType> getControlElements() {
+		return controlElements;
+	}
+
+	public void setControlElements(HashMap <String,ActionType> controlElements) {
+		this.controlElements = controlElements;
+	}
+
+	public List<Collider> getColliders() {
+		return colliders;
+	}
+
+	public void setColliders(List<Collider> colliders) {
+		this.colliders = colliders;
 	}
 	
 	

@@ -10,11 +10,16 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.commands.ChangeVelXCommand;
+import com.commands.ChangeVelYCommand;
 import com.commands.MoveCommand;
 import com.commands.NullCommand;
 import com.commands.TimerCommand;
 import com.components.GameElement;
+import com.helper.Collider;
+import com.helper.CollisionChecker;
 import com.infrastruture.Command;
+import com.infrastruture.Direction;
 import com.infrastruture.Observer;
 import com.timer.GameTimer;
 import com.ui.GUI;
@@ -26,13 +31,14 @@ public class MainController implements Observer, KeyListener, ActionListener{
     private boolean isGamePaused;
     private Deque<Command> commandQueue;
 	private DesignController designController;
-	private GameController gameController;
+	private CollisionChecker collisionChecker ;
 	
-	public MainController(GUI gui,GameTimer observable,DesignController designController,GameController gameController) { 
+	public MainController(GUI gui,GameTimer observable,DesignController designController, CollisionChecker collisionChecker) { 
 		this.gui = gui;
 		this.observable = observable;
-		this.gameController = gameController;
+
 		this.designController = designController;
+		this.collisionChecker = collisionChecker;
 		isGamePaused = false;
 		commandQueue = new ArrayDeque<Command>();
     }
@@ -67,13 +73,30 @@ public class MainController implements Observer, KeyListener, ActionListener{
 	@Override
 	public void update() {
 		TimerCommand timerCommand = new TimerCommand(designController.getClock());
+		timerCommand.execute();
+		addCommand(timerCommand);
+		for(GameElement element : designController.getElements()) {
+			Direction direction = collisionChecker.checkCollisionBetweenGameElementAndBounds(element);
+			if(direction == direction.X) {
+				Command command = new ChangeVelXCommand(element);
+				command.execute();
+				addCommand(command);
+			}
+			else if(direction == direction.X) {
+				 Command command = new ChangeVelYCommand(element);
+				 command.execute();
+				 addCommand(command);
+			}
+		}
+		for(Collider collider: designController.getColliders()) {
+			collider.execute(this);
+		}
 		List<GameElement> graphicsElements = designController.getTimerElements();
 		for(GameElement element: graphicsElements) {
 			Command command = createCommand(element);
 			command.execute();
 			addCommand(command);
 		}
-		
 	}	
 	
 	public Command createCommand(GameElement element) {

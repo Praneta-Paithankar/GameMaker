@@ -21,6 +21,7 @@ import com.dimension.Circle;
 import com.dimension.Coordinate;
 import com.dimension.Dimensions;
 import com.dimension.Rectangle;
+import com.helper.CollisionChecker;
 //import com.helper.CollisionChecker;
 import com.infrastruture.*;
 import com.strategy.DrawOvalColor;
@@ -69,7 +70,7 @@ public class GameMaker {
 		// ! Not sure where this logic will end up
 		//CollisionChecker checker = new CollisionChecker();
 		
-		MainController driver = new MainController(gui,observable,null,null); // maybe keep this checker);
+		MainController driver = new MainController(gui,observable,null,new CollisionChecker()); // maybe keep this checker);
 		
 		gui.addDriver(driver);
 		observable.startTimer();
