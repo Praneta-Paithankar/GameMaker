@@ -15,6 +15,7 @@ import com.commands.ChangeVelYCommand;
 import com.commands.MoveCommand;
 import com.commands.NullCommand;
 import com.commands.TimerCommand;
+import com.components.Clock;
 import com.components.GameElement;
 import com.helper.Collider;
 import com.helper.CollisionChecker;
@@ -72,6 +73,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 
 	@Override
 	public void update() {
+		Clock clock = designController.getClock();
 		TimerCommand timerCommand = new TimerCommand(designController.getClock());
 		timerCommand.execute();
 		addCommand(timerCommand);
@@ -82,7 +84,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				command.execute();
 				addCommand(command);
 			}
-			else if(direction == direction.X) {
+			else if(direction == direction.Y) {
 				 Command command = new ChangeVelYCommand(element);
 				 command.execute();
 				 addCommand(command);

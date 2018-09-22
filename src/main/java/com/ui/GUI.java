@@ -214,7 +214,13 @@ public class GUI extends JFrame implements Element{
 		}
 	}
 	
+	public ControlPanel getControlPanel() {
+		return controlPanel;
+	}
 
+	public void setControlPanel(ControlPanel controlPanel) {
+		this.controlPanel = controlPanel;
+	}
 
 		
 }
