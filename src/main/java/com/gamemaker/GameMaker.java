@@ -69,19 +69,16 @@ public class GameMaker {
 		
 		// ! Not sure where this logic will end up
 		//CollisionChecker checker = new CollisionChecker();
+		DesignController controller = new DesignController(gui);
 		
-		MainController driver = new MainController(gui,observable,new DesignController(gui),new CollisionChecker()); // maybe keep this checker);
-		
+		MainController driver = new MainController(gui,observable,controller,new CollisionChecker()); // maybe keep this checker);
+		controller.setMainController(driver);
 		gui.addDriver(driver);
 		observable.startTimer();
 		gui.setVisible(true);
-
 		gui.draw(null);
 		gui.pack();
-		if(isRestart)
-			observable.registerObserver(driver);
-		else
-			driver.pause();
+
 	}
 	public static void main(String args[]) {
 		PropertyConfigurator.configure("log4j.properties");

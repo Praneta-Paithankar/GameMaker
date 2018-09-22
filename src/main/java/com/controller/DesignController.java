@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.JComponent;
+
 import com.components.Clock;
 import com.components.GameElement;
 import com.helper.Collider;
@@ -21,6 +23,7 @@ public class DesignController {
 	private HashMap <String,ActionType> controlElements;
 	private List<Collider> colliders;
 	private Clock clock;
+	private MainController mainController;
 	
 	public DesignController(GUI gui) {
 		mainJframe = gui;
@@ -34,12 +37,16 @@ public class DesignController {
 	public List<GameElement> getKeyboardElementsBasedKeys(int key)
 	{
 		if(keyboardElements.containsKey(key)) {
-			List<GameElement> elements = keyboardElements.get(key);
-			return elements;
+			return keyboardElements.get(key);
 		}
 		return null;
 	}
-	
+	public ActionType getActionTypeBasedOnButtonCommand(String key) {
+		if(controlElements.containsKey(key)) {
+			return controlElements.get(key);
+		}
+		return null;
+	}
 	public void addGameElement() {
 		
 		// gui.getData();
@@ -51,14 +58,15 @@ public class DesignController {
 	
 	public void addControlElement() {
 		
-		CustomButton button = mainJframe.getDesignPanel().getButton();
-	    controlElements.put(button.getActionCommand(), button.getActionType());
-	    mainJframe.getControlPanel().addComponent(button);
-	    mainJframe.getControlPanel().add(button);
-	    //		controlElements.put(button.getActionCommand(),button.getActionType());
-		// gui.getData();
-		// add element into elements
-		// add elements into controlPanel with actions
+		JComponent component = mainJframe.getDesignPanel().getControlElement();
+		if(component instanceof CustomButton) {
+			  CustomButton received = (CustomButton) component;
+			  CustomButton button = new CustomButton(received.getText(),received.getText(),received.getWidth(),received.getHeight(),mainController);
+			  button.setActionType(received.getActionType());
+			  controlElements.put(button.getActionCommand(), button.getActionType());
+			  mainJframe.getControlPanel().addComponent(button);
+			  mainJframe.getControlPanel().add(button);
+		}
 	    mainJframe.getControlPanel().revalidate();
 	}
 
@@ -107,6 +115,14 @@ public class DesignController {
 
 	public void setKeyboardElements(HashMap<Integer, List<GameElement>> keyboardElements) {
 		this.keyboardElements = keyboardElements;
+	}
+
+	public MainController getMainController() {
+		return mainController;
+	}
+
+	public void setMainController(MainController mainController) {
+		this.mainController = mainController;
 	}
 	
 }

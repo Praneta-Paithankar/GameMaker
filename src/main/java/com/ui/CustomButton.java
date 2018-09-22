@@ -44,8 +44,6 @@ public class CustomButton extends JButton implements Element,Serializable{
 	
 	@Override
 	public void draw(Graphics g) {
-		System.out.println(getHeight());
-		System.out.println(getWidth());
 		setVisible(true);
 		
 	}

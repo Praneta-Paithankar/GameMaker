@@ -48,7 +48,7 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	{
 		this.driver = driver;
 		
-	    createReplay();
+//	    createReplay();
 //	    createUndo();
 //	    createStart();
 //	    createPause();
@@ -58,11 +58,11 @@ public class ControlPanel  extends AbstractPanel implements Element {
 //	    createLayout();
 	}
 	
-	public void createReplay() {
-		CustomButton replayButton = new CustomButton("Replay", "replay", 50,50,driver);
-		this.add(replayButton);
-
-	}
+//	public void createReplay() {
+//		CustomButton replayButton = new CustomButton("Replay", "replay", 50,50,driver);
+//		this.add(replayButton);
+//
+//	}
 //	
 //	public void createUndo() {
 //		ControlPanelButton undoButton = new ControlPanelButton("Undo", "undo", driver);

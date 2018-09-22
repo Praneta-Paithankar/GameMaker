@@ -66,6 +66,25 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		if(commandText.equals("AddControlElement")) {
 			designController.addControlElement();
 		}
+		ActionType actionType = designController.getActionTypeBasedOnButtonCommand(commandText);
+		if(actionType != null) {
+			if(actionType == ActionType.PLAY) {
+				start();
+			}else if(actionType == ActionType.PAUSE) {
+				pause();
+			}else if(actionType == ActionType.REPLAY) {
+				replay();
+			}else if(actionType == ActionType.SAVE) {
+				save();
+			}else if(actionType == ActionType.LOAD) {
+				load();
+			}else if(actionType == ActionType.UNDO) {
+				undo();
+			}else if (actionType == ActionType.RESET) {
+				gameReset();
+			}
+			
+		}
 	}
 
 	@Override
