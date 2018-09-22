@@ -120,15 +120,16 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	
 	
 	public void init() {
-		// This button adds a new combo box to select basic shape of the 		
-		JButton addElementButton = new JButton("Add Element");
+		// This button adds a new combo box to select basic shape of the 	
+		//for graphic tab
+		JButton addGraphicElementButton = new JButton("Add Element");
 
-		addElementButton.addActionListener(driver);
-		addElementButton.setActionCommand("addControlElement");
-		addElementButton.setVisible(true);
-		addElementButton.setAlignmentX(LEFT_ALIGNMENT);
-		addElementButton.setAlignmentY(CENTER_ALIGNMENT);
-		graphic.add(addElementButton);
+		addGraphicElementButton.addActionListener(this);
+		addGraphicElementButton.setActionCommand("addControlElement");
+		addGraphicElementButton.setVisible(true);
+		addGraphicElementButton.setAlignmentX(LEFT_ALIGNMENT);
+		addGraphicElementButton.setAlignmentY(CENTER_ALIGNMENT);
+		graphic.add(addGraphicElementButton);
 		graphic.add(Box.createRigidArea(new Dimension(5,5)));
 		
 		
@@ -144,16 +145,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		controlElementPanel.setLayout(new BoxLayout(controlElementPanel,BoxLayout.Y_AXIS));
 		
 		
-		// for control tab
-		JButton addControlElementButton = new JButton("AddControlElement");
-		addControlElementButton.addActionListener(this);
-		addControlElementButton.setActionCommand("AddControlElement");
-		addControlElementButton.setVisible(true);
-		addControlElementButton.setAlignmentX(LEFT_ALIGNMENT);
-		addControlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
-		controlElementPanel.add(addControlElementButton);
-		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
-			
+		// for control tab			
 		JButton controlElementButton = new JButton("Button");
 		controlElementButton.setFont(new Font("Times", Font.PLAIN, 12));
 		controlElementButton.addActionListener(this);
@@ -259,6 +251,15 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	public void createButtons(MainController driver)
 	{
 		this.driver = driver;
+		//get driver , add buttons for adding control element
+		JButton addControlElementButton = new JButton("AddControlElement");
+		addControlElementButton.addActionListener(driver);
+		addControlElementButton.setActionCommand("AddControlElement");
+		addControlElementButton.setVisible(true);
+		addControlElementButton.setAlignmentX(LEFT_ALIGNMENT);
+		addControlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
+		controlElementPanel.add(addControlElementButton);
+		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
 //	    createReplay();
 //	    createUndo();
 //	    createStart();
@@ -472,18 +473,25 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		            System.out.println(" is not a valid integer number"); 
 		        } 
 
-				Dimension dim = tendToAddButton.getPreferredSize();
 				tendToAddButton.setPreferredSize(new Dimension( (int)tendToAddButton.getPreferredSize().getWidth() , height));
 				tendToAddButton.revalidate();
 		}
 		if(owner.getName().equals("buttonWidthField")) {
-			int width;
-			if(content.equals("")) {
-				width = 0;
-			}
-			else{
-				width = Integer.parseInt(content);
-			}
+			int width = 0;
+	        try 
+	        { 
+	            // checking valid integer using parseInt() method 
+				if(content.equals("")) {
+					width = 0;
+				}
+				else{
+					width = Integer.parseInt(content);
+				} 
+	        }  
+	        catch (NumberFormatException notNumE)  
+	        { 
+	            System.out.println(" is not a valid integer number"); 
+	        } 
 			tendToAddButton.setPreferredSize(new Dimension(width , (int)tendToAddButton.getPreferredSize().getHeight()));
 			tendToAddButton.revalidate();
 		}

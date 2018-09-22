@@ -68,6 +68,7 @@ public class GUI extends JFrame implements Element{
 		this.mainController = mainController;
 		mainPanel.addKeyListener(mainController);
         controlPanel.createButtons(mainController);
+        designPanel.createButtons(mainController);
 	}
 
 	public void changeFocus()
@@ -214,7 +215,14 @@ public class GUI extends JFrame implements Element{
 		}
 	}
 	
+	public DesignPanel getDesignPanel() {
+		return designPanel;
+	}
 
+
+	public void setDesignPanel(DesignPanel designPanel) {
+		this.designPanel = designPanel;
+	}
 
 		
 }

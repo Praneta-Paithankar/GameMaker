@@ -63,6 +63,9 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			designController.addGameElement();
 			designController.addControlElement();
 		}
+		if(commandText.equals("AddControlElement")) {
+			designController.addControlElement();
+		}
 	}
 
 	@Override
