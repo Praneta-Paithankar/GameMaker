@@ -234,9 +234,6 @@ public class GUI extends JFrame implements Element{
 		this.controlPanel = controlPanel;
 	}
 
-	public void setControlPanel(ControlPanel controlPanel) {
-		this.controlPanel = controlPanel;
-	}
 
 	public void setGamePanel(GamePanel gamePanel) {
 		this.gamePanel = gamePanel;

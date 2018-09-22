@@ -105,15 +105,6 @@ public class ControlPanel  extends AbstractPanel implements Element {
 		}
 	}
 
-	@Override
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		for(Element element : elementList)
-		{
-			element.draw(g);
-		}
-	}
-
 	
 
 	@Override
