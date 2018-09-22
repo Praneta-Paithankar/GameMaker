@@ -33,11 +33,11 @@ public class GameElement implements Element,Serializable{
 	private int velY;
 	private MoveType moveType;
 
-	public GameElement(Dimensions dimension, Coordinate coordinate, Coordinate startingPosition, String name) {
+	public GameElement(Dimensions dimension, Coordinate coordinate, String name, MoveType moveType) {
 		this.dimension = dimension;
 		this.coordinate = coordinate;
-		this.startingPosition = startingPosition;
 		this.color = Color.BLACK;
+		this.moveType = moveType;
 		this.name = name;
 	}
 	
