@@ -95,15 +95,7 @@ public class ControlPanel  extends AbstractPanel implements Element {
 //		ControlPanelButton layoutButton = new ControlPanelButton("Save", "save", driver);
 //		this.add(layoutButton);
 //	}
-	
-	@Override
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		for(Element element : elementList)
-		{
-			element.draw(g);
-		}
-	}
+
 
 	@Override
 	public void paintComponent(Graphics g){
@@ -112,9 +104,7 @@ public class ControlPanel  extends AbstractPanel implements Element {
 		{
 			element.draw(g);
 		}
-	}
-
-	
+	}	
 
 	@Override
 	public void draw(Graphics g) {

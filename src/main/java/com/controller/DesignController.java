@@ -19,6 +19,7 @@ import com.infrastruture.Element;
 import com.infrastruture.MoveType;
 import com.strategy.DrawOvalColor;
 import com.strategy.DrawRectangularColorShape;
+import com.ui.CustomButton;
 import com.ui.GUI;
 import com.ui.GamePanel;
 
