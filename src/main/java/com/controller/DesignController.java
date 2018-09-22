@@ -36,9 +36,9 @@ public class DesignController {
 		mainJframe = gui;
 		graphicsElements = new ArrayList<>();
 		timerElements  = new ArrayList<>();
-		colliders = new ArrayList<>();
 		keyboardElements = new HashMap<>();
 		controlElements = new HashMap<>();
+		colliders = new ArrayList<>();
 	}
 	
 	public List<GameElement> getKeyboardElementsBasedKeys(int key)
@@ -113,12 +113,18 @@ public class DesignController {
 		// update timer Elements or KeyboardElements
 	}
 	
-	public List<GameElement> getElements() {
-		return graphicsElements;
-	}
-
-	public void setElements(List<GameElement> elements) {
-		this.graphicsElements = elements;
+	
+	public void addControlElement() {
+		
+		CustomButton button = mainJframe.getDesignPanel().getButton();
+	    controlElements.put(button.getActionCommand(), button.getActionType());
+	    mainJframe.getControlPanel().addComponent(button);
+	    mainJframe.getControlPanel().add(button);
+	    //		controlElements.put(button.getActionCommand(),button.getActionType());
+		// gui.getData();
+		// add element into elements
+		// add elements into controlPanel with actions
+	    mainJframe.getControlPanel().revalidate();
 	}
 
 	public List<GameElement> getTimerElements() {
@@ -127,13 +133,6 @@ public class DesignController {
 
 	public void setTimerElements(List<GameElement> timerElements) {
 		this.timerElements = timerElements;
-	}
-
-	public void addControlElement() {
-		
-		// gui.getData();
-		// add element into elements
-		// add elements into controlPanel with actions
 	}
 
 	public Clock getClock() {
@@ -159,6 +158,20 @@ public class DesignController {
 	public void setColliders(List<Collider> colliders) {
 		this.colliders = colliders;
 	}
-	
+	public List<GameElement> getGraphicsElements() {
+		return graphicsElements;
+	}
+
+	public void setGraphicsElements(List<GameElement> graphicsElements) {
+		this.graphicsElements = graphicsElements;
+	}
+
+	public HashMap<Integer, List<GameElement>> getKeyboardElements() {
+		return keyboardElements;
+	}
+
+	public void setKeyboardElements(HashMap<Integer, List<GameElement>> keyboardElements) {
+		this.keyboardElements = keyboardElements;
+	}
 	
 }

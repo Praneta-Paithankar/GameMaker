@@ -27,6 +27,7 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	public ControlPanel() {
 		this.elementList = new ArrayList<>();
 		setBorder("ControlPanel");
+		elementList = new ArrayList<>();
 		setLayoutBehavior(new FlowLayoutBehavior());
 		performUpdateLayout(this, Constants.CONTROL_PANEL_WIDTH,Constants.CONTROL_PANEL_HEIGHT);
 	}
@@ -47,8 +48,8 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	public void createButtons(MainController driver)
 	{
 		this.driver = driver;
-		elementList = new ArrayList<>();
-//	    createReplay();
+		
+	    createReplay();
 //	    createUndo();
 //	    createStart();
 //	    createPause();
@@ -58,11 +59,11 @@ public class ControlPanel  extends AbstractPanel implements Element {
 //	    createLayout();
 	}
 	
-//	public void createReplay() {
-//		ControlPanelButton replayButton = new ControlPanelButton("Replay", "replay", driver);
-//		this.add(replayButton);
-//
-//	}
+	public void createReplay() {
+		CustomButton replayButton = new CustomButton("Replay", "replay", 50,50,driver);
+		this.add(replayButton);
+
+	}
 //	
 //	public void createUndo() {
 //		ControlPanelButton undoButton = new ControlPanelButton("Undo", "undo", driver);
@@ -105,31 +106,41 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	}
 
 	@Override
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		for(Element element : elementList)
+		{
+			element.draw(g);
+		}
+	}
+
+	
+
+	@Override
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
 		repaint();
 	}
 
-	@Override
 	public void addComponent(Element e) {
 		elementList.add(e);
 	}
 
 	@Override
 	public void removeComponent(Element e) {
-		elementList.add(e);
+		elementList.remove(e);
 	}
 
 	@Override
 	public void save(ObjectOutputStream op) {
-		// TODO Auto-generated method stub
 		for (Element element : elementList) {
 			element.save(op);
 		}
 	}
-
 	@Override
 	public Element load(ObjectInputStream ip) {
+		for (Element element : elementList) {
+			element.load(ip);
+		}
 		ArrayList<Element> loadComponents = new ArrayList<>();
 		for (Element element : elementList) {
 			loadComponents.add(element.load(ip));
