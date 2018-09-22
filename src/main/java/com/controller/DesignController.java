@@ -89,13 +89,13 @@ public class DesignController {
 		keyboardElements.put(KeyEvent.VK_LEFT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
 		keyboardElements.put(KeyEvent.VK_RIGHT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
 		
-		controlElements.put("START", ActionType.START);
-		controlElements.put("PAUSE", ActionType.PAUSE);
-		controlElements.put("UNDO", ActionType.UNDO);
-		controlElements.put("SAVE", ActionType.SAVE);
-		controlElements.put("LOAD", ActionType.LOAD);
-		controlElements.put("REPLAY", ActionType.REPLAY);
-		controlElements.put("CHANGELAYOUT", ActionType.CHANGELAYOUT);
+//		controlElements.put("START", ActionType.START);
+//		controlElements.put("PAUSE", ActionType.PAUSE);
+//		controlElements.put("UNDO", ActionType.UNDO);
+//		controlElements.put("SAVE", ActionType.SAVE);
+//		controlElements.put("LOAD", ActionType.LOAD);
+//		controlElements.put("REPLAY", ActionType.REPLAY);
+//		controlElements.put("CHANGELAYOUT", ActionType.CHANGELAYOUT);
 		
 		CollisionChecker collisionChecker = new CollisionChecker();
 		Collider ballPaddle = new Collider(elementBall, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker);
