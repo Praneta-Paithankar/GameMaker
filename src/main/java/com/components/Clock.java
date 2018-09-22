@@ -40,7 +40,7 @@ public class Clock implements Element, Serializable{
 				
 		g.setFont(new Font("Arial", Font.BOLD, 40));
 		String time = getTime();
-		g.drawString(time, position.getX(), position.getY());
+		g.drawString(time, 10, 10);
 	}
 
 	@Override
