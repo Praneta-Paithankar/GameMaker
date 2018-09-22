@@ -109,6 +109,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 
 	@Override
 	public void update() {
+		Clock clock = designController.getClock();
 		TimerCommand timerCommand = new TimerCommand(designController.getClock());
 		timerCommand.execute();
 		addCommand(timerCommand);

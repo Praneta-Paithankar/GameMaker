@@ -25,6 +25,7 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	private ArrayList<Element> elementList;
 	
 	public ControlPanel() {
+		this.elementList = new ArrayList<>();
 		setBorder("ControlPanel");
 		elementList = new ArrayList<>();
 		setLayoutBehavior(new FlowLayoutBehavior());
@@ -94,6 +95,16 @@ public class ControlPanel  extends AbstractPanel implements Element {
 //		ControlPanelButton layoutButton = new ControlPanelButton("Save", "save", driver);
 //		this.add(layoutButton);
 //	}
+	
+	@Override
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		for(Element element : elementList)
+		{
+			element.draw(g);
+		}
+	}
+
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
@@ -124,13 +135,18 @@ public class ControlPanel  extends AbstractPanel implements Element {
 		for (Element element : elementList) {
 			element.save(op);
 		}
-		
 	}
 	@Override
 	public Element load(ObjectInputStream ip) {
 		for (Element element : elementList) {
 			element.load(ip);
 		}
+		ArrayList<Element> loadComponents = new ArrayList<>();
+		for (Element element : elementList) {
+			loadComponents.add(element.load(ip));
+		}
+		elementList.clear();
+		elementList.addAll(loadComponents);
 		return null;
 	}
 
