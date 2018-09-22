@@ -157,7 +157,11 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		return elements;
 	}
 	
-	public void controlElementButtonSelect() {
+	public void controlElementButtonSelect() {  
+		/* 1 can't set tendToAdd as JComponent , no settext 
+		 * 2 pass new elemnt to control panle 
+		 * 3 clear new panel , clear preview window ...... 
+		 */
 		tendToAdd = new JButton();
 		JPanel newButtonPanel = new JPanel();
 		JLabel buttonNameLable = new JLabel("Button Name : ");
