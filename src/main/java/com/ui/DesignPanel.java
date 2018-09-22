@@ -67,12 +67,17 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JPanel graphic;
 	private JPanel control;
 	private JPanel cards;
-	private ButtonFile tendToAddButton;
-	private JLabel tendToAddLabel; 
 	private ArrayList<Element> elements;
 	private String [] actionType = ActionType.getActionTypes();
 	final static String CIRCLE = "Circle Shape";
     final static String SQUARE = "Square Shape";
+    
+    //control tag var
+	private ButtonFile tendToAddButton;
+	private JLabel tendToAddLabel;
+	private JPanel buttonBuildPanel;
+	private JPanel controlElementPanel;
+	
 	
 	public DesignPanel() {
 		setBorder("Design Center"); // Method call for setting the border
@@ -115,28 +120,32 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	
 	
 	public void init() {
-		// This button adds a new combo box to select basic shape of the 		
-		JButton addElementButton = new JButton("Add Element");
+		// This button adds a new combo box to select basic shape of the 	
+		//for graphic tab
+		JButton addGraphicElementButton = new JButton("Add Element");
 
-		addElementButton.addActionListener(this);
-		addElementButton.setActionCommand("addElement");
-		addElementButton.setVisible(true);
-		addElementButton.setAlignmentX(LEFT_ALIGNMENT);
-		addElementButton.setAlignmentY(CENTER_ALIGNMENT);
-		graphic.add(addElementButton);
+		addGraphicElementButton.addActionListener(this);
+		addGraphicElementButton.setActionCommand("addControlElement");
+		addGraphicElementButton.setVisible(true);
+		addGraphicElementButton.setAlignmentX(LEFT_ALIGNMENT);
+		addGraphicElementButton.setAlignmentY(CENTER_ALIGNMENT);
+		graphic.add(addGraphicElementButton);
 		graphic.add(Box.createRigidArea(new Dimension(5,5)));
 		
 		
-		// for control tab
-		JButton addControlElementButton = new JButton("AddControlElement");
-		addControlElementButton.addActionListener(this);
-		addControlElementButton.setActionCommand("AddControlElement");
-		addControlElementButton.setVisible(true);
-		addControlElementButton.setAlignmentX(LEFT_ALIGNMENT);
-		addControlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
-		control.add(addControlElementButton);
-		control.add(Box.createRigidArea(new Dimension(5,5)));
-			
+		//control variable
+		tendToAddButton = new ButtonFile();
+		
+		buttonBuildPanel = new JPanel();
+		buttonBuildPanel.setAlignmentX(LEFT_ALIGNMENT);
+		
+		controlElementPanel = new JPanel();
+		controlElementPanel.setAlignmentX(LEFT_ALIGNMENT);
+		controlElementPanel.setBackground(Color.LIGHT_GRAY);
+		controlElementPanel.setLayout(new BoxLayout(controlElementPanel,BoxLayout.Y_AXIS));
+		
+		
+		// for control tab			
 		JButton controlElementButton = new JButton("Button");
 		controlElementButton.setFont(new Font("Times", Font.PLAIN, 12));
 		controlElementButton.addActionListener(this);
@@ -144,8 +153,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		controlElementButton.setVisible(true);
 		controlElementButton.setAlignmentX(LEFT_ALIGNMENT);
 		controlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
-		control.add(controlElementButton);
-		control.add(Box.createRigidArea(new Dimension(5,5)));
+		controlElementPanel.add(controlElementButton);
+		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
 		
 		JButton controlElementLabel = new JButton("Label");
 		controlElementLabel.setFont(new Font("Times", Font.PLAIN, 12));
@@ -154,8 +163,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		controlElementLabel.setVisible(true);
 		controlElementLabel.setAlignmentX(LEFT_ALIGNMENT);
 		controlElementLabel.setAlignmentY(BOTTOM_ALIGNMENT);
-		control.add(controlElementLabel);
-		control.add(Box.createRigidArea(new Dimension(5,5)));
+		controlElementPanel.add(controlElementLabel);
+		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
+		
+		control.add(controlElementPanel);
 	}
 	
 	public ArrayList<Element> getElements(){
@@ -163,15 +174,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	}
 	
 	public void controlElementButtonSelect() {  
-		/* 1 can't set tendToAdd as JComponent , no settext 
-		 * 2 pass new elemnt to control panle 
-		 * 3 clear new panel , clear preview window ...... 
-		 */
 		preview.removeAll();
-		
-		tendToAddButton = new ButtonFile();
-		JPanel newButtonPanel = new JPanel();
-		
+		refresh(preview);
+		control.remove(buttonBuildPanel);
+		buttonBuildPanel.removeAll();
 		
 		JLabel buttonNameLable = new JLabel("Button Name : ");
 		JTextField buttonName = new JTextField("", 15);
@@ -198,18 +204,16 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		boxAction.addActionListener(this);
 
 		
-		
-		
-		
-		newButtonPanel.add(buttonNameLable);
-		newButtonPanel.add(buttonName);
-		newButtonPanel.add(buttonHeightLable);
-		newButtonPanel.add(buttonHeight);
-		newButtonPanel.add(buttonWidthLable);
-		newButtonPanel.add(buttonWidth);
-		newButtonPanel.add(buttonActionLable);
-		newButtonPanel.add(boxAction);
-		control.add(newButtonPanel);
+		buttonBuildPanel.add(buttonNameLable);
+		buttonBuildPanel.add(buttonName);
+		buttonBuildPanel.add(buttonHeightLable);
+		buttonBuildPanel.add(buttonHeight);
+		buttonBuildPanel.add(buttonWidthLable);
+		buttonBuildPanel.add(buttonWidth);
+		buttonBuildPanel.add(buttonActionLable);
+		buttonBuildPanel.add(boxAction);
+		control.add(buttonBuildPanel);
+		tendToAddButton.setAlignmentY(CENTER_ALIGNMENT);
 		preview.add(tendToAddButton);
 		this.validate();
 	}
@@ -247,6 +251,15 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	public void createButtons(MainController driver)
 	{
 		this.driver = driver;
+		//get driver , add buttons for adding control element
+		JButton addControlElementButton = new JButton("AddControlElement");
+		addControlElementButton.addActionListener(driver);
+		addControlElementButton.setActionCommand("AddControlElement");
+		addControlElementButton.setVisible(true);
+		addControlElementButton.setAlignmentX(LEFT_ALIGNMENT);
+		addControlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
+		controlElementPanel.add(addControlElementButton);
+		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
 //	    createReplay();
 //	    createUndo();
 //	    createStart();
@@ -412,7 +425,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		if(e.getActionCommand().equals("boxActionChanged")) {
 			JComboBox boxAction = (JComboBox)e.getSource();
 			tendToAddButton.setActionType(ActionType.valueOf(boxAction.getSelectedItem().toString()));
-			System.out.println(tendToAddButton.getActionType().toString());
+			//System.out.println(tendToAddButton.getActionType().toString());
 		}
 	}
 
@@ -444,16 +457,50 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 				tendToAddButton.setText(content);
 		}
 		if(owner.getName().equals("buttonHeightField")) {
-				int height = Integer.parseInt(content);
-				Dimension dim = tendToAddButton.getPreferredSize();
+				int height = 0;
+		        try 
+		        { 
+		            // checking valid integer using parseInt() method 
+					if(content.equals("")) {
+						height = 0;
+					}
+					else{
+						height = Integer.parseInt(content);
+					} 
+		        }  
+		        catch (NumberFormatException notNumE)  
+		        { 
+		            System.out.println(" is not a valid integer number"); 
+		        } 
+
 				tendToAddButton.setPreferredSize(new Dimension( (int)tendToAddButton.getPreferredSize().getWidth() , height));
 				tendToAddButton.revalidate();
 		}
 		if(owner.getName().equals("buttonWidthField")) {
-			int width = Integer.parseInt(content);
+			int width = 0;
+	        try 
+	        { 
+	            // checking valid integer using parseInt() method 
+				if(content.equals("")) {
+					width = 0;
+				}
+				else{
+					width = Integer.parseInt(content);
+				} 
+	        }  
+	        catch (NumberFormatException notNumE)  
+	        { 
+	            System.out.println(" is not a valid integer number"); 
+	        } 
 			tendToAddButton.setPreferredSize(new Dimension(width , (int)tendToAddButton.getPreferredSize().getHeight()));
 			tendToAddButton.revalidate();
 		}
 		this.validate();
+	}
+	
+	public void refresh(JComponent j) {
+		j.revalidate();
+		j.repaint();
+		
 	}
 }
