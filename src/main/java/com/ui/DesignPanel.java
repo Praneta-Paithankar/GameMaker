@@ -8,6 +8,9 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Color;
 import com.dimension.*;
+import com.helper.ActionType;
+import com.helper.ButtonFile;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -21,6 +24,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.awt.FlowLayout;
+import java.awt.Font;
+
 import javax.swing.*;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -29,6 +34,10 @@ import javax.swing.JPanel;
 import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.border.*;
 
 import javax.swing.JLabel;
@@ -49,7 +58,7 @@ import com.dimension.*;
 
 
 @SuppressWarnings("serial")
-public class DesignPanel extends AbstractPanel implements Element, ItemListener, ActionListener {
+public class DesignPanel extends AbstractPanel implements DocumentListener , Element, ItemListener, ActionListener {
 	protected static Logger log = Logger.getLogger(DesignPanel.class);
 	private JLabel score;
 	private MainController driver;
@@ -58,7 +67,10 @@ public class DesignPanel extends AbstractPanel implements Element, ItemListener,
 	private JPanel graphic;
 	private JPanel control;
 	private JPanel cards;
+	private ButtonFile tendToAddButton;
+	private JLabel tendToAddLabel; 
 	private ArrayList<Element> elements;
+	private String [] actionType = ActionType.getActionTypes();
 	final static String CIRCLE = "Circle Shape";
     final static String SQUARE = "Square Shape";
 	
@@ -73,6 +85,7 @@ public class DesignPanel extends AbstractPanel implements Element, ItemListener,
 		
 		control  = new JPanel();
 		control.setBackground(Color.LIGHT_GRAY);
+		control.setLayout(new BoxLayout(control,BoxLayout.Y_AXIS));
 		
 		// Tabbed pane holds the two different interfaces 
 		tabbedPane = new JTabbedPane();
@@ -104,19 +117,101 @@ public class DesignPanel extends AbstractPanel implements Element, ItemListener,
 	public void init() {
 		// This button adds a new combo box to select basic shape of the 		
 		JButton addElementButton = new JButton("Add Element");
+
 		addElementButton.addActionListener(this);
 		addElementButton.setActionCommand("addElement");
 		addElementButton.setVisible(true);
 		addElementButton.setAlignmentX(LEFT_ALIGNMENT);
 		addElementButton.setAlignmentY(CENTER_ALIGNMENT);
-
-	
 		graphic.add(addElementButton);
 		graphic.add(Box.createRigidArea(new Dimension(5,5)));
+		
+		
+		// for control tab
+		JButton addControlElementButton = new JButton("AddControlElement");
+		addControlElementButton.addActionListener(this);
+		addControlElementButton.setActionCommand("AddControlElement");
+		addControlElementButton.setVisible(true);
+		addControlElementButton.setAlignmentX(LEFT_ALIGNMENT);
+		addControlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
+		control.add(addControlElementButton);
+		control.add(Box.createRigidArea(new Dimension(5,5)));
+			
+		JButton controlElementButton = new JButton("Button");
+		controlElementButton.setFont(new Font("Times", Font.PLAIN, 12));
+		controlElementButton.addActionListener(this);
+		controlElementButton.setActionCommand("ElementButton");
+		controlElementButton.setVisible(true);
+		controlElementButton.setAlignmentX(LEFT_ALIGNMENT);
+		controlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
+		control.add(controlElementButton);
+		control.add(Box.createRigidArea(new Dimension(5,5)));
+		
+		JButton controlElementLabel = new JButton("Label");
+		controlElementLabel.setFont(new Font("Times", Font.PLAIN, 12));
+		controlElementLabel.addActionListener(this);
+		controlElementLabel.setActionCommand("ElementLabel");
+		controlElementLabel.setVisible(true);
+		controlElementLabel.setAlignmentX(LEFT_ALIGNMENT);
+		controlElementLabel.setAlignmentY(BOTTOM_ALIGNMENT);
+		control.add(controlElementLabel);
+		control.add(Box.createRigidArea(new Dimension(5,5)));
 	}
 	
 	public ArrayList<Element> getElements(){
 		return elements;
+	}
+	
+	public void controlElementButtonSelect() {  
+		/* 1 can't set tendToAdd as JComponent , no settext 
+		 * 2 pass new elemnt to control panle 
+		 * 3 clear new panel , clear preview window ...... 
+		 */
+		preview.removeAll();
+		
+		tendToAddButton = new ButtonFile();
+		JPanel newButtonPanel = new JPanel();
+		
+		
+		JLabel buttonNameLable = new JLabel("Button Name : ");
+		JTextField buttonName = new JTextField("", 15);
+		buttonName.setName("buttonNameField");
+		buttonName.getDocument().addDocumentListener(this);
+		buttonName.getDocument().putProperty("owner", buttonName);
+		
+		JLabel buttonWidthLable = new JLabel("Button Width : ");
+		JTextField buttonWidth = new JTextField("", 15);
+		buttonWidth.setName("buttonWidthField");
+		buttonWidth.getDocument().addDocumentListener(this);
+		buttonWidth.getDocument().putProperty("owner", buttonWidth);
+		
+		JLabel buttonHeightLable = new JLabel("Button Height : ");
+		JTextField buttonHeight = new JTextField("", 15);
+		buttonHeight.setName("buttonHeightField");
+		buttonHeight.getDocument().addDocumentListener(this);
+		buttonHeight.getDocument().putProperty("owner", buttonHeight);
+		
+		JLabel buttonActionLable = new JLabel("Button Action : ");
+		JComboBox boxAction = new JComboBox(this.actionType);
+		boxAction.setName("boxAction");
+		boxAction.setActionCommand("boxActionChanged");
+		boxAction.addActionListener(this);
+
+		
+		
+		
+		
+		newButtonPanel.add(buttonNameLable);
+		newButtonPanel.add(buttonName);
+		newButtonPanel.add(buttonHeightLable);
+		newButtonPanel.add(buttonHeight);
+		newButtonPanel.add(buttonWidthLable);
+		newButtonPanel.add(buttonWidth);
+		newButtonPanel.add(buttonActionLable);
+		newButtonPanel.add(boxAction);
+		control.add(newButtonPanel);
+		preview.add(tendToAddButton);
+		this.validate();
 	}
 	
 	public void addElementSelect() {
@@ -311,6 +406,54 @@ public class DesignPanel extends AbstractPanel implements Element, ItemListener,
 		if (e.getActionCommand().equals("addElement")) {
 			this.addElementSelect();
 		}
+		if (e.getActionCommand().equals("ElementButton")) {
+			this.controlElementButtonSelect();
+		}
+		if(e.getActionCommand().equals("boxActionChanged")) {
+			JComboBox boxAction = (JComboBox)e.getSource();
+			tendToAddButton.setActionType(ActionType.valueOf(boxAction.getSelectedItem().toString()));
+			System.out.println(tendToAddButton.getActionType().toString());
+		}
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		//System.out.println("changed");
 	}
 	
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+		documentExeute(e);
+	}
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+		documentExeute(e);
+	}
+	
+	public void documentExeute(DocumentEvent e) {
+		JComponent owner = (JComponent)e.getDocument().getProperty("owner");
+		Document d = e.getDocument();
+		String content = "";
+		try {
+			content = d.getText(0, d.getLength());
+		} catch (BadLocationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if(owner.getName().equals("buttonNameField")) {
+				tendToAddButton.setText(content);
+		}
+		if(owner.getName().equals("buttonHeightField")) {
+				int height = Integer.parseInt(content);
+				Dimension dim = tendToAddButton.getPreferredSize();
+				tendToAddButton.setPreferredSize(new Dimension( (int)tendToAddButton.getPreferredSize().getWidth() , height));
+				tendToAddButton.revalidate();
+		}
+		if(owner.getName().equals("buttonWidthField")) {
+			int width = Integer.parseInt(content);
+			tendToAddButton.setPreferredSize(new Dimension(width , (int)tendToAddButton.getPreferredSize().getHeight()));
+			tendToAddButton.revalidate();
+		}
+		this.validate();
+	}
 }
