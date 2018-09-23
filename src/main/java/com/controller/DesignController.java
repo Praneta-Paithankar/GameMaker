@@ -39,6 +39,7 @@ public class DesignController implements Serializable{
 	private HashMap<Integer,List<GameElement>> keyboardElements;
 	private HashMap <String,ActionType> controlElements;
 	private List<Collider> colliders;
+	private List<GameElement> scoreElementList;
 	private Clock clock;
 	private MainController mainController;
 	private ScoreBoard scoreBoard;
@@ -50,6 +51,7 @@ public class DesignController implements Serializable{
 		keyboardElements = new HashMap<>();
 		controlElements = new HashMap<>();
 		colliders = new ArrayList<>();
+		scoreElementList = new ArrayList<>();
 	}
 	
 	public List<GameElement> getKeyboardElementsBasedKeys(int key)
@@ -101,6 +103,10 @@ public class DesignController implements Serializable{
 		elementBrick3.setVisible(true);
 		clock = new Clock(new Coordinate(30, 60));
 		scoreBoard = new ScoreBoard(new Coordinate(30,500));
+		
+		scoreElementList.add(elementBrick1);
+		scoreElementList.add(elementBrick2);
+		scoreElementList.add(elementBrick3);
 		
 		// add element into elements
 		graphicsElements.add(elementPaddle);
@@ -249,4 +255,13 @@ public class DesignController implements Serializable{
 	public void setScoreBoard(ScoreBoard scoreBoard) {
 		this.scoreBoard = scoreBoard;
 	}
+	
+	public List<GameElement> getScoreElementList() {
+		return scoreElementList;
+	}
+
+	public void setScoreElementList(List<GameElement> scoreElementList) {
+		this.scoreElementList = scoreElementList;
+	}
+
 }
