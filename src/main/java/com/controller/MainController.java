@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
@@ -73,11 +74,9 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			designController.addControlElement();
 			gui.changeFocus();
 		}
-		System.out.println(commandText);
 		ActionType actionType = designController.getActionTypeBasedOnButtonCommand(commandText);
 		if(actionType != null) {
 			if(actionType == ActionType.PLAY) {
-				System.out.println(ActionType.PLAY);
 				start();
 			}else if(actionType == ActionType.PAUSE) {
 				pause();
@@ -111,23 +110,9 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				key = KeyType.DOWN;
 			}
 			for(GameElement element: elements) {
-				Command keyVelChangeCommand = new KeyMoveCommand(element,key);
-				keyVelChangeCommand.execute();
-				addCommand(keyVelChangeCommand);
-//				Direction direction = collisionChecker.checkCollisionBetweenGameElementAndBounds(element);
-//				if(direction == direction.X) {
-//					Command command = new ChangeVelXCommand(element);
-//					command.execute();
-//					addCommand(command);
-//				}
-//				else if(direction == direction.Y) {
-//					 Command command = new ChangeVelYCommand(element);
-//					 command.execute();
-//					 addCommand(command);
-//				}
-//				Command command = createCommand(element);
-//				command.execute();
-//				addCommand(command);
+				Command keyMoveCommand = new KeyMoveCommand(element,key);
+				keyMoveCommand.execute();
+				addCommand(keyMoveCommand);
 			}
 		}
 		
@@ -147,7 +132,6 @@ public class MainController implements Observer, KeyListener, ActionListener{
 
 	@Override
 	public void update() {
-		Clock clock = designController.getClock();
 		TimerCommand timerCommand = new TimerCommand(designController.getClock());
 		timerCommand.execute();
 		addCommand(timerCommand);
@@ -174,24 +158,25 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		List<GameElement> scoreElements = designController.getScoreElementList();
 		for(GameElement element : scoreElements) {
 			if(element.isVisible())
-				continue;
-//			handleGameTermination();
+				break;
+			SwingUtilities.invokeLater(
+  					new Runnable() {
+
+  						@Override
+  						public void run() {
+  						
+  							gameOver();	
+  						}
+			});
 		}
 		gui.draw(null);
 	}	
-//	private void handleGameTermination() {
-//		if(!observable.isObserverListEmpty())
-//			observable.removeObserver(this);
-//		//Game End condition
-//	}
 
 
 	public void start() {
 		if(isGamePaused) {
 			unPause();
 		}
-//		gui.dispose();
-//		gui.revalidate();
 		gui.changeFocus();
 		observable.registerObserver(this);
 	}
@@ -236,7 +221,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 								gui.draw(null);
 								try {
 									currentThread();
-									Thread.sleep(Constants.TIMER_COUNT);
+									Thread.sleep(10);
 								} catch (InterruptedException e) {
 									// TODO Auto-generated catch block
 									log.error(e.getMessage());
@@ -292,6 +277,14 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			List<Element> list = gui.getGamePanel().getElements();
 			out.writeObject(list);
+			list = gui.getControlPanel().getElements();
+			for(Element ele : list) {
+				if(ele instanceof Clock) {
+					designController.setClock((Clock)ele);
+					break;
+				}
+			}
+			out.writeObject(list);
 			List<CustomButton> buttons  = gui.getControlPanel().getButtons();
 			out.writeObject(buttons);
 			//gui.add(out)
@@ -318,11 +311,12 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				ObjectInputStream in = new ObjectInputStream(fileIn);
 			
 				ArrayList<Element> gameElements = (ArrayList<Element>) in.readObject();
+				ArrayList<Element> controlpanelElements = (ArrayList<Element>) in.readObject();
 				ArrayList<CustomButton>  controlpanelButtons = (ArrayList<CustomButton>) in.readObject();
 		
 				gui.getGamePanel().setElement(gameElements);
 				gui.getControlPanel().reset();
-				
+				gui.getControlPanel().setElements(controlpanelElements);
 				gui.getControlPanel().setButtons(new ArrayList<CustomButton>());
 				for(CustomButton button: controlpanelButtons) {
 					button.addController(this);
@@ -366,6 +360,18 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		gui.draw(null);
 		gui.changeFocus();
 
+	}
+	public void gameOver() {
+		pause();
+		Object[] options = { "Exit"}; 
+		String outputMsg = new String();
+		outputMsg = "Your Score is " + designController.getScoreBoard().getScore();
+		int a = JOptionPane.showOptionDialog(gui.getGamePanel(), outputMsg, "Game Over", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE
+				, null, options, null);
+		
+		if(a == JOptionPane.OK_OPTION) {
+			System.exit(0);
+		}
 	}
 	
 	public Command createCommand(GameElement element) {

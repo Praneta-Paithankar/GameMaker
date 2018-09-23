@@ -108,6 +108,7 @@ public class DesignController implements Serializable{
 		elementBrick3.setDraw(new DrawRectangularColorShape());
 		elementBrick3.setVisible(true);
 		elementBrick3.setGameElementShape(GameElementShape.RECTANGLE);
+		
 		clock = new Clock(new Coordinate(30, 60));
 		scoreBoard = new ScoreBoard(new Coordinate(30,500));
 		
@@ -126,6 +127,7 @@ public class DesignController implements Serializable{
 		timerElements.add(elementBall);
 		timerElements.add(elementBall1);
 		timerElements.add(elementBrick3);
+	
 		
 		keyboardElements.put(KeyEvent.VK_LEFT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
 		keyboardElements.put(KeyEvent.VK_RIGHT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));

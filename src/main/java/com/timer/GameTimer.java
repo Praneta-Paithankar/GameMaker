@@ -33,7 +33,8 @@ public class GameTimer implements Observable{
 	public void registerObserver(Observer o) {
 		
 		// TODO Auto-generated method stub
-		observers.add(o);
+		if(!observers.contains(o))
+			observers.add(o);
 	}
 
 	@Override
