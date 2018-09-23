@@ -49,16 +49,16 @@ public class GameMaker {
 		// Create our 4 panels
 		MainPanel mainPanel = new MainPanel();
 		DesignPanel designPanel = new DesignPanel();
-		GamePanel boardPanel = new GamePanel();
+		GamePanel gamePanel = new GamePanel();
 		ControlPanel controlPanel = new ControlPanel();
 		
 		//Add everything to mainPanel in order
 		mainPanel.addComponent(designPanel);
-		mainPanel.addComponent(boardPanel);
+		mainPanel.addComponent(gamePanel);
 		mainPanel.addComponent(controlPanel);
 		
 		// Create the GUI class and pass all the panels
-		GUI gui = new GUI(mainPanel,designPanel, boardPanel, controlPanel);
+		GUI gui = new GUI(mainPanel,designPanel, gamePanel, controlPanel);
 		
 		gui.addComponent(mainPanel);
 		
@@ -66,7 +66,7 @@ public class GameMaker {
 		//CollisionChecker checker = new CollisionChecker();
 		DesignController controller = new DesignController(gui);
 		controller.addGameElement();
-		
+		gamePanel.setDesignController(controller);
 		designPanel.setController(controller);
 		
 		MainController driver = new MainController(gui,observable,controller,new CollisionChecker()); // maybe keep this checker);

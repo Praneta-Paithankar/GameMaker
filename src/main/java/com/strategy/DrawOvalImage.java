@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
@@ -19,16 +20,13 @@ public class DrawOvalImage implements Drawable,Serializable{
 	public void draw(GameElement element, Graphics g) {
 		Dimensions dimension = element.getPosition();
 		Coordinate coordinate = element.getCoordinate();
+	
+		Graphics2D g2d = (Graphics2D) g.create();
+		Image dimg = element.getImage().getScaledInstance(dimension.getWidth(), dimension.getHeight(),
+		        Image.SCALE_SMOOTH);
+		g2d.setClip(new Ellipse2D.Float(coordinate.getX(), coordinate.getY(), dimension.getWidth(), dimension.getWidth()));
 		
-		Image tmp = element.getImage();
-		tmp.getScaledInstance(dimension.getWidth(), dimension.getHeight(), Image.SCALE_SMOOTH);
-        
-		BufferedImage resized = new BufferedImage(dimension.getWidth(), dimension.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        
-        Graphics2D g2d = (Graphics2D) g;
-        g2d = resized.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_IN));
-        g2d.drawImage(tmp, 0, 0, null);
+		g2d.drawImage(dimg, coordinate.getX(), coordinate.getY(),dimension.getWidth(), dimension.getHeight(), null); 
+		g2d.dispose();
 	}
 }

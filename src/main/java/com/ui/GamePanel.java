@@ -6,6 +6,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +26,8 @@ import com.dimension.Coordinate;
 import com.ui.AbstractPanel;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
+import com.components.GameElement;
+import com.controller.DesignController;
 
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
@@ -33,10 +39,13 @@ public class GamePanel extends AbstractPanel implements Element {
 	protected static Logger log = Logger.getLogger(GamePanel.class);
 	private BufferedImage image;
 	private ArrayList<Element> elementList;
-	
+	private DesignController designController;
+	private GamePanel that;
 
 	public GamePanel()
 	{
+		this.that = this;
+		this.designController = null;
 		setBorder("Game Board");
 	    elementList = new ArrayList<Element>();
         try {
@@ -46,7 +55,31 @@ public class GamePanel extends AbstractPanel implements Element {
             // TODO Auto-generated catch block
         	log.error(e.getMessage());
         }
+        
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent me) {
+                super.mouseClicked(me);
+                boolean flag = false;
+                for (Element s: elementList) {
+                	GameElement temp = (GameElement) s;
+                	flag = temp.getRectBounds().contains(me.getPoint());
+            	
+                    if (flag) {//check if mouse is clicked within shape
+                    	that.designController.pushToPreview(temp);
+                        //we can either just print out the object class name
+                        System.out.println("Clicked a "+s.getClass().getName());
+                    }
+                }
+            }
+        });
+        
+        
+        
         setLayout();
+        
+        
+        
 	}
 	public void setBorder(String title) {
 		Border raisedbevel = BorderFactory.createRaisedBevelBorder();
@@ -94,7 +127,6 @@ public class GamePanel extends AbstractPanel implements Element {
 			element.draw(g);
 		}
 	}
-
 	
 
 	@Override
@@ -137,5 +169,9 @@ public class GamePanel extends AbstractPanel implements Element {
 		elementList.clear();
 		elementList.addAll(loadComponents);
 		return null;
+	}
+	public void setDesignController(DesignController controller){
+		// TODO Auto-generated method stub
+		this.designController = controller;
 	}
 }

@@ -111,6 +111,10 @@ public class GUI extends JFrame implements Element{
 	public void setFileReader(FileReader fileReader) {
 		this.fileReader = fileReader;
 	}		
+	
+	public MainPanel getMainPanel() {
+		return this.mainPanel;
+	}
 
 	public void modifyLayout() {
 		toggleLayout = !toggleLayout;

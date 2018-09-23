@@ -13,7 +13,7 @@ import java.awt.event.ItemListener;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
+import com.components.GameElement;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -153,10 +153,14 @@ public class PreviewPanel extends AbstractPanel implements DocumentListener , El
 
 	public void addGameElement(GameElement g) {
 		// TODO Auto-generated method stub
+		if(!elements.isEmpty()) {
+			GameElement temp = (GameElement) elements.get(0);
+			temp.pushToBoard();
+		}
 		this.elements = new ArrayList<Element>();
 		this.elements.add(g);
-		 this.revalidate();
-		    this.repaint();
+		this.revalidate();
+		this.repaint();
 	}
 	public void setElements(ArrayList<Element> a) {
 		this.elements = a;

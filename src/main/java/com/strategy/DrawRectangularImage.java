@@ -21,16 +21,8 @@ public class DrawRectangularImage implements Drawable,Serializable{
 	public void draw(GameElement element, Graphics g) {
 		Dimensions dimension = element.getPosition();
 		Coordinate coordinate = element.getCoordinate();
-		
-		Image tmp = element.getImage();
-		tmp.getScaledInstance(dimension.getWidth(), dimension.getHeight(), Image.SCALE_SMOOTH);
-        
-		BufferedImage resized = new BufferedImage(dimension.getWidth(), dimension.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        
-        Graphics2D g2d = (Graphics2D) g;
-        g2d = resized.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_IN));
-        g2d.drawImage(tmp, 0, 0, null);
+		Image dimg = element.getImage().getScaledInstance(dimension.getWidth(), dimension.getHeight(),
+		        Image.SCALE_SMOOTH);
+		g.drawImage(dimg, coordinate.getX(), coordinate.getY(),dimension.getWidth(), dimension.getHeight(), null); 
 	}	
 }

@@ -14,25 +14,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
@@ -51,7 +46,9 @@ import com.infrastruture.Constants;
 import com.infrastruture.Element;
 import com.infrastruture.MoveType;
 import com.strategy.DrawOvalColor;
+import com.strategy.DrawOvalImage;
 import com.strategy.DrawRectangularColorShape;
+import com.strategy.DrawRectangularImage;
 
 
 
@@ -67,25 +64,30 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JPanel graphic;
 	private JPanel control;
 	private JPanel cards;
-	private JButton addGraphicElementButton;
+	private JPanel comboBoxPane;
+	private JFileChooser jFileChooser;
 	private boolean finished;
 	private JFrame frame;
 	private ArrayList<Element> elements;
 	final static String CIRCLE = "Circle Shape";
-    final static String SQUARE = "Square Shape";
+    final static String RECTANGLE = "Rectangle Shape";
     private DesignPanel that = this;
+    private String type;
     //control tag var
     
 	private CustomButton tendToAddButton;
 	private JLabel tendToAddLabel;
 	private JPanel buttonBuildPanel;
 	private JPanel controlElementPanel;
-	
+	private JButton addGraphicElementButton;
+	private JButton finishedButton;
 	
 	public DesignPanel() {
 		setBorder("Design Center"); // Method call for setting the border
 		setLayoutBehavior(new FlowLayoutBehavior());
 		setBackground(Color.DARK_GRAY);
+		this.type = "Oval";
+		this.finished = true;
 		// Build the Graphic Panel: used to create graphic objects, Control Panel: used to create control elements
 		graphic = new JPanel();
 		scroller = new JScrollPane(graphic,
@@ -128,23 +130,33 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         elements = new ArrayList<>();
         
         // Init creates Add Element button
-        init();
+        init(null);
 	}
 	
 	
-	public void init() {
+	public void init(GameElement gameElement) {
+		this.finished = gameElement== null;
+		
 		// This button adds a new combo box to select basic shape of the 	
 		//for graphic tab
-		JButton addGraphicElementButton = new JButton("Add Element");
-		finished = true; // used for disabling the button
+		JPanel baseButtons = new JPanel(new FlowLayout());
+		addGraphicElementButton = new JButton("Add Element");
+		addGraphicElementButton.setEnabled(this.finished);
+		finishedButton = new JButton("Finished");
+		finishedButton.setEnabled(!this.finished);
+		
+		
+		finishedButton.addActionListener(this);
+		finishedButton.setActionCommand("finishedElement");
+		
+		//graphic.add(Box.createRigidArea(new Dimension(5,5)));
 		
 		addGraphicElementButton.addActionListener(this);
 		addGraphicElementButton.setActionCommand("addElement");
 		addGraphicElementButton.setVisible(true);
-		addGraphicElementButton.setAlignmentX(LEFT_ALIGNMENT);
-		addGraphicElementButton.setAlignmentY(CENTER_ALIGNMENT);
-		graphic.add(addGraphicElementButton);
-		graphic.add(Box.createRigidArea(new Dimension(5,5)));
+		baseButtons.add(addGraphicElementButton);
+		baseButtons.add(finishedButton);
+		graphic.add(baseButtons);
 		
 		
 		//control variable
@@ -181,6 +193,9 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
 		
 		control.add(controlElementPanel);
+		if(gameElement!= null) {
+			this.addElementSelect(gameElement);
+		}
 	}
 	
 	public ArrayList<Element> getElements(){
@@ -233,10 +248,20 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.validate();
 	}
 	
-	public void addElementSelect(JButton pressed) {
+	// This creates the separate views for circle and retangle
+	public void addElementSelect(GameElement gameElement) {
+		int index = 0;
+		int xPos = 100;
+		int yPos = 100;
+		int width = 200;
+		int height = 200;
+		if(gameElement != null) {
+			index = gameElement.getShapeType().equals("Oval") ? 0 : 1;
+		}
 		//Where the components controlled by the CardLayout are initialized:
-		this.finished = false; // PRevents user adding another element until finished
-		pressed.setEnabled(this.finished);
+		this.finished = false; // Prevents user adding another element until finished
+		this.addGraphicElementButton.setEnabled(this.finished);
+		this.finishedButton.setEnabled(!this.finished);
 		//Create the "cards".
 		JPanel circleCard = new JPanel();
 		createCircleCard(circleCard);
@@ -249,27 +274,30 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		
 		cards.setPreferredSize(new Dimension(250,200));
 		cards.add(circleCard, CIRCLE);
-		cards.add(rectangleCard, SQUARE);
+		cards.add(rectangleCard, RECTANGLE);
 
 		//Where the GUI is assembled:
 		//Put the JComboBox in a JPanel to get a nicer look.
-		JPanel comboBoxPane = new JPanel(); //use FlowLayout
-		String comboBoxItems[] = { CIRCLE, SQUARE };
+		comboBoxPane = new JPanel(); //use FlowLayout
+		String comboBoxItems[] = { CIRCLE, RECTANGLE };
 		JComboBox cb = new JComboBox(comboBoxItems);
 		cb.setEditable(false);
 		cb.addItemListener(this);
+		cb.setSelectedIndex(index);
 		comboBoxPane.add(cb);
 		graphic.add(comboBoxPane, BorderLayout.PAGE_START);
 		graphic.add(cards,  BorderLayout.CENTER);
 		this.validate();
 		
 		// Initial Shape
-		GameElement g = new GameElement(new Dimensions(Constants.PREVIEW_RADIUS), new Coordinate(Constants.PREVIEW_X_START, Constants.PREVIEW_Y_START), "Paddle", MoveType.LEFTRIGHT,20,0);
+		GameElement g = new GameElement(new Dimensions(Constants.PREVIEW_RADIUS), new Coordinate(Constants.PREVIEW_X_START, Constants.PREVIEW_Y_START), "Paddle", MoveType.LEFTRIGHT,20,0,"Oval");
         g.setColor(Color.BLACK);
         g.setDraw(new DrawOvalColor());
         g.setVisible(true);
         this.preview.addGameElement(g);
 	}
+	
+	// This creates the part of the design panel responsible for all other properties
 	private void createGraphicCard(JPanel card) {
 		final int tempX = 0;
 		final boolean xSet = false;
@@ -337,15 +365,41 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             }
         });
         
-        
-        
-        
+        JButton btnImage = new JButton("Choose Image");
+        card.add(btnImage);
+  
+        btnImage.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                JFileChooser fc = new JFileChooser();
+                BufferedImage img = null;
+                int result = fc.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    String sname = file.getAbsolutePath(); //THIS WAS THE PROBLEM
+                    try {
+	                    img = ImageIO.read(new File(sname));
+	                    GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+	                    if(that.type.equals("Oval")) {
+	                    	tempElement.setDraw(new DrawOvalImage());
+	                    } else {
+	                    	tempElement.setDraw(new DrawRectangularImage());
+	                    }
+	                    tempElement.setImage(img);
+	                    that.preview.addGameElement(tempElement);
+	                    System.out.println(img);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         
         
         
         this.revalidate();
 	    this.repaint();
 	}
+	// This creates the part of the design panel responsible for rectangle only properties
 	private void createRectangleCard(JPanel card) {
 		// TODO Auto-generated method stub
 		card.add(new JLabel("Object Name: ", JLabel.LEFT));
@@ -391,9 +445,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         });
 		createGraphicCard(card);
 	}
-
-	
-
+	// This creates the part of the design panel responsible for circle only properties 
 	private void createCircleCard(JPanel card) {
 		// TODO Auto-generated method stub
 		
@@ -443,28 +495,81 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 //	    createLoad();
 //	    createLayout();
 	}
+	
+
+	// This changes the card shown for creating circle vs rectangle and changes preview window
 	public void itemStateChanged(ItemEvent evt) {
 	    CardLayout cl = (CardLayout)(cards.getLayout());
 	    cl.show(cards, (String)evt.getItem());
 	    System.out.println(elements);
 	    if(evt.getItem() == CIRCLE) {
 	    	this.preview.setElements(new ArrayList<Element>());
-	    	GameElement g = new GameElement(new Dimensions(Constants.PREVIEW_RADIUS), new Coordinate(Constants.PREVIEW_X_START, Constants.PREVIEW_Y_START), "Paddle", MoveType.LEFTRIGHT,20,0);
+	    	GameElement g = new GameElement(new Dimensions(Constants.PREVIEW_RADIUS), new Coordinate(Constants.PREVIEW_X_START, Constants.PREVIEW_Y_START), "Paddle", MoveType.LEFTRIGHT,20,0,"Oval");
 	        g.setColor(Color.BLACK);
 	        g.setDraw(new DrawOvalColor());
 	        g.setVisible(true);
 	        this.preview.addGameElement(g);
+	        this.type = "Oval";
 	    	
-	    } else if(evt.getItem() == SQUARE) {
+	    } else if(evt.getItem() == RECTANGLE) {
 	    	this.preview.setElements(new ArrayList<Element>());
-	    	GameElement g = new GameElement(new Dimensions(Constants.PREVIEW_RADIUS*2, Constants.PREVIEW_RADIUS*2), new Coordinate(Constants.PREVIEW_X_START, Constants.PREVIEW_Y_START), "Paddle", MoveType.LEFTRIGHT,20,0);
+	    	GameElement g = new GameElement(new Dimensions(Constants.PREVIEW_RADIUS*2, Constants.PREVIEW_RADIUS*2), new Coordinate(Constants.PREVIEW_X_START, Constants.PREVIEW_Y_START), "Paddle", MoveType.LEFTRIGHT,20,0,"Rectangle");
 	        g.setColor(Color.BLACK);
 	        g.setDraw(new DrawRectangularColorShape());
 	        g.setVisible(true);
 	        this.preview.addGameElement(g);
+	        this.type = "Rectangle";
 	    }
 	    this.revalidate();
 	    this.repaint();
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getActionCommand().equals("addElement")) {
+			this.addElementSelect(null);
+		}
+		if (e.getActionCommand().equals("ElementButton")) {
+			this.controlElementButtonSelect();
+		}
+		if (e.getActionCommand().equals("finishedElement")) {
+			this.graphicElementFinished();
+		}
+		if(e.getActionCommand().equals("boxActionChanged")) {
+			JComboBox boxAction = (JComboBox) e.getSource();
+			tendToAddButton.setActionType(ActionType.valueOf(boxAction.getSelectedItem().toString()));
+		}
+	}
+
+	
+	private void graphicElementFinished() {
+		this.finished = true;
+		GameElement temp = (GameElement)this.preview.getElements().get(0);
+		temp.pushToBoard();
+		designController.addGameElement(temp);
+		try {
+			this.graphic.remove(cards);
+			this.graphic.remove(comboBoxPane);
+		} catch(Exception e) {
+			// Do nothing
+		}
+		
+		this.preview.setElements(new ArrayList<Element>());
+		this.addGraphicElementButton.setEnabled(this.finished);
+		this.finishedButton.setEnabled(!this.finished);
+	}
+
+	
+
+	public void pushToPreview(GameElement temp) {
+		try {
+			this.graphic.removeAll();
+		} catch(Exception e) {
+			System.out.println("No cards/combo to remove");
+		}
+		this.preview.addGameElement(temp);
+		init(temp);
 	}
 	
 	
@@ -617,22 +722,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		return null;
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getActionCommand().equals("addElement")) {
-			this.addElementSelect((JButton)e.getSource());
-		}
-		if (e.getActionCommand().equals("ElementButton")) {
-			this.controlElementButtonSelect();
-		}
-		if(e.getActionCommand().equals("boxActionChanged")) {
-			JComboBox boxAction = (JComboBox) e.getSource();
-			tendToAddButton.setActionType(ActionType.valueOf(boxAction.getSelectedItem().toString()));
-		}
-	}
-
 	
+
 	@Override
 	public void changedUpdate(DocumentEvent e) {
 		//System.out.println("changed");
@@ -707,4 +798,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		j.repaint();
 		
 	}
+
+
 }
