@@ -1,5 +1,7 @@
 package com.helper;
 
+import java.io.Serializable;
+
 import org.apache.log4j.Logger;
 
 import com.commands.ChangeVelXCommand;
@@ -13,7 +15,7 @@ import com.infrastruture.CollisionType;
 import com.infrastruture.Command;
 import com.infrastruture.Direction;
 
-public class Collider {
+public class Collider implements Serializable {
 	public static final Logger logger = Logger.getLogger(Collider.class);
 	private GameElement element1;
 	private GameElement element2;

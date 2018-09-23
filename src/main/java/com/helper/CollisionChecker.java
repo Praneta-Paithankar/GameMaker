@@ -1,6 +1,7 @@
 package com.helper;
 
 import java.awt.Rectangle;
+import java.io.Serializable;
 
 import javax.swing.JOptionPane;
 
@@ -12,7 +13,7 @@ import com.dimension.Coordinate;
 import com.infrastruture.Constants;
 import com.infrastruture.Direction;
 
-public class CollisionChecker {
+public class CollisionChecker implements Serializable {
 	
 	public static final Logger logger = Logger.getLogger(CollisionChecker.class);
 	
