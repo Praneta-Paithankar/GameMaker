@@ -24,6 +24,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -86,14 +87,14 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		control.setLayout(new BoxLayout(control,BoxLayout.Y_AXIS));
 		
 		// Tabbed pane holds the two different interfaces 
-<<<<<<< HEAD
+
 		tabbedPane = new JTabbedPane(); 
 		tabbedPane.addTab("Graphic", null, scroller, null);
-=======
+
 //		
 //		tabbedPane = new JTabbedPane();
 //		tabbedPane.addTab("Graphic", null, graphic, null);
->>>>>>> 0a7333804acb51d9a2ec78bd191d1320156a7ff4
+
 		tabbedPane.addTab("Control", null, control, null);
 		tabbedPane.setPreferredSize(new Dimension(Constants.DESIGN_PANEL_WIDTH, 500));
 		this.add(tabbedPane);
@@ -124,7 +125,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		JButton addGraphicElementButton = new JButton("Add Element");
 
 		addGraphicElementButton.addActionListener(this);
-		addGraphicElementButton.setActionCommand("addControlElement");
+		addGraphicElementButton.setActionCommand("addElement");
 		addGraphicElementButton.setVisible(true);
 		addGraphicElementButton.setAlignmentX(LEFT_ALIGNMENT);
 		addGraphicElementButton.setAlignmentY(CENTER_ALIGNMENT);
@@ -221,19 +222,11 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	public void addElementSelect() {
 		//Where the components controlled by the CardLayout are initialized:
 		
-<<<<<<< HEAD
 		//Create the "cards".
 		JPanel card1 = new JPanel();
 		card1.add(new JTextField("Object Name", 20));
 		
 		
-=======
-		 //Create the "cards".
-        JPanel card1 = new JPanel();
-        card1.add(new JButton("Button 1"));
-        card1.add(new JButton("Button 2"));
-        card1.add(new JButton("Button 3"));
->>>>>>> 0a7333804acb51d9a2ec78bd191d1320156a7ff4
 		JPanel card2 = new JPanel();
 		card2.add(new JLabel("Object Name: ", JLabel.LEFT));
 		card2.add(new JTextField("Object"+elements.size(), 20));
@@ -243,11 +236,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		
 		cards.setPreferredSize(new Dimension(250,200));
 		cards.add(card1, CIRCLE);
-<<<<<<< HEAD
 		cards.add(card2, SQUARE);
-=======
-        cards.add(card2, SQUARE);
->>>>>>> 0a7333804acb51d9a2ec78bd191d1320156a7ff4
+
 		//Where the GUI is assembled:
 		//Put the JComboBox in a JPanel to get a nicer look.
 		JPanel comboBoxPane = new JPanel(); //use FlowLayout
@@ -400,13 +390,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	}
 
 	@Override
-<<<<<<< HEAD
-	public void draw(Graphics g) {
-		for(Element component : elements) {
-			System.out.println("Circle");
-			component.draw(g);
-		}
-=======
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		for(Element element : elements)
@@ -418,7 +401,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	@Override
 	public void draw(Graphics g) {
 		//repaint();
->>>>>>> 0a7333804acb51d9a2ec78bd191d1320156a7ff4
 	}
 	@Override
 	public void reset() {
