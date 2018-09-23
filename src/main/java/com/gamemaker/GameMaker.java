@@ -65,11 +65,11 @@ public class GameMaker {
 		// ! Not sure where this logic will end up
 		//CollisionChecker checker = new CollisionChecker();
 		DesignController controller = new DesignController(gui);
-		controller.addGameElement();
+		
 		
 		MainController driver = new MainController(gui,observable,controller,new CollisionChecker()); // maybe keep this checker);
 		controller.setMainController(driver);
-
+		controller.addGameElement();
 		gui.addDriver(driver);
 		observable.startTimer();
 		gui.setVisible(true);

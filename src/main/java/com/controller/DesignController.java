@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
+import com.commands.GameOverEvent;
 import com.commands.ScoreEvent;
 import com.commands.SoundEvent;
 import com.components.Clock;
@@ -40,6 +41,8 @@ public class DesignController implements Serializable{
 	private HashMap <String,ActionType> controlElements;
 	private List<Collider> colliders;
 	private List<GameElement> scoreElementList;
+	private long timeConstraintinmilliSeconds;
+	private boolean timerConstraintSpecified;
 	private Clock clock;
 	private MainController mainController;
 	private ScoreBoard scoreBoard;
@@ -52,6 +55,7 @@ public class DesignController implements Serializable{
 		controlElements = new HashMap<>();
 		colliders = new ArrayList<>();
 		scoreElementList = new ArrayList<>();
+		setTimerConstraintSpecified(false);
 	}
 	
 	public List<GameElement> getKeyboardElementsBasedKeys(int key)
@@ -135,14 +139,16 @@ public class DesignController implements Serializable{
 //		
 		Command soundEvent = new SoundEvent("explosion.wav");
 		Command scoreUpdate = new ScoreEvent(scoreBoard);
+		Command GameOver = new GameOverEvent(mainController);
 		
 		ArrayList<Command> eventList= new ArrayList<>(Arrays.asList(soundEvent, scoreUpdate));
+		ArrayList<Command> eventList1= new ArrayList<>(Arrays.asList(soundEvent, scoreUpdate,GameOver));
 		
 		CollisionChecker collisionChecker = new CollisionChecker();
 		Collider ballPaddle = new Collider(elementBall, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
 		Collider ballBrick1 = new Collider(elementBall, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
 		Collider ballBrick2 = new Collider(elementBall, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
-		Collider ballBrick3 = new Collider(elementBall, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
+		Collider ballBrick3 = new Collider(elementBall, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList1);
 		
 		Collider ballPaddle1 = new Collider(elementBall1, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
 		Collider ballBrick11 = new Collider(elementBall1, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
@@ -176,6 +182,8 @@ public class DesignController implements Serializable{
 
 		mainJframe.revalidate();
 		mainJframe.repaint();
+		timerConstraintSpecified = true;
+		timeConstraintinmilliSeconds = 10000;
 		// update timer Elements or KeyboardElements
 	}
 	
@@ -265,5 +273,24 @@ public class DesignController implements Serializable{
 	public void setScoreElementList(List<GameElement> scoreElementList) {
 		this.scoreElementList = scoreElementList;
 	}
+
+	
+	public boolean isTimerConstraintSpecified() {
+		return timerConstraintSpecified;
+	}
+
+	public void setTimerConstraintSpecified(boolean timerConstraintSpecified) {
+		this.timerConstraintSpecified = timerConstraintSpecified;
+	}
+
+	public long getTimeConstraintinmilliSeconds() {
+		return timeConstraintinmilliSeconds;
+	}
+
+	public void setTimeConstraintinmilliSeconds(long timeConstraintinmilliSeconds) {
+		this.timeConstraintinmilliSeconds = timeConstraintinmilliSeconds;
+	}
+
+	
 
 }
