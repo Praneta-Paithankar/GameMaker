@@ -169,6 +169,21 @@ public class MainController implements Observer, KeyListener, ActionListener{
   						}
 			});
 		}
+		if(designController.isTimerConstraintSpecified())
+		{
+			Clock clock = designController.getClock();
+			if(clock.getMilisecondsElapsed() >= designController.getTimeConstraintinmilliSeconds()) {
+				SwingUtilities.invokeLater(
+	  					new Runnable() {
+
+	  						@Override
+	  						public void run() {
+	  						
+	  							gameOver();	
+	  						}
+				});
+			}
+		}
 		gui.draw(null);
 	}	
 
