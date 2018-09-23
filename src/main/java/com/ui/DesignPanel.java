@@ -5,7 +5,9 @@ package com.ui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -35,13 +37,21 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import org.apache.log4j.Logger;
-
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import com.behavior.FlowLayoutBehavior;
+import com.components.GameElement;
+import com.controller.DesignController;
 import com.controller.MainController;
+import com.dimension.Coordinate;
+import com.dimension.Dimensions;
 //import com.helper.ActionType;
 import com.infrastruture.ActionType;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
+import com.infrastruture.MoveType;
+import com.strategy.DrawOvalColor;
+import com.strategy.DrawRectangularColorShape;
 
 
 
@@ -51,17 +61,19 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JLabel score;
 	private MainController driver;
 	private JTabbedPane tabbedPane;
-	private JPanel preview;
+	private PreviewPanel preview;
+	private DesignController designController;
 	private JScrollPane scroller;
 	private JPanel graphic;
 	private JPanel control;
 	private JPanel cards;
 	private JButton addGraphicElementButton;
 	private boolean finished;
+	private JFrame frame;
 	private ArrayList<Element> elements;
 	final static String CIRCLE = "Circle Shape";
     final static String SQUARE = "Square Shape";
-    
+    private DesignPanel that = this;
     //control tag var
     
 	private CustomButton tendToAddButton;
@@ -74,7 +86,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		setBorder("Design Center"); // Method call for setting the border
 		setLayoutBehavior(new FlowLayoutBehavior());
 		setBackground(Color.DARK_GRAY);
-		
 		// Build the Graphic Panel: used to create graphic objects, Control Panel: used to create control elements
 		graphic = new JPanel();
 		scroller = new JScrollPane(graphic,
@@ -102,7 +113,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.add(tabbedPane);
 		
 		// Create Preview Panel, which show the preview of the element
-		preview = new JPanel();
+		preview = new PreviewPanel();
 		Border redline = BorderFactory.createLineBorder(Color.red);
 		TitledBorder border = BorderFactory.createTitledBorder(
                 redline, "Preview Window");
@@ -227,20 +238,18 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.finished = false; // PRevents user adding another element until finished
 		pressed.setEnabled(this.finished);
 		//Create the "cards".
-		JPanel card1 = new JPanel();
-		card1.add(new JTextField("Object Name", 20));
+		JPanel circleCard = new JPanel();
+		createCircleCard(circleCard);
 		
+		JPanel rectangleCard = new JPanel();
+		createRectangleCard(rectangleCard);
 		
-		JPanel card2 = new JPanel();
-		card2.add(new JLabel("Object Name: ", JLabel.LEFT));
-		card2.add(new JTextField("Object"+elements.size(), 20));
-
-		//Create the pael that contains the "cards".
+		//Create the panel that contains the "cards".
 		cards = new JPanel(new CardLayout());
 		
 		cards.setPreferredSize(new Dimension(250,200));
-		cards.add(card1, CIRCLE);
-		cards.add(card2, SQUARE);
+		cards.add(circleCard, CIRCLE);
+		cards.add(rectangleCard, SQUARE);
 
 		//Where the GUI is assembled:
 		//Put the JComboBox in a JPanel to get a nicer look.
@@ -253,8 +262,167 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		graphic.add(comboBoxPane, BorderLayout.PAGE_START);
 		graphic.add(cards,  BorderLayout.CENTER);
 		this.validate();
+		
+		// Initial Shape
+		GameElement g = new GameElement(new Dimensions(Constants.PREVIEW_RADIUS), new Coordinate(Constants.PREVIEW_X_START, Constants.PREVIEW_Y_START), "Paddle", MoveType.LEFTRIGHT,20,0);
+        g.setColor(Color.BLACK);
+        g.setDraw(new DrawOvalColor());
+        g.setVisible(true);
+        this.preview.addGameElement(g);
 	}
+	private void createGraphicCard(JPanel card) {
+		final int tempX = 0;
+		final boolean xSet = false;
+		final int tempY = 0;
+		final boolean ySet = false;
+		
+		card.add(new JLabel("X-Position: ", JLabel.LEFT));
+		final JTextField xCoor = new JTextField("100", 4);
+		card.add(xCoor);
+		card.add(new JLabel("Y-Position: ", JLabel.LEFT));
+		final JTextField yCoor = new JTextField("100", 4);
+		card.add(yCoor);
+		// Used for updating the coordinates
+		xCoor.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempX = Integer.parseInt(xCoor.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	int tempY = tempElement.getActualCoordinate().getY();
+            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	that.preview.addGameElement(tempElement);
+            }
+        });
+		
+		yCoor.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempX = Integer.parseInt(xCoor.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	int tempY = tempElement.getActualCoordinate().getY();
+            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	that.preview.addGameElement(tempElement);	
+            }
+        });
+		
+		
+		JButton btn1 = new JButton("Choose Color");
 	
+		card.add(btn1);
+	
+		btn1.setAlignmentY(BOTTOM_ALIGNMENT);
+		
+        btn1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+                Color newColor = JColorChooser.showDialog(
+                     frame,
+                     "Choose Color",
+                     frame.getBackground());
+                if(newColor != null){
+                    tempElement.setColor(newColor);
+                    that.preview.addGameElement(tempElement);
+                }
+                
+            }
+        });
+        
+        
+        
+        
+        
+        
+        
+        this.revalidate();
+	    this.repaint();
+	}
+	private void createRectangleCard(JPanel card) {
+		// TODO Auto-generated method stub
+		card.add(new JLabel("Object Name: ", JLabel.LEFT));
+		card.add(new JTextField("Rectangle"+elements.size(), 20));
+		card.add(new JLabel("               "));
+		card.add(new JLabel("Width: ", JLabel.LEFT));
+		final JTextField width = new JTextField("100", 4);
+		card.add(width);
+		card.add(new JLabel("Height: ", JLabel.LEFT));
+		final JTextField height = new JTextField("100", 4);
+		card.add(height);
+		// Used for updating the coordinates
+		width.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempWidth = Integer.parseInt(width.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	int tempHeight = tempElement.getActualDimensions().getHeight();
+            	tempElement.setActualDimension(new Dimensions(tempWidth, tempHeight),"Rectangle");
+            	that.preview.addGameElement(tempElement);
+            }
+        });
+		
+		height.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempHeight = Integer.parseInt(height.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	int tempWidth = tempElement.getActualDimensions().getWidth();
+            	tempElement.setActualDimension(new Dimensions(tempWidth, tempHeight),"Rectangle");
+            	that.preview.addGameElement(tempElement);
+            }
+        });
+		createGraphicCard(card);
+	}
+
+	
+
+	private void createCircleCard(JPanel card) {
+		// TODO Auto-generated method stub
+		
+		card.add(new JLabel("Object Name: ", JLabel.LEFT));
+		card.add(new JTextField("Circle"+elements.size(), 20));
+		card.add(new JLabel("Radius: ", JLabel.LEFT));
+		final JTextField radius = new JTextField("100", 20);
+		radius.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	tempElement.setActualDimension(new Dimensions(Integer.parseInt(radius.getText())), "Oval");
+            	that.preview.addGameElement(tempElement);
+            }
+        });
+	
+		card.add(radius);
+		
+		createGraphicCard(card);
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
 	public void createButtons(MainController driver)
 	{
 		this.driver = driver;
@@ -278,8 +446,22 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	public void itemStateChanged(ItemEvent evt) {
 	    CardLayout cl = (CardLayout)(cards.getLayout());
 	    cl.show(cards, (String)evt.getItem());
+	    System.out.println(elements);
 	    if(evt.getItem() == CIRCLE) {
-	    	//elements.add(new GameElement(new Dimensions(50,50), new Coordinate(30,30), new Coordinate(30,30)));
+	    	this.preview.setElements(new ArrayList<Element>());
+	    	GameElement g = new GameElement(new Dimensions(Constants.PREVIEW_RADIUS), new Coordinate(Constants.PREVIEW_X_START, Constants.PREVIEW_Y_START), "Paddle", MoveType.LEFTRIGHT,20,0);
+	        g.setColor(Color.BLACK);
+	        g.setDraw(new DrawOvalColor());
+	        g.setVisible(true);
+	        this.preview.addGameElement(g);
+	    	
+	    } else if(evt.getItem() == SQUARE) {
+	    	this.preview.setElements(new ArrayList<Element>());
+	    	GameElement g = new GameElement(new Dimensions(Constants.PREVIEW_RADIUS*2, Constants.PREVIEW_RADIUS*2), new Coordinate(Constants.PREVIEW_X_START, Constants.PREVIEW_Y_START), "Paddle", MoveType.LEFTRIGHT,20,0);
+	        g.setColor(Color.BLACK);
+	        g.setDraw(new DrawRectangularColorShape());
+	        g.setVisible(true);
+	        this.preview.addGameElement(g);
 	    }
 	    this.revalidate();
 	    this.repaint();
@@ -393,6 +575,13 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		elements.remove(e);
 	}
 
+	public JPanel getPreview() {
+		return this.preview;
+	}
+	
+	public void setController(DesignController controller) {
+		this.designController = controller;
+	}
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);

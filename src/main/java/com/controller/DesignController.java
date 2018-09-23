@@ -63,7 +63,7 @@ public class DesignController implements Serializable{
 
 		// gui.getData();
 		GameElement elementPaddle = new GameElement(new Dimensions(80,10), new Coordinate(300, 350), "Paddle", MoveType.LEFTRIGHT,20,0);
-		elementPaddle.setColor(Color.BLACK);
+		elementPaddle.setColor(Color.GREEN);
 		elementPaddle.setDraw(new DrawRectangularColorShape());
 		elementPaddle.setVisible(true);
 		
@@ -158,7 +158,14 @@ public class DesignController implements Serializable{
 		mainJframe.repaint();
 		// update timer Elements or KeyboardElements
 	}
-	
+	// To be used if we export some of the logic from the view to the controller
+	public void addGameElement(GameElement element) {
+		graphicsElements.add(element);
+		mainJframe.getDesignPanel().getPreview().addComponent(element);
+		mainJframe.revalidate();
+		mainJframe.repaint();
+		System.out.println("in");
+	}
 	
 	public void addControlElement() {
 		

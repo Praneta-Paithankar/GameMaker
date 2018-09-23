@@ -54,7 +54,7 @@ public class GUI extends JFrame implements Element{
 
 
 	private void initializeUI() {
-		
+	   this.designPanel.setFrame(this);
 	   setSize(Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT);
 	   setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	   setResizable(false);	
