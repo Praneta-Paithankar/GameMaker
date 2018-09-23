@@ -1,6 +1,8 @@
 package com.dimension;
 
-public class Dimensions {
+import java.io.Serializable;
+
+public class Dimensions implements Serializable{
 	
 	private int width;
 	private int height;
@@ -18,8 +20,16 @@ public class Dimensions {
 	public int getWidth() {
 		return width;
 	}
+  
+	public void setWidth(int width) {
+		this.width = width;
+	}
 	
 	public int getHeight() {
 		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 }

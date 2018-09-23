@@ -3,7 +3,6 @@
 package com.ui;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -35,6 +34,7 @@ public class GamePanel extends AbstractPanel implements Element {
 	private BufferedImage image;
 	private ArrayList<Element> elementList;
 	
+
 	public GamePanel()
 	{
 		setBorder("Game Board");
@@ -78,7 +78,10 @@ public class GamePanel extends AbstractPanel implements Element {
 	public ArrayList<Element> getElements(){
 		return elementList;
 	}
-
+	
+	public void setElement(ArrayList<Element> elementList) {
+		this.elementList = elementList;
+	}
 	
 	@Override
 	public void paintComponent(Graphics g){
@@ -96,20 +99,17 @@ public class GamePanel extends AbstractPanel implements Element {
 
 	@Override
 	public void draw(Graphics g) {
-		
 		repaint();
 	}
 	
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
 		for(Element element : elementList) {
 			element.reset();
 		}
 	}
 
 	public void addComponent(Element e) {
-		//this.add((Component)e);
 		elementList.add(e);
 	}
 	
@@ -123,7 +123,6 @@ public class GamePanel extends AbstractPanel implements Element {
 
 	@Override
 	public void save(ObjectOutputStream op) {
-		// TODO Auto-generated method stub
 		for (Element element : elementList) {
 			element.save(op);
 		}
@@ -131,7 +130,6 @@ public class GamePanel extends AbstractPanel implements Element {
 
 	@Override
 	public Element load(ObjectInputStream ip) {
-		// TODO Auto-generated method stub
 		ArrayList<Element> loadComponents = new ArrayList<>();
 		for (Element element : elementList) {
 			loadComponents.add(element.load(ip));
