@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import com.infrastruture.Command;
 import com.infrastruture.Event;
 
-public class SoundEvent implements Command, Serializable{
+public class SoundEvent implements Command{
 	
 	public static final Logger logger = Logger.getLogger(SoundEvent.class);
 	private String filePath;
