@@ -16,9 +16,11 @@ import com.dimension.Coordinate;
 import com.dimension.Dimensions;
 import com.helper.Collider;
 import com.helper.CollisionChecker;
+import com.helper.Sound;
 import com.infrastruture.ActionType;
 import com.infrastruture.CollisionType;
 import com.infrastruture.Element;
+import com.infrastruture.Event;
 import com.infrastruture.MoveType;
 import com.strategy.DrawOvalColor;
 import com.strategy.DrawRectangularColorShape;
@@ -102,11 +104,11 @@ public class DesignController implements Serializable{
 		graphicsElements.add(elementBall1);
 		graphicsElements.add(elementBrick1);
 		graphicsElements.add(elementBrick2);
-//		graphicsElements.add(elementBrick3);
+		graphicsElements.add(elementBrick3);
 		
 		timerElements.add(elementBall);
 		timerElements.add(elementBall1);
-//		timerElements.add(elementBrick3);
+		timerElements.add(elementBrick3);
 		
 		keyboardElements.put(KeyEvent.VK_LEFT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
 		keyboardElements.put(KeyEvent.VK_RIGHT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
@@ -119,20 +121,22 @@ public class DesignController implements Serializable{
 //		controlElements.put("REPLAY", ActionType.REPLAY);
 //		controlElements.put("CHANGELAYOUT", ActionType.CHANGELAYOUT);
 //		
+		Event ballBrickEvent = new Sound("explosion.wav");
+		
 		CollisionChecker collisionChecker = new CollisionChecker();
-		Collider ballPaddle = new Collider(elementBall, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker);
-		Collider ballBrick1 = new Collider(elementBall, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
-		Collider ballBrick2 = new Collider(elementBall, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
-		Collider ballBrick3 = new Collider(elementBall, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
+		Collider ballPaddle = new Collider(elementBall, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
+		Collider ballBrick1 = new Collider(elementBall, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, ballBrickEvent);
+		Collider ballBrick2 = new Collider(elementBall, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, ballBrickEvent);
+		Collider ballBrick3 = new Collider(elementBall, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, ballBrickEvent);
 		
-		Collider ballPaddle1 = new Collider(elementBall1, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker);
-		Collider ballBrick11 = new Collider(elementBall1, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
-		Collider ballBrick21 = new Collider(elementBall1, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
-		Collider ballBrick31 = new Collider(elementBall1, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
+		Collider ballPaddle1 = new Collider(elementBall1, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
+		Collider ballBrick11 = new Collider(elementBall1, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
+		Collider ballBrick21 = new Collider(elementBall1, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
+		Collider ballBrick31 = new Collider(elementBall1, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
 		
 		
 		
-		Collider ballball = new Collider(elementBall, elementBall1, CollisionType.BOUNCE, CollisionType.BOUNCE, collisionChecker);
+		Collider ballball = new Collider(elementBall, elementBall1, CollisionType.BOUNCE, CollisionType.BOUNCE, collisionChecker, null);
 		
 		colliders.add(ballPaddle);
 		colliders.add(ballBrick1);
