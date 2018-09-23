@@ -70,9 +70,16 @@ public class DesignController {
 		GameElement elementBall =  new GameElement(new Dimensions(15), new Coordinate(50, 50), "Ball", MoveType.FREE);
 		elementBall.setColor(Color.RED);
 		elementBall.setDraw(new DrawOvalColor());
-		elementBall.setVelX(1);
-		elementBall.setVelY(1);
+		elementBall.setVelX(2);
+		elementBall.setVelY(2);
 		elementBall.setVisible(true);
+		
+		GameElement elementBall1 =  new GameElement(new Dimensions(15), new Coordinate(100, 100), "Ball", MoveType.FREE);
+		elementBall1.setColor(Color.BLACK);
+		elementBall1.setDraw(new DrawOvalColor());
+		elementBall1.setVelX(1);
+		elementBall1.setVelY(1);
+		elementBall1.setVisible(true);
 		
 		GameElement elementBrick1 = new GameElement(new Dimensions(50, 25), new Coordinate(250, 90), "Brick", MoveType.FIXED);
 		elementBrick1.setColor(Color.BLUE);
@@ -90,10 +97,12 @@ public class DesignController {
 		// add element into elements
 		graphicsElements.add(elementPaddle);
 		graphicsElements.add(elementBall);
+		graphicsElements.add(elementBall1);
 		graphicsElements.add(elementBrick1);
 		graphicsElements.add(elementBrick2);
 		
 		timerElements.add(elementBall);
+		timerElements.add(elementBall1);
 		
 		keyboardElements.put(KeyEvent.VK_LEFT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
 		keyboardElements.put(KeyEvent.VK_RIGHT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
@@ -111,14 +120,26 @@ public class DesignController {
 		Collider ballBrick1 = new Collider(elementBall, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
 		Collider ballBrick2 = new Collider(elementBall, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
 		
+		Collider ballPaddle1 = new Collider(elementBall1, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker);
+		Collider ballBrick11 = new Collider(elementBall1, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
+		Collider ballBrick21 = new Collider(elementBall1, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
+		
+		Collider ballball = new Collider(elementBall, elementBall1, CollisionType.BOUNCE, CollisionType.BOUNCE, collisionChecker);
+		
 		colliders.add(ballPaddle);
 		colliders.add(ballBrick1);
 		colliders.add(ballBrick2);
+		colliders.add(ballball);
+		colliders.add(ballPaddle1);
+		colliders.add(ballBrick11);
+		colliders.add(ballBrick21);
+		
 //		
 //		
 		// add elements into gamePanel
 		mainJframe.getGamePanel().addComponent(elementPaddle);
 		mainJframe.getGamePanel().addComponent(elementBall);
+		mainJframe.getGamePanel().addComponent(elementBall1);
 		mainJframe.getGamePanel().addComponent(elementBrick1);
 		mainJframe.getGamePanel().addComponent(elementBrick2);
 		mainJframe.getControlPanel().addComponent(clock);

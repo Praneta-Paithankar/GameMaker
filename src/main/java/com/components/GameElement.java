@@ -155,7 +155,8 @@ public class GameElement implements Element,Serializable{
 
 	@Override
 	public void draw(Graphics g) {
-		drawable.draw(this, g);
+		if(isVisible)
+			drawable.draw(this, g);
 	}
 
 	@Override

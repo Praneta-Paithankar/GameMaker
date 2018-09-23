@@ -1,3 +1,4 @@
+
 package com.controller;
 
 import java.awt.event.ActionEvent;
@@ -22,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import com.commands.ChangeVelXCommand;
 import com.commands.ChangeVelYCommand;
+import com.commands.KeyVelChange;
 import com.commands.MoveCommand;
 import com.commands.TimerCommand;
 import com.components.Clock;
@@ -32,6 +34,7 @@ import com.infrastruture.ActionType;
 import com.infrastruture.Command;
 import com.infrastruture.Constants;
 import com.infrastruture.Direction;
+import com.infrastruture.KeyType;
 import com.infrastruture.Observer;
 import com.timer.GameTimer;
 import com.ui.GUI;
@@ -93,8 +96,21 @@ public class MainController implements Observer, KeyListener, ActionListener{
 	public void keyPressed(KeyEvent e) {
 		List<GameElement> elements= designController.getKeyboardElementsBasedKeys(e.getKeyCode());
 		if(elements != null) {
-			
+			KeyType key = null ;
+			if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+				key = KeyType.LEFT;
+			}else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				key = KeyType.RIGHT;
+			}else if(e.getKeyCode() == KeyEvent.VK_UP) {
+				key = KeyType.UP;
+			}else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				key = KeyType.DOWN;
+			}
+			System.out.println(key);
 			for(GameElement element: elements) {
+				Command keyVelChangeCommand = new KeyVelChange(element,key);
+				keyVelChangeCommand.execute();
+				addCommand(keyVelChangeCommand);
 				Direction direction = collisionChecker.checkCollisionBetweenGameElementAndBounds(element);
 				if(direction == direction.X) {
 					Command command = new ChangeVelXCommand(element);
@@ -110,18 +126,8 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				command.execute();
 				addCommand(command);
 			}
-			for(Collider collider: designController.getColliders()) {
-				collider.execute(this);
-			}
-			List<GameElement> graphicsElements = designController.getTimerElements();
-			for(GameElement element: graphicsElements) {
-				Command command = createCommand(element);
-				command.execute();
-				System.out.println(element.getName() + " : X ="+ element.getX()+ " and Y : "+ element.getY());
-				addCommand(command);
-			}
-			gui.repaint();
 		}
+		
 	}
 
 	@Override
@@ -164,6 +170,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			command.execute();
 			addCommand(command);
 		}
+		gui.repaint();
 	}	
 	public void start() {
 		if(isGamePaused) {
@@ -172,6 +179,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		System.out.println("play");
 //		gui.dispose();
 //		gui.revalidate();
+		gui.changeFocus();
 		observable.registerObserver(this);
 	}
 	

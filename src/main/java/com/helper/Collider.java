@@ -30,7 +30,7 @@ public class Collider {
 	}
 	
 	public void execute(MainController controller) {
-		if(collisionChecker.checkIntersectionBetweenElements(element1, element2)) {
+		if(element1.isVisible() && element2.isVisible() && collisionChecker.checkIntersectionBetweenElements(element1, element2)) {
 			Command command = getCollisionAction(element1, collisionType1);
 			if (collisionType1 == CollisionType.BOUNCE) {
 				Direction direction = collisionChecker.checkCollisionBetweenGameElements(element1, element2);
