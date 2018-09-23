@@ -147,7 +147,6 @@ public class MainController implements Observer, KeyListener, ActionListener{
 
 	@Override
 	public void update() {
-		Clock clock = designController.getClock();
 		TimerCommand timerCommand = new TimerCommand(designController.getClock());
 		timerCommand.execute();
 		addCommand(timerCommand);
@@ -179,8 +178,6 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		if(isGamePaused) {
 			unPause();
 		}
-//		gui.dispose();
-//		gui.revalidate();
 		gui.changeFocus();
 		observable.registerObserver(this);
 	}
@@ -225,7 +222,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 								gui.draw(null);
 								try {
 									currentThread();
-									Thread.sleep(Constants.TIMER_COUNT);
+									Thread.sleep(10);
 								} catch (InterruptedException e) {
 									// TODO Auto-generated catch block
 									log.error(e.getMessage());
@@ -281,6 +278,14 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			List<Element> list = gui.getGamePanel().getElements();
 			out.writeObject(list);
+			list = gui.getControlPanel().getElements();
+			for(Element ele : list) {
+				if(ele instanceof Clock) {
+					designController.setClock((Clock)ele);
+					break;
+				}
+			}
+			out.writeObject(list);
 			List<CustomButton> buttons  = gui.getControlPanel().getButtons();
 			out.writeObject(buttons);
 			//gui.add(out)
@@ -307,11 +312,12 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				ObjectInputStream in = new ObjectInputStream(fileIn);
 			
 				ArrayList<Element> gameElements = (ArrayList<Element>) in.readObject();
+				ArrayList<Element> controlpanelElements = (ArrayList<Element>) in.readObject();
 				ArrayList<CustomButton>  controlpanelButtons = (ArrayList<CustomButton>) in.readObject();
 		
 				gui.getGamePanel().setElement(gameElements);
 				gui.getControlPanel().reset();
-				
+				gui.getControlPanel().setElements(controlpanelElements);
 				gui.getControlPanel().setButtons(new ArrayList<CustomButton>());
 				for(CustomButton button: controlpanelButtons) {
 					button.addController(this);
