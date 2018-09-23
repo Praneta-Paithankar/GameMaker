@@ -1,6 +1,8 @@
 package com.dimension;
 
-public class Dimensions {
+import java.io.Serializable;
+
+public class Dimensions implements Serializable{
 	
 	private int width;
 	private int height;

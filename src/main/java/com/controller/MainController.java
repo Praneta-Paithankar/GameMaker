@@ -39,6 +39,7 @@ import com.infrastruture.Element;
 import com.infrastruture.KeyType;
 import com.infrastruture.Observer;
 import com.timer.GameTimer;
+import com.ui.CustomButton;
 import com.ui.GUI;
 
 public class MainController implements Observer, KeyListener, ActionListener{
@@ -278,8 +279,11 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			if(!fileName.isEmpty()) {
 			FileOutputStream fileOut = new FileOutputStream(fileName);
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			
-			gui.save(out);
+			List<Element> list = gui.getGamePanel().getElements();
+			out.writeObject(list);
+			List<CustomButton> buttons  = gui.getControlPanel().getButtons();
+			out.writeObject(buttons);
+			//gui.add(out)
 			out.writeObject(commandQueue);
 			out.writeObject(designController.getColliders());
 			out.writeObject(designController.getControlElements());
@@ -302,11 +306,27 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				FileInputStream fileIn =new FileInputStream(fileName);
 				ObjectInputStream in = new ObjectInputStream(fileIn);
 			
-				gui.load(in);
+				ArrayList<Element> gameElements = (ArrayList<Element>) in.readObject();
+				ArrayList<CustomButton>  controlpanelButtons = (ArrayList<CustomButton>) in.readObject();
+		
+				gui.getGamePanel().setElement(gameElements);
+				gui.getControlPanel().reset();
+				
+				gui.getControlPanel().setButtons(new ArrayList<CustomButton>());
+				for(CustomButton button: controlpanelButtons) {
+					button.addController(this);
+					gui.getControlPanel().addButtons(button);
+				}
+				
+				
+				//gui.load(in);
 			
-//				ArrayList<Element> graphicsElements = gui.getGamePanel().getElements();
-//				designController.setGraphicsElements((Graphics)graphicsElements);
-//			
+				List<GameElement>elements = new ArrayList<>();
+			    for(Element e :gameElements) {
+			    	elements.add((GameElement) e);
+			    }
+			    designController.setGraphicsElements(elements);
+			    
 				commandQueue.clear();
 				Deque<Command> loadCmdQueue = (Deque<Command>) in.readObject();
 				commandQueue.addAll(loadCmdQueue);
@@ -331,7 +351,10 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			e.printStackTrace();
 			log.error(e.getMessage());
 		}
+		gui.revalidate();
 		gui.draw(null);
+		gui.changeFocus();
+
 	}
 	
 	public Command createCommand(GameElement element) {

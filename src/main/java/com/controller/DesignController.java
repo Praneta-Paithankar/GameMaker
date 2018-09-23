@@ -2,6 +2,7 @@ package com.controller;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ import com.ui.CustomButton;
 import com.ui.GUI;
 import com.ui.GamePanel;
 
-public class DesignController {
+public class DesignController implements Serializable{
 	
 	private List<GameElement> graphicsElements;
 	private GUI mainJframe;
@@ -87,12 +88,11 @@ public class DesignController {
 		elementBrick2.setColor(Color.BLUE);
 		elementBrick2.setDraw(new DrawRectangularColorShape());
 		elementBrick2.setVisible(true);
-		
+
 		GameElement elementBrick3 = new GameElement(new Dimensions(70, 50), new Coordinate(563, 79), "Brick", MoveType.LEFTRIGHT,1,0);
 		elementBrick3.setColor(Color.BLUE);
 		elementBrick3.setDraw(new DrawRectangularColorShape());
 		elementBrick3.setVisible(true);
-		
 		clock = new Clock(new Coordinate(30, 60));
 		
 		
@@ -102,11 +102,11 @@ public class DesignController {
 		graphicsElements.add(elementBall1);
 		graphicsElements.add(elementBrick1);
 		graphicsElements.add(elementBrick2);
-		graphicsElements.add(elementBrick3);
+//		graphicsElements.add(elementBrick3);
 		
 		timerElements.add(elementBall);
 		timerElements.add(elementBall1);
-		timerElements.add(elementBrick3);
+//		timerElements.add(elementBrick3);
 		
 		keyboardElements.put(KeyEvent.VK_LEFT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
 		keyboardElements.put(KeyEvent.VK_RIGHT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
@@ -168,8 +168,9 @@ public class DesignController {
 			  CustomButton button = new CustomButton(received.getText(),received.getText(),received.getWidth(),received.getHeight(),mainController);
 			  button.setActionType(received.getActionType());
 			  controlElements.put(button.getActionCommand(), button.getActionType());
-			  mainJframe.getControlPanel().addComponent(button);
+//			  mainJframe.getControlPanel().addComponent(button);
 			  mainJframe.getControlPanel().add(button);
+			  mainJframe.getControlPanel().addButtons(button);
 		}
 	    mainJframe.getControlPanel().revalidate();
 	}
