@@ -45,6 +45,27 @@ public class KeyVelChange implements Command{
 
 	@Override
 	public void undo() {
-		
+		switch(keyType) {
+		case RIGHT:
+			if(element.getVelX() < 0) {
+				element.setVelX(-1 * element.getVelX());
+			}
+			break;
+		case LEFT:
+			if(element.getVelX() > 0) {
+				element.setVelX(-1 * element.getVelX());
+			}
+			break;
+		case UP:
+			if(element.getVelY() < 0) {
+				element.setVelY(-1 * element.getVelY());
+			}
+			break;
+		case DOWN:
+			if(element.getVelY() > 0) {
+				element.setVelY(-1 * element.getVelY());
+			}
+			break;
+		}
 	}
 }

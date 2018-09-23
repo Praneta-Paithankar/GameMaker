@@ -176,7 +176,6 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		if(isGamePaused) {
 			unPause();
 		}
-		System.out.println("play");
 //		gui.dispose();
 //		gui.revalidate();
 		gui.changeFocus();
@@ -191,6 +190,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		} else {
 			undoAction();
 		}
+		gui.changeFocus();
 	}
 	private void undoAction() {
 		int count = 0;

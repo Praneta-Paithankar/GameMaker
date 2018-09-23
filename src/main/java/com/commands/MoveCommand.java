@@ -43,8 +43,10 @@ public class MoveCommand implements Command{
 
 	@Override
 	public void undo() {
-		element.setX(prevVelX);
-		element.setY(prevVelY);
+		element.setX(prevX);
+		element.setY(prevY);
+		element.setVelX(prevVelX);
+		element.setVelY(prevVelY);
 	}
 
 }
