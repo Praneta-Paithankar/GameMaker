@@ -107,7 +107,7 @@ public class DesignController implements Serializable{
 		elementBrick2.setVisible(true);
 		elementBrick2.setGameElementShape(GameElementShape.RECTANGLE);
 
-		GameElement elementBrick3 = new GameElement(new Dimensions(70, 50), new Coordinate(613, 79), "Brick", MoveType.LEFTRIGHT,1,0);
+		GameElement elementBrick3 = new GameElement(new Dimensions(50, 25), new Coordinate(613, 89), "Brick", MoveType.LEFTRIGHT,1,0);
 		elementBrick3.setColor(Color.BLUE);
 		elementBrick3.setDraw(new DrawRectangularColorShape());
 		elementBrick3.setVisible(true);
