@@ -5,7 +5,6 @@ package com.ui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -25,6 +24,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -52,9 +52,12 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private MainController driver;
 	private JTabbedPane tabbedPane;
 	private JPanel preview;
+	private JScrollPane scroller;
 	private JPanel graphic;
 	private JPanel control;
 	private JPanel cards;
+	private JButton addGraphicElementButton;
+	private boolean finished;
 	private ArrayList<Element> elements;
 	final static String CIRCLE = "Circle Shape";
     final static String SQUARE = "Square Shape";
@@ -72,20 +75,28 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		setLayoutBehavior(new FlowLayoutBehavior());
 		setBackground(Color.DARK_GRAY);
 		
-		System.out.println(com.infrastruture.ActionType.values());
-		
 		// Build the Graphic Panel: used to create graphic objects, Control Panel: used to create control elements
 		graphic = new JPanel();
+		scroller = new JScrollPane(graphic,
+	            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+	            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		graphic.setBackground(Color.LIGHT_GRAY);
+		graphic.setLayout(new BoxLayout(graphic, BoxLayout.Y_AXIS));
+		
 		
 		control  = new JPanel();
 		control.setBackground(Color.LIGHT_GRAY);
 		control.setLayout(new BoxLayout(control,BoxLayout.Y_AXIS));
 		
 		// Tabbed pane holds the two different interfaces 
-		
-		tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Graphic", null, graphic, null);
+
+		tabbedPane = new JTabbedPane(); 
+		tabbedPane.addTab("Graphic", null, scroller, null);
+
+//		
+//		tabbedPane = new JTabbedPane();
+//		tabbedPane.addTab("Graphic", null, graphic, null);
+
 		tabbedPane.addTab("Control", null, control, null);
 		tabbedPane.setPreferredSize(new Dimension(Constants.DESIGN_PANEL_WIDTH, 500));
 		this.add(tabbedPane);
@@ -114,9 +125,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		// This button adds a new combo box to select basic shape of the 	
 		//for graphic tab
 		JButton addGraphicElementButton = new JButton("Add Element");
-
+		finished = true; // used for disabling the button
+		
 		addGraphicElementButton.addActionListener(this);
-		addGraphicElementButton.setActionCommand("addControlElement");
+		addGraphicElementButton.setActionCommand("addElement");
 		addGraphicElementButton.setVisible(true);
 		addGraphicElementButton.setAlignmentX(LEFT_ALIGNMENT);
 		addGraphicElementButton.setAlignmentY(CENTER_ALIGNMENT);
@@ -169,7 +181,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		refresh(preview);
 		control.remove(buttonBuildPanel);
 		buttonBuildPanel.removeAll();
-		
+		ActionType action = ActionType.SAVE;
+		tendToAddButton.setActionType(action);
 		JLabel buttonNameLabel = new JLabel("Button Name : ");
 		JTextField buttonName = new JTextField("", 15);
 		buttonName.setName("buttonNameField");
@@ -209,23 +222,26 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.validate();
 	}
 	
-	public void addElementSelect() {
+	public void addElementSelect(JButton pressed) {
 		//Where the components controlled by the CardLayout are initialized:
+		this.finished = false; // PRevents user adding another element until finished
+		pressed.setEnabled(this.finished);
+		//Create the "cards".
+		JPanel card1 = new JPanel();
+		card1.add(new JTextField("Object Name", 20));
 		
-		 //Create the "cards".
-        JPanel card1 = new JPanel();
-        card1.add(new JButton("Button 1"));
-        card1.add(new JButton("Button 2"));
-        card1.add(new JButton("Button 3"));
+		
 		JPanel card2 = new JPanel();
-		card2.add(new JTextField("TextField", 20));
+		card2.add(new JLabel("Object Name: ", JLabel.LEFT));
+		card2.add(new JTextField("Object"+elements.size(), 20));
 
 		//Create the pael that contains the "cards".
 		cards = new JPanel(new CardLayout());
 		
 		cards.setPreferredSize(new Dimension(250,200));
 		cards.add(card1, CIRCLE);
-        cards.add(card2, SQUARE);
+		cards.add(card2, SQUARE);
+
 		//Where the GUI is assembled:
 		//Put the JComboBox in a JPanel to get a nicer look.
 		JPanel comboBoxPane = new JPanel(); //use FlowLayout
@@ -264,7 +280,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	    cl.show(cards, (String)evt.getItem());
 	    if(evt.getItem() == CIRCLE) {
 	    	//elements.add(new GameElement(new Dimensions(50,50), new Coordinate(30,30), new Coordinate(30,30)));
-	    	System.out.println(elements);
 	    }
 	    this.revalidate();
 	    this.repaint();
@@ -363,12 +378,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.add(Box.createRigidArea(new Dimension(5,5)));
 	}
 
-	public int getControlElement() {
-		return 0;
-	}
-	public CustomButton getButton() {
+	public JComponent getControlElement() {
 		return tendToAddButton;
 	}
+	
 	
 	
 	public void addComponent(Element e) {
@@ -383,7 +396,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		
 		for(Element element : elements)
 		{
 			element.draw(g);
@@ -392,8 +404,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 
 	@Override
 	public void draw(Graphics g) {
-		
-		repaint();
+		//repaint();
 	}
 	@Override
 	public void reset() {
@@ -421,15 +432,14 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand().equals("addElement")) {
-			this.addElementSelect();
+			this.addElementSelect((JButton)e.getSource());
 		}
 		if (e.getActionCommand().equals("ElementButton")) {
 			this.controlElementButtonSelect();
 		}
 		if(e.getActionCommand().equals("boxActionChanged")) {
-			JComboBox boxAction = (JComboBox)e.getSource();
+			JComboBox boxAction = (JComboBox) e.getSource();
 			tendToAddButton.setActionType(ActionType.valueOf(boxAction.getSelectedItem().toString()));
-			System.out.println(tendToAddButton.getActionType());
 		}
 	}
 

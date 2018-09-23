@@ -34,6 +34,9 @@ public class CustomButton extends JButton implements Element,Serializable{
 		setPreferredSize(new Dimension(width, height));
 		setMaximumSize(new Dimension(width, height));
 	}
+	public void addController(MainController controller) {
+		addActionListener(controller);
+	}
 	public ActionType getActionType() {
 		return actionType;
 	}
@@ -44,8 +47,6 @@ public class CustomButton extends JButton implements Element,Serializable{
 	
 	@Override
 	public void draw(Graphics g) {
-		System.out.println(getHeight());
-		System.out.println(getWidth());
 		setVisible(true);
 		
 	}

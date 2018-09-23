@@ -13,7 +13,6 @@ import javax.swing.border.TitledBorder;
 
 import com.behavior.FlowLayoutBehavior;
 import com.controller.MainController;
-import com.dimension.Coordinate;
 import com.ui.AbstractPanel;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
@@ -23,11 +22,13 @@ public class ControlPanel  extends AbstractPanel implements Element {
 
 	private MainController driver;
 	private ArrayList<Element> elementList;
+	private ArrayList<CustomButton> buttons;
 	
 	public ControlPanel() {
 		this.elementList = new ArrayList<>();
 		setBorder("ControlPanel");
 		elementList = new ArrayList<>();
+		buttons = new ArrayList<>();
 		setLayoutBehavior(new FlowLayoutBehavior());
 		performUpdateLayout(this, Constants.CONTROL_PANEL_WIDTH,Constants.CONTROL_PANEL_HEIGHT);
 	}
@@ -49,7 +50,7 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	{
 		this.driver = driver;
 		
-	    createReplay();
+//	    createReplay();
 //	    createUndo();
 //	    createStart();
 //	    createPause();
@@ -59,11 +60,11 @@ public class ControlPanel  extends AbstractPanel implements Element {
 //	    createLayout();
 	}
 	
-	public void createReplay() {
-		CustomButton replayButton = new CustomButton("Replay", "replay", 50,50,driver);
-		this.add(replayButton);
-
-	}
+//	public void createReplay() {
+//		CustomButton replayButton = new CustomButton("Replay", "replay", 50,50,driver);
+//		this.add(replayButton);
+//
+//	}
 //	
 //	public void createUndo() {
 //		ControlPanelButton undoButton = new ControlPanelButton("Undo", "undo", driver);
@@ -121,6 +122,14 @@ public class ControlPanel  extends AbstractPanel implements Element {
 		elementList.remove(e);
 	}
 
+	public ArrayList<Element> getElements() {
+		return elementList;
+	}
+
+	public void setElements(ArrayList<Element> elementList) {
+		this.elementList = elementList;
+	}
+
 	@Override
 	public void save(ObjectOutputStream op) {
 		for (Element element : elementList) {
@@ -129,9 +138,6 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	}
 	@Override
 	public Element load(ObjectInputStream ip) {
-		for (Element element : elementList) {
-			element.load(ip);
-		}
 		ArrayList<Element> loadComponents = new ArrayList<>();
 		for (Element element : elementList) {
 			loadComponents.add(element.load(ip));
@@ -144,8 +150,22 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
+		this.removeAll();
 		for(Element element : elementList) {
 			element.reset();
 		}
+	}
+
+	public void addButtons(CustomButton button) {
+		buttons.add(button);
+		this.add(button);
+	}
+	
+	public ArrayList<CustomButton> getButtons() {
+		return buttons;
+	}
+
+	public void setButtons(ArrayList<CustomButton> buttons) {
+		this.buttons = buttons;
 	}
 }

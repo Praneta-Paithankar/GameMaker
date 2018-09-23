@@ -1,3 +1,4 @@
+
 package com.controller;
 
 import java.awt.event.ActionEvent;
@@ -11,17 +12,20 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 
 import com.commands.ChangeVelXCommand;
 import com.commands.ChangeVelYCommand;
+import com.commands.KeyMoveCommand;
 import com.commands.MoveCommand;
 import com.commands.TimerCommand;
 import com.components.Clock;
@@ -32,8 +36,11 @@ import com.infrastruture.ActionType;
 import com.infrastruture.Command;
 import com.infrastruture.Constants;
 import com.infrastruture.Direction;
+import com.infrastruture.Element;
+import com.infrastruture.KeyType;
 import com.infrastruture.Observer;
 import com.timer.GameTimer;
+import com.ui.CustomButton;
 import com.ui.GUI;
 
 public class MainController implements Observer, KeyListener, ActionListener{
@@ -65,6 +72,26 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		}
 		if(commandText.equals("AddControlElement")) {
 			designController.addControlElement();
+			gui.changeFocus();
+		}
+		ActionType actionType = designController.getActionTypeBasedOnButtonCommand(commandText);
+		if(actionType != null) {
+			if(actionType == ActionType.PLAY) {
+				start();
+			}else if(actionType == ActionType.PAUSE) {
+				pause();
+			}else if(actionType == ActionType.REPLAY) {
+				replay();
+			}else if(actionType == ActionType.SAVE) {
+				save();
+			}else if(actionType == ActionType.LOAD) {
+				load();
+			}else if(actionType == ActionType.UNDO) {
+				undo();
+			}else if (actionType == ActionType.RESET) {
+				gameReset();
+			}
+			
 		}
 	}
 
@@ -72,27 +99,23 @@ public class MainController implements Observer, KeyListener, ActionListener{
 	public void keyPressed(KeyEvent e) {
 		List<GameElement> elements= designController.getKeyboardElementsBasedKeys(e.getKeyCode());
 		if(elements != null) {
-			
-			for(GameElement element: elements) {
-				Direction direction = collisionChecker.checkCollisionBetweenGameElementAndBounds(element);
-				if(direction == direction.X) {
-					Command command = new ChangeVelXCommand(element);
-					command.execute();
-					addCommand(command);
-				}
-				else if(direction == direction.Y) {
-					 Command command = new ChangeVelYCommand(element);
-					 command.execute();
-					 addCommand(command);
-				}
-				Command command = createCommand(element);
-				command.execute();
-				addCommand(command);
+			KeyType key = null ;
+			if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+				key = KeyType.LEFT;
+			}else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				key = KeyType.RIGHT;
+			}else if(e.getKeyCode() == KeyEvent.VK_UP) {
+				key = KeyType.UP;
+			}else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				key = KeyType.DOWN;
 			}
-			for(Collider collider: designController.getColliders()) {
-				collider.execute(this);
+			for(GameElement element: elements) {
+				Command keyMoveCommand = new KeyMoveCommand(element,key);
+				keyMoveCommand.execute();
+				addCommand(keyMoveCommand);
 			}
 		}
+		
 	}
 
 	@Override
@@ -109,11 +132,14 @@ public class MainController implements Observer, KeyListener, ActionListener{
 
 	@Override
 	public void update() {
-		Clock clock = designController.getClock();
 		TimerCommand timerCommand = new TimerCommand(designController.getClock());
 		timerCommand.execute();
 		addCommand(timerCommand);
-		for(GameElement element : designController.getGraphicsElements()) {
+		for(Collider collider: designController.getColliders()) {
+			collider.execute(this);
+		}
+		List<GameElement> graphicsElements = designController.getTimerElements();
+		for(GameElement element: graphicsElements) {
 			Direction direction = collisionChecker.checkCollisionBetweenGameElementAndBounds(element);
 			if(direction == direction.X) {
 				Command command = new ChangeVelXCommand(element);
@@ -125,23 +151,48 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				 command.execute();
 				 addCommand(command);
 			}
-		}
-		for(Collider collider: designController.getColliders()) {
-			collider.execute(this);
-		}
-		List<GameElement> graphicsElements = designController.getTimerElements();
-		for(GameElement element: graphicsElements) {
 			Command command = createCommand(element);
 			command.execute();
 			addCommand(command);
 		}
+		List<GameElement> scoreElements = designController.getScoreElementList();
+		for(GameElement element : scoreElements) {
+			if(element.isVisible())
+				break;
+			SwingUtilities.invokeLater(
+  					new Runnable() {
+
+  						@Override
+  						public void run() {
+  						
+  							gameOver();	
+  						}
+			});
+		}
+		if(designController.isTimerConstraintSpecified())
+		{
+			Clock clock = designController.getClock();
+			if(clock.getMilisecondsElapsed() >= designController.getTimeConstraintinmilliSeconds()) {
+				SwingUtilities.invokeLater(
+	  					new Runnable() {
+
+	  						@Override
+	  						public void run() {
+	  						
+	  							gameOver();	
+	  						}
+				});
+			}
+		}
+		gui.draw(null);
 	}	
+
+
 	public void start() {
 		if(isGamePaused) {
 			unPause();
 		}
-		gui.dispose();
-		gui.revalidate();
+		gui.changeFocus();
 		observable.registerObserver(this);
 	}
 	
@@ -153,6 +204,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		} else {
 			undoAction();
 		}
+		gui.changeFocus();
 	}
 	private void undoAction() {
 		int count = 0;
@@ -170,7 +222,6 @@ public class MainController implements Observer, KeyListener, ActionListener{
 	
 	private void replayAction() {
 		// TODO Auto-generated method stub
-		
 	    final Iterator<Command> itr = commandQueue.iterator();
 		new Thread(){
 			public void run(){
@@ -239,8 +290,19 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			if(!fileName.isEmpty()) {
 			FileOutputStream fileOut = new FileOutputStream(fileName);
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
-			
-			gui.save(out);
+			List<Element> list = gui.getGamePanel().getElements();
+			out.writeObject(list);
+			list = gui.getControlPanel().getElements();
+			for(Element ele : list) {
+				if(ele instanceof Clock) {
+					designController.setClock((Clock)ele);
+					break;
+				}
+			}
+			out.writeObject(list);
+			List<CustomButton> buttons  = gui.getControlPanel().getButtons();
+			out.writeObject(buttons);
+			//gui.add(out)
 			out.writeObject(commandQueue);
 			out.writeObject(designController.getColliders());
 			out.writeObject(designController.getControlElements());
@@ -263,11 +325,28 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				FileInputStream fileIn =new FileInputStream(fileName);
 				ObjectInputStream in = new ObjectInputStream(fileIn);
 			
-				gui.load(in);
+				ArrayList<Element> gameElements = (ArrayList<Element>) in.readObject();
+				ArrayList<Element> controlpanelElements = (ArrayList<Element>) in.readObject();
+				ArrayList<CustomButton>  controlpanelButtons = (ArrayList<CustomButton>) in.readObject();
+		
+				gui.getGamePanel().setElement(gameElements);
+				gui.getControlPanel().reset();
+				gui.getControlPanel().setElements(controlpanelElements);
+				gui.getControlPanel().setButtons(new ArrayList<CustomButton>());
+				for(CustomButton button: controlpanelButtons) {
+					button.addController(this);
+					gui.getControlPanel().addButtons(button);
+				}
+				
+				
+				//gui.load(in);
 			
-				//List<GameElement> graphicsElements = gui.getGamePanel().getElements();
-				//designController.setGraphicsElements(graphicsElements);
-			
+				List<GameElement>elements = new ArrayList<>();
+			    for(Element e :gameElements) {
+			    	elements.add((GameElement) e);
+			    }
+			    designController.setGraphicsElements(elements);
+			    
 				commandQueue.clear();
 				Deque<Command> loadCmdQueue = (Deque<Command>) in.readObject();
 				commandQueue.addAll(loadCmdQueue);
@@ -292,7 +371,22 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			e.printStackTrace();
 			log.error(e.getMessage());
 		}
+		gui.revalidate();
 		gui.draw(null);
+		gui.changeFocus();
+
+	}
+	public void gameOver() {
+		pause();
+		Object[] options = { "Exit"}; 
+		String outputMsg = new String();
+		outputMsg = "Your Score is " + designController.getScoreBoard().getScore();
+		int a = JOptionPane.showOptionDialog(gui.getGamePanel(), outputMsg, "Game Over", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE
+				, null, options, null);
+		
+		if(a == JOptionPane.OK_OPTION) {
+			System.exit(0);
+		}
 	}
 	
 	public Command createCommand(GameElement element) {
