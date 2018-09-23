@@ -7,6 +7,8 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 
 import com.components.GameElement;
+import com.dimension.Coordinate;
+import com.infrastruture.Constants;
 import com.infrastruture.Direction;
 
 public class CollisionChecker {
@@ -28,33 +30,37 @@ public class CollisionChecker {
 	}
 	
 	public Direction checkCollisionBetweenGameElementAndBounds(GameElement element) {
-		int currentBallPosX = element.getX();
-		int currentBallPosY = element.getY();
-		int leftWallPosition = 1;
-		int rightWallPosition = 2;
-		int topWallPosition = 3;
-		int bottomWallPosition = 4;
-		// check for hit on the wall
-		boolean hitLeftWall = currentBallPosX + element.getVelX() < leftWallPosition;
-		boolean hitRightWall = currentBallPosX +  element.getWidth()+ element.getVelX() > rightWallPosition;
-		boolean hitTopWall = currentBallPosY + element.getVelY() < topWallPosition;
-		boolean hitBottomWall = currentBallPosY + element.getHeight() + element.getVelY() > bottomWallPosition;
-		
-		// if ball hits one of the horizontal sides of wall
-		if (hitLeftWall || hitRightWall) {
-			return Direction.X;
-		}
-		// if ball hits one of the vertical sides of wall
-		if (hitTopWall) {
-			return Direction.Y;
-		}
 
-		if (hitBottomWall) {
-			JOptionPane.showMessageDialog(null, "Game Over");
-			System.exit(0);
-		}
+		Coordinate delta = element.getCoordinate();
+		
+ 		//get current position of ball
+ 		int left =  element.getX();
+ 		int right = element.getX() + element.getWidth();
+ 		int top = element.getY();
+ 		int bottom = element.getY() + element.getHeight();
+ 		
+ 		
+ 		if((left <=0) && (delta.getX() < 0))
+ 		{
+ 		    return Direction.X;
+ 		}
+ 		if((right >= Constants.GAME_PANEL_WIDTH) && (delta.getX() > 0))
+ 		{
+ 			return Direction.X;
+ 		}
+ 		if((top <=0) && (delta.getY() < 0))
+ 		{
+ 			return Direction.Y;
+ 		}
+ 		if((bottom >= Constants.GAME_PANEL_HEIGHT) && (delta.getY() > 0))
+ 		{
+ 			return Direction.Y;
+ 		}
+ 	
 		return Direction.NONE;
+ 	
 	}
+	
 	
 	public Direction checkCollisionBetweenGameElements(GameElement element1, GameElement element2) {
 		int element1PrevOffsetX = element1.getX() - element1.getVelX();

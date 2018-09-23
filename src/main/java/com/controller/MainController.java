@@ -1,3 +1,4 @@
+
 package com.controller;
 
 import java.awt.event.ActionEvent;
@@ -11,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +24,7 @@ import org.apache.log4j.Logger;
 
 import com.commands.ChangeVelXCommand;
 import com.commands.ChangeVelYCommand;
+import com.commands.KeyVelChange;
 import com.commands.MoveCommand;
 import com.commands.TimerCommand;
 import com.components.Clock;
@@ -32,6 +35,8 @@ import com.infrastruture.ActionType;
 import com.infrastruture.Command;
 import com.infrastruture.Constants;
 import com.infrastruture.Direction;
+import com.infrastruture.Element;
+import com.infrastruture.KeyType;
 import com.infrastruture.Observer;
 import com.timer.GameTimer;
 import com.ui.GUI;
@@ -65,10 +70,13 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		}
 		if(commandText.equals("AddControlElement")) {
 			designController.addControlElement();
+			gui.changeFocus();
 		}
+		System.out.println(commandText);
 		ActionType actionType = designController.getActionTypeBasedOnButtonCommand(commandText);
 		if(actionType != null) {
 			if(actionType == ActionType.PLAY) {
+				System.out.println(ActionType.PLAY);
 				start();
 			}else if(actionType == ActionType.PAUSE) {
 				pause();
@@ -91,8 +99,20 @@ public class MainController implements Observer, KeyListener, ActionListener{
 	public void keyPressed(KeyEvent e) {
 		List<GameElement> elements= designController.getKeyboardElementsBasedKeys(e.getKeyCode());
 		if(elements != null) {
-			
+			KeyType key = null ;
+			if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+				key = KeyType.LEFT;
+			}else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				key = KeyType.RIGHT;
+			}else if(e.getKeyCode() == KeyEvent.VK_UP) {
+				key = KeyType.UP;
+			}else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				key = KeyType.DOWN;
+			}
 			for(GameElement element: elements) {
+				Command keyVelChangeCommand = new KeyVelChange(element,key);
+				keyVelChangeCommand.execute();
+				addCommand(keyVelChangeCommand);
 				Direction direction = collisionChecker.checkCollisionBetweenGameElementAndBounds(element);
 				if(direction == direction.X) {
 					Command command = new ChangeVelXCommand(element);
@@ -108,10 +128,8 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				command.execute();
 				addCommand(command);
 			}
-			for(Collider collider: designController.getColliders()) {
-				collider.execute(this);
-			}
 		}
+		
 	}
 
 	@Override
@@ -154,13 +172,15 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			command.execute();
 			addCommand(command);
 		}
+		gui.draw(null);
 	}	
 	public void start() {
 		if(isGamePaused) {
 			unPause();
 		}
-		gui.dispose();
-		gui.revalidate();
+//		gui.dispose();
+//		gui.revalidate();
+		gui.changeFocus();
 		observable.registerObserver(this);
 	}
 	
@@ -172,6 +192,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		} else {
 			undoAction();
 		}
+		gui.changeFocus();
 	}
 	private void undoAction() {
 		int count = 0;
@@ -189,7 +210,6 @@ public class MainController implements Observer, KeyListener, ActionListener{
 	
 	private void replayAction() {
 		// TODO Auto-generated method stub
-		
 	    final Iterator<Command> itr = commandQueue.iterator();
 		new Thread(){
 			public void run(){
@@ -204,7 +224,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 								gui.draw(null);
 								try {
 									currentThread();
-									Thread.sleep(10);
+									Thread.sleep(Constants.TIMER_COUNT);
 								} catch (InterruptedException e) {
 									// TODO Auto-generated catch block
 									log.error(e.getMessage());
@@ -284,9 +304,9 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			
 				gui.load(in);
 			
-				//List<GameElement> graphicsElements = gui.getGamePanel().getElements();
-				//designController.setGraphicsElements(graphicsElements);
-			
+//				ArrayList<Element> graphicsElements = gui.getGamePanel().getElements();
+//				designController.setGraphicsElements((Graphics)graphicsElements);
+//			
 				commandQueue.clear();
 				Deque<Command> loadCmdQueue = (Deque<Command>) in.readObject();
 				commandQueue.addAll(loadCmdQueue);
