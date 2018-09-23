@@ -165,7 +165,7 @@ public class GameElement implements Element,Serializable{
 	}
 	
 	public int getX() {
-		return coordinate.getX();
+		return actualCoordinate.getX();
 	}
 	
 	public void setX(int x) {
@@ -173,7 +173,7 @@ public class GameElement implements Element,Serializable{
 	}
 	
 	public int getY() {
-		return coordinate.getY();
+		return actualCoordinate.getY();
 	}
 	
 	public void setY(int y) {

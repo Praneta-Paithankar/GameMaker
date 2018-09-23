@@ -75,8 +75,6 @@ public class DesignController implements Serializable{
 		GameElement elementBall1 =  new GameElement(new Dimensions(15), new Coordinate(100, 100), "Ball", MoveType.FREE,1,1, "Oval");
 		elementBall1.setColor(Color.BLACK);
 		elementBall1.setDraw(new DrawOvalColor());
-		elementBall1.setVelX(1);
-		elementBall1.setVelY(1);
 		elementBall1.setVisible(true);
 		
 		GameElement elementBrick1 = new GameElement(new Dimensions(50, 25), new Coordinate(250, 90), "Brick", MoveType.FIXED,0,0, "Rectangle");
