@@ -18,13 +18,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 
 import com.commands.ChangeVelXCommand;
 import com.commands.ChangeVelYCommand;
-import com.commands.KeyVelChange;
+import com.commands.KeyMoveCommand;
 import com.commands.MoveCommand;
 import com.commands.TimerCommand;
 import com.components.Clock;
@@ -73,11 +74,9 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			designController.addControlElement();
 			gui.changeFocus();
 		}
-		System.out.println(commandText);
 		ActionType actionType = designController.getActionTypeBasedOnButtonCommand(commandText);
 		if(actionType != null) {
 			if(actionType == ActionType.PLAY) {
-				System.out.println(ActionType.PLAY);
 				start();
 			}else if(actionType == ActionType.PAUSE) {
 				pause();
@@ -111,23 +110,9 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				key = KeyType.DOWN;
 			}
 			for(GameElement element: elements) {
-				Command keyVelChangeCommand = new KeyVelChange(element,key);
-				keyVelChangeCommand.execute();
-				addCommand(keyVelChangeCommand);
-				Direction direction = collisionChecker.checkCollisionBetweenGameElementAndBounds(element);
-				if(direction == direction.X) {
-					Command command = new ChangeVelXCommand(element);
-					command.execute();
-					addCommand(command);
-				}
-				else if(direction == direction.Y) {
-					 Command command = new ChangeVelYCommand(element);
-					 command.execute();
-					 addCommand(command);
-				}
-				Command command = createCommand(element);
-				command.execute();
-				addCommand(command);
+				Command keyMoveCommand = new KeyMoveCommand(element,key);
+				keyMoveCommand.execute();
+				addCommand(keyMoveCommand);
 			}
 		}
 		
@@ -150,7 +135,11 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		TimerCommand timerCommand = new TimerCommand(designController.getClock());
 		timerCommand.execute();
 		addCommand(timerCommand);
-		for(GameElement element : designController.getGraphicsElements()) {
+		for(Collider collider: designController.getColliders()) {
+			collider.execute(this);
+		}
+		List<GameElement> graphicsElements = designController.getTimerElements();
+		for(GameElement element: graphicsElements) {
 			Direction direction = collisionChecker.checkCollisionBetweenGameElementAndBounds(element);
 			if(direction == direction.X) {
 				Command command = new ChangeVelXCommand(element);
@@ -162,18 +151,28 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				 command.execute();
 				 addCommand(command);
 			}
-		}
-		for(Collider collider: designController.getColliders()) {
-			collider.execute(this);
-		}
-		List<GameElement> graphicsElements = designController.getTimerElements();
-		for(GameElement element: graphicsElements) {
 			Command command = createCommand(element);
 			command.execute();
 			addCommand(command);
 		}
+		List<GameElement> scoreElements = designController.getScoreElementList();
+		for(GameElement element : scoreElements) {
+			if(element.isVisible())
+				break;
+			SwingUtilities.invokeLater(
+  					new Runnable() {
+
+  						@Override
+  						public void run() {
+  						
+  							gameOver();	
+  						}
+			});
+		}
 		gui.draw(null);
 	}	
+
+
 	public void start() {
 		if(isGamePaused) {
 			unPause();
@@ -361,6 +360,18 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		gui.draw(null);
 		gui.changeFocus();
 
+	}
+	public void gameOver() {
+		pause();
+		Object[] options = { "Exit"}; 
+		String outputMsg = new String();
+		outputMsg = "Your Score is " + designController.getScoreBoard().getScore();
+		int a = JOptionPane.showOptionDialog(gui.getGamePanel(), outputMsg, "Game Over", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE
+				, null, options, null);
+		
+		if(a == JOptionPane.OK_OPTION) {
+			System.exit(0);
+		}
 	}
 	
 	public Command createCommand(GameElement element) {

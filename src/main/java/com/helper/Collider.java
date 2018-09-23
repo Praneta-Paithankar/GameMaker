@@ -36,7 +36,15 @@ public class Collider implements Serializable {
 	}
 	
 	public void execute(MainController controller) {
+		
 		if(element1.isVisible() && element2.isVisible() && collisionChecker.checkIntersectionBetweenElements(element1, element2)) {
+		
+			if(eventList != null) {
+				for(Command eventCommand : eventList) {
+					eventCommand.execute();
+					controller.addCommand(eventCommand);
+				}
+			}
 			Command command = getCollisionAction(element1, collisionType1);
 			if (collisionType1 == CollisionType.BOUNCE) {
 				Direction direction = collisionChecker.checkCollisionBetweenGameElements(element1, element2);
@@ -51,10 +59,6 @@ public class Collider implements Serializable {
 			}
 			command.execute();
 			controller.addCommand(command);
-//			for(Command eventCommand : eventList) {
-//				eventCommand.execute();
-//				controller.addCommand(eventCommand);
-//			}
 		}
 	}
 	

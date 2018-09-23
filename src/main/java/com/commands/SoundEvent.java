@@ -1,5 +1,6 @@
 package com.commands;
 
+import java.io.File;
 import java.io.Serializable;
 import java.net.URL;
 
@@ -22,24 +23,28 @@ public class SoundEvent implements Command, Serializable{
 		this.filePath = filePath;
 	}
 	
-	public void loadClip() {
-		try {
-			URL url = this.getClass().getClassLoader().getResource(filePath);
-			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
-			clip = AudioSystem.getClip();
-			clip.open(audioInputStream);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	@Override
 	public void execute() {
-		loadClip();
-		if (clip.isRunning())
-			clip.stop();
-		clip.setFramePosition(0);
-		clip.start();
+		try {
+			File f = new File(filePath);
+			if(f.exists() && !f.isDirectory()) { 
+				URL url = this.getClass().getClassLoader().getResource(filePath);
+				AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
+				clip = AudioSystem.getClip();
+				clip.open(audioInputStream);
+				if (clip.isRunning())
+					clip.stop();
+				clip.setFramePosition(0);
+				clip.start();
+			}
+			else {
+				logger.error("Sound file is missing");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		
 	}
 
 	@Override
