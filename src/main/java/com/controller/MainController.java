@@ -175,15 +175,15 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		for(GameElement element : scoreElements) {
 			if(element.isVisible())
 				continue;
-			handleGameTermination();
+//			handleGameTermination();
 		}
 		gui.draw(null);
 	}	
-	private void handleGameTermination() {
-		if(!observable.isObserverListEmpty())
-			observable.removeObserver(this);
-		//Game End condition
-	}
+//	private void handleGameTermination() {
+//		if(!observable.isObserverListEmpty())
+//			observable.removeObserver(this);
+//		//Game End condition
+//	}
 
 
 	public void start() {
