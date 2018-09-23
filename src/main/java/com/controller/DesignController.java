@@ -12,6 +12,7 @@ import javax.swing.JComponent;
 
 import com.components.Clock;
 import com.components.GameElement;
+import com.components.ScoreBoard;
 import com.dimension.Coordinate;
 import com.dimension.Dimensions;
 import com.helper.Collider;
@@ -38,7 +39,8 @@ public class DesignController implements Serializable{
 	private List<Collider> colliders;
 	private Clock clock;
 	private MainController mainController;
-	
+	private ScoreBoard scoreBoard;
+
 	public DesignController(GUI gui) {
 		mainJframe = gui;
 		graphicsElements = new ArrayList<>();
@@ -96,7 +98,7 @@ public class DesignController implements Serializable{
 		elementBrick3.setDraw(new DrawRectangularColorShape());
 		elementBrick3.setVisible(true);
 		clock = new Clock(new Coordinate(30, 60));
-		
+		scoreBoard = new ScoreBoard(new Coordinate(30,500));
 		
 		// add element into elements
 		graphicsElements.add(elementPaddle);
@@ -156,6 +158,7 @@ public class DesignController implements Serializable{
 		mainJframe.getGamePanel().addComponent(elementBrick1);
 		mainJframe.getGamePanel().addComponent(elementBrick3);
 		mainJframe.getGamePanel().addComponent(elementBrick2);
+		mainJframe.getControlPanel().addComponent(scoreBoard);
 		mainJframe.getControlPanel().addComponent(clock);
 
 		mainJframe.revalidate();
@@ -234,4 +237,11 @@ public class DesignController implements Serializable{
 		this.mainController = mainController;
 	}
 	
+	public ScoreBoard getScoreBoard() {
+		return scoreBoard;
+	}
+
+	public void setScoreBoard(ScoreBoard scoreBoard) {
+		this.scoreBoard = scoreBoard;
+	}
 }
