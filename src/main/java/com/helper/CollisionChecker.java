@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 
 import com.components.GameElement;
+import com.dimension.Circle;
 import com.dimension.Coordinate;
 import com.infrastruture.Constants;
 import com.infrastruture.Direction;
