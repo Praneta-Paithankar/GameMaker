@@ -56,6 +56,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JPanel graphic;
 	private JPanel control;
 	private JPanel cards;
+	private JButton addGraphicElementButton;
+	private boolean finished;
 	private ArrayList<Element> elements;
 	final static String CIRCLE = "Circle Shape";
     final static String SQUARE = "Square Shape";
@@ -123,7 +125,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		// This button adds a new combo box to select basic shape of the 	
 		//for graphic tab
 		JButton addGraphicElementButton = new JButton("Add Element");
-
+		finished = true; // used for disabling the button
+		
 		addGraphicElementButton.addActionListener(this);
 		addGraphicElementButton.setActionCommand("addElement");
 		addGraphicElementButton.setVisible(true);
@@ -219,9 +222,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.validate();
 	}
 	
-	public void addElementSelect() {
+	public void addElementSelect(JButton pressed) {
 		//Where the components controlled by the CardLayout are initialized:
-		
+		this.finished = false; // PRevents user adding another element until finished
+		pressed.setEnabled(this.finished);
 		//Create the "cards".
 		JPanel card1 = new JPanel();
 		card1.add(new JTextField("Object Name", 20));
@@ -428,7 +432,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand().equals("addElement")) {
-			this.addElementSelect();
+			this.addElementSelect((JButton)e.getSource());
 		}
 		if (e.getActionCommand().equals("ElementButton")) {
 			this.controlElementButtonSelect();
