@@ -6,13 +6,14 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 import com.components.GameElement;
 import com.dimension.Coordinate;
 import com.dimension.Dimensions;
 import com.infrastruture.Drawable;
 
-public class DrawRectangularImage implements Drawable{
+public class DrawRectangularImage implements Drawable,Serializable{
 	
 	private BufferedImage image;
 	
