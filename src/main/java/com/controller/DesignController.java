@@ -10,15 +10,20 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
+import com.commands.ScoreEvent;
+import com.commands.SoundEvent;
 import com.components.Clock;
 import com.components.GameElement;
+import com.components.ScoreBoard;
 import com.dimension.Coordinate;
 import com.dimension.Dimensions;
 import com.helper.Collider;
 import com.helper.CollisionChecker;
 import com.infrastruture.ActionType;
 import com.infrastruture.CollisionType;
+import com.infrastruture.Command;
 import com.infrastruture.Element;
+import com.infrastruture.Event;
 import com.infrastruture.MoveType;
 import com.strategy.DrawOvalColor;
 import com.strategy.DrawRectangularColorShape;
@@ -34,9 +39,11 @@ public class DesignController implements Serializable{
 	private HashMap<Integer,List<GameElement>> keyboardElements;
 	private HashMap <String,ActionType> controlElements;
 	private List<Collider> colliders;
+	private List<GameElement> scoreElementList;
 	private Clock clock;
 	private MainController mainController;
-	
+	private ScoreBoard scoreBoard;
+
 	public DesignController(GUI gui) {
 		mainJframe = gui;
 		graphicsElements = new ArrayList<>();
@@ -44,6 +51,7 @@ public class DesignController implements Serializable{
 		keyboardElements = new HashMap<>();
 		controlElements = new HashMap<>();
 		colliders = new ArrayList<>();
+		scoreElementList = new ArrayList<>();
 	}
 	
 	public List<GameElement> getKeyboardElementsBasedKeys(int key)
@@ -94,7 +102,11 @@ public class DesignController implements Serializable{
 		elementBrick3.setDraw(new DrawRectangularColorShape());
 		elementBrick3.setVisible(true);
 		clock = new Clock(new Coordinate(30, 60));
+		scoreBoard = new ScoreBoard(new Coordinate(30,500));
 		
+		scoreElementList.add(elementBrick1);
+		scoreElementList.add(elementBrick2);
+		scoreElementList.add(elementBrick3);
 		
 		// add element into elements
 		graphicsElements.add(elementPaddle);
@@ -102,11 +114,11 @@ public class DesignController implements Serializable{
 		graphicsElements.add(elementBall1);
 		graphicsElements.add(elementBrick1);
 		graphicsElements.add(elementBrick2);
-//		graphicsElements.add(elementBrick3);
+		graphicsElements.add(elementBrick3);
 		
 		timerElements.add(elementBall);
 		timerElements.add(elementBall1);
-//		timerElements.add(elementBrick3);
+		timerElements.add(elementBrick3);
 		
 		keyboardElements.put(KeyEvent.VK_LEFT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
 		keyboardElements.put(KeyEvent.VK_RIGHT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
@@ -119,20 +131,25 @@ public class DesignController implements Serializable{
 //		controlElements.put("REPLAY", ActionType.REPLAY);
 //		controlElements.put("CHANGELAYOUT", ActionType.CHANGELAYOUT);
 //		
+		Command soundEvent = new SoundEvent("explosion.wav");
+		Command scoreUpdate = new ScoreEvent(scoreBoard);
+		
+		ArrayList<Command> eventList= new ArrayList<>(Arrays.asList(soundEvent, scoreUpdate));
+		
 		CollisionChecker collisionChecker = new CollisionChecker();
-		Collider ballPaddle = new Collider(elementBall, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker);
-		Collider ballBrick1 = new Collider(elementBall, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
-		Collider ballBrick2 = new Collider(elementBall, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
-		Collider ballBrick3 = new Collider(elementBall, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
+		Collider ballPaddle = new Collider(elementBall, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
+		Collider ballBrick1 = new Collider(elementBall, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
+		Collider ballBrick2 = new Collider(elementBall, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
+		Collider ballBrick3 = new Collider(elementBall, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
 		
-		Collider ballPaddle1 = new Collider(elementBall1, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker);
-		Collider ballBrick11 = new Collider(elementBall1, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
-		Collider ballBrick21 = new Collider(elementBall1, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
-		Collider ballBrick31 = new Collider(elementBall1, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
+		Collider ballPaddle1 = new Collider(elementBall1, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
+		Collider ballBrick11 = new Collider(elementBall1, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
+		Collider ballBrick21 = new Collider(elementBall1, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
+		Collider ballBrick31 = new Collider(elementBall1, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
 		
 		
 		
-		Collider ballball = new Collider(elementBall, elementBall1, CollisionType.BOUNCE, CollisionType.BOUNCE, collisionChecker);
+		Collider ballball = new Collider(elementBall, elementBall1, CollisionType.BOUNCE, CollisionType.BOUNCE, collisionChecker, null);
 		
 		colliders.add(ballPaddle);
 		colliders.add(ballBrick1);
@@ -152,6 +169,7 @@ public class DesignController implements Serializable{
 		mainJframe.getGamePanel().addComponent(elementBrick1);
 		mainJframe.getGamePanel().addComponent(elementBrick3);
 		mainJframe.getGamePanel().addComponent(elementBrick2);
+		mainJframe.getControlPanel().addComponent(scoreBoard);
 		mainJframe.getControlPanel().addComponent(clock);
 
 		mainJframe.revalidate();
@@ -230,4 +248,20 @@ public class DesignController implements Serializable{
 		this.mainController = mainController;
 	}
 	
+	public ScoreBoard getScoreBoard() {
+		return scoreBoard;
+	}
+
+	public void setScoreBoard(ScoreBoard scoreBoard) {
+		this.scoreBoard = scoreBoard;
+	}
+	
+	public List<GameElement> getScoreElementList() {
+		return scoreElementList;
+	}
+
+	public void setScoreElementList(List<GameElement> scoreElementList) {
+		this.scoreElementList = scoreElementList;
+	}
+
 }

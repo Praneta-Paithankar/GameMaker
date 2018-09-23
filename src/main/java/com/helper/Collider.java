@@ -1,6 +1,7 @@
 package com.helper;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
@@ -14,6 +15,7 @@ import com.controller.MainController;
 import com.infrastruture.CollisionType;
 import com.infrastruture.Command;
 import com.infrastruture.Direction;
+import com.infrastruture.Event;
 
 public class Collider implements Serializable {
 	public static final Logger logger = Logger.getLogger(Collider.class);
@@ -22,13 +24,15 @@ public class Collider implements Serializable {
 	private CollisionType collisionType1;
 	private CollisionType collisionType2;
 	private CollisionChecker collisionChecker;
+	private ArrayList<Command> eventList;
 	
-	public Collider(GameElement element1, GameElement element2, CollisionType collisionType1, CollisionType collisionType2,CollisionChecker collisionChecker) {
+	public Collider(GameElement element1, GameElement element2, CollisionType collisionType1, CollisionType collisionType2,CollisionChecker collisionChecker, ArrayList<Command> eventList) {
 		this.element1 = element1;
 		this.element2 = element2;
 		this.collisionType1 = collisionType1;
 		this.collisionType2 = collisionType2;
 		this.collisionChecker = collisionChecker;
+		this.eventList = eventList;
 	}
 	
 	public void execute(MainController controller) {
@@ -47,6 +51,10 @@ public class Collider implements Serializable {
 			}
 			command.execute();
 			controller.addCommand(command);
+			for(Command eventCommand : eventList) {
+				eventCommand.execute();
+				controller.addCommand(eventCommand);
+			}
 		}
 	}
 	
