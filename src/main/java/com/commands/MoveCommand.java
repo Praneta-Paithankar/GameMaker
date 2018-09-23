@@ -17,6 +17,7 @@ public class MoveCommand implements Command{
 	
 	public MoveCommand(GameElement element) {
 		this.element = element;
+		
 	}
 	
 	@Override

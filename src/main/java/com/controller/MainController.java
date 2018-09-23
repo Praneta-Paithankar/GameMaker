@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,6 +35,7 @@ import com.infrastruture.ActionType;
 import com.infrastruture.Command;
 import com.infrastruture.Constants;
 import com.infrastruture.Direction;
+import com.infrastruture.Element;
 import com.infrastruture.KeyType;
 import com.infrastruture.Observer;
 import com.timer.GameTimer;
@@ -68,6 +70,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		}
 		if(commandText.equals("AddControlElement")) {
 			designController.addControlElement();
+			gui.changeFocus();
 		}
 		System.out.println(commandText);
 		ActionType actionType = designController.getActionTypeBasedOnButtonCommand(commandText);
@@ -106,7 +109,6 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			}else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
 				key = KeyType.DOWN;
 			}
-			System.out.println(key);
 			for(GameElement element: elements) {
 				Command keyVelChangeCommand = new KeyVelChange(element,key);
 				keyVelChangeCommand.execute();
@@ -170,7 +172,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			command.execute();
 			addCommand(command);
 		}
-		gui.repaint();
+		gui.draw(null);
 	}	
 	public void start() {
 		if(isGamePaused) {
@@ -208,7 +210,6 @@ public class MainController implements Observer, KeyListener, ActionListener{
 	
 	private void replayAction() {
 		// TODO Auto-generated method stub
-		
 	    final Iterator<Command> itr = commandQueue.iterator();
 		new Thread(){
 			public void run(){
@@ -223,7 +224,7 @@ public class MainController implements Observer, KeyListener, ActionListener{
 								gui.draw(null);
 								try {
 									currentThread();
-									Thread.sleep(10);
+									Thread.sleep(Constants.TIMER_COUNT);
 								} catch (InterruptedException e) {
 									// TODO Auto-generated catch block
 									log.error(e.getMessage());
@@ -303,9 +304,9 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			
 				gui.load(in);
 			
-				//List<GameElement> graphicsElements = gui.getGamePanel().getElements();
-				//designController.setGraphicsElements(graphicsElements);
-			
+//				ArrayList<Element> graphicsElements = gui.getGamePanel().getElements();
+//				designController.setGraphicsElements((Graphics)graphicsElements);
+//			
 				commandQueue.clear();
 				Deque<Command> loadCmdQueue = (Deque<Command>) in.readObject();
 				commandQueue.addAll(loadCmdQueue);

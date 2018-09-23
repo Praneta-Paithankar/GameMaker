@@ -95,7 +95,6 @@ public class GamePanel extends AbstractPanel implements Element {
 
 	@Override
 	public void draw(Graphics g) {
-		
 		repaint();
 	}
 	
