@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
+import com.commands.ScoreEvent;
+import com.commands.SoundEvent;
 import com.components.Clock;
 import com.components.GameElement;
 import com.components.ScoreBoard;
@@ -17,9 +19,9 @@ import com.dimension.Coordinate;
 import com.dimension.Dimensions;
 import com.helper.Collider;
 import com.helper.CollisionChecker;
-import com.helper.SoundEvent;
 import com.infrastruture.ActionType;
 import com.infrastruture.CollisionType;
+import com.infrastruture.Command;
 import com.infrastruture.Element;
 import com.infrastruture.Event;
 import com.infrastruture.MoveType;
@@ -123,13 +125,16 @@ public class DesignController implements Serializable{
 //		controlElements.put("REPLAY", ActionType.REPLAY);
 //		controlElements.put("CHANGELAYOUT", ActionType.CHANGELAYOUT);
 //		
-		Event ballBrickEvent = new SoundEvent("explosion.wav");
+		Command soundEvent = new SoundEvent("explosion.wav");
+		Command scoreUpdate = new ScoreEvent(scoreBoard);
+		
+		ArrayList<Command> eventList= new ArrayList<>(Arrays.asList(soundEvent, scoreUpdate));
 		
 		CollisionChecker collisionChecker = new CollisionChecker();
 		Collider ballPaddle = new Collider(elementBall, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
-		Collider ballBrick1 = new Collider(elementBall, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, ballBrickEvent);
-		Collider ballBrick2 = new Collider(elementBall, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, ballBrickEvent);
-		Collider ballBrick3 = new Collider(elementBall, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, ballBrickEvent);
+		Collider ballBrick1 = new Collider(elementBall, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
+		Collider ballBrick2 = new Collider(elementBall, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
+		Collider ballBrick3 = new Collider(elementBall, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
 		
 		Collider ballPaddle1 = new Collider(elementBall1, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
 		Collider ballBrick11 = new Collider(elementBall1, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
