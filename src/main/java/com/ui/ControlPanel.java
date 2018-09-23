@@ -13,7 +13,6 @@ import javax.swing.border.TitledBorder;
 
 import com.behavior.FlowLayoutBehavior;
 import com.controller.MainController;
-import com.dimension.Coordinate;
 import com.ui.AbstractPanel;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
