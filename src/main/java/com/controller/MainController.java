@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 
 import com.commands.ChangeVelXCommand;
 import com.commands.ChangeVelYCommand;
-import com.commands.KeyVelChange;
+import com.commands.KeyMoveCommand;
 import com.commands.MoveCommand;
 import com.commands.TimerCommand;
 import com.components.Clock;
@@ -111,23 +111,23 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				key = KeyType.DOWN;
 			}
 			for(GameElement element: elements) {
-				Command keyVelChangeCommand = new KeyVelChange(element,key);
+				Command keyVelChangeCommand = new KeyMoveCommand(element,key);
 				keyVelChangeCommand.execute();
 				addCommand(keyVelChangeCommand);
-				Direction direction = collisionChecker.checkCollisionBetweenGameElementAndBounds(element);
-				if(direction == direction.X) {
-					Command command = new ChangeVelXCommand(element);
-					command.execute();
-					addCommand(command);
-				}
-				else if(direction == direction.Y) {
-					 Command command = new ChangeVelYCommand(element);
-					 command.execute();
-					 addCommand(command);
-				}
-				Command command = createCommand(element);
-				command.execute();
-				addCommand(command);
+//				Direction direction = collisionChecker.checkCollisionBetweenGameElementAndBounds(element);
+//				if(direction == direction.X) {
+//					Command command = new ChangeVelXCommand(element);
+//					command.execute();
+//					addCommand(command);
+//				}
+//				else if(direction == direction.Y) {
+//					 Command command = new ChangeVelYCommand(element);
+//					 command.execute();
+//					 addCommand(command);
+//				}
+//				Command command = createCommand(element);
+//				command.execute();
+//				addCommand(command);
 			}
 		}
 		
@@ -151,7 +151,11 @@ public class MainController implements Observer, KeyListener, ActionListener{
 		TimerCommand timerCommand = new TimerCommand(designController.getClock());
 		timerCommand.execute();
 		addCommand(timerCommand);
-		for(GameElement element : designController.getGraphicsElements()) {
+		for(Collider collider: designController.getColliders()) {
+			collider.execute(this);
+		}
+		List<GameElement> graphicsElements = designController.getTimerElements();
+		for(GameElement element: graphicsElements) {
 			Direction direction = collisionChecker.checkCollisionBetweenGameElementAndBounds(element);
 			if(direction == direction.X) {
 				Command command = new ChangeVelXCommand(element);
@@ -163,18 +167,25 @@ public class MainController implements Observer, KeyListener, ActionListener{
 				 command.execute();
 				 addCommand(command);
 			}
-		}
-		for(Collider collider: designController.getColliders()) {
-			collider.execute(this);
-		}
-		List<GameElement> graphicsElements = designController.getTimerElements();
-		for(GameElement element: graphicsElements) {
 			Command command = createCommand(element);
 			command.execute();
 			addCommand(command);
 		}
+		List<GameElement> scoreElements = designController.getScoreElementList();
+		for(GameElement element : scoreElements) {
+			if(element.isVisible())
+				continue;
+			handleGameTermination();
+		}
 		gui.draw(null);
 	}	
+	private void handleGameTermination() {
+		if(!observable.isObserverListEmpty())
+			observable.removeObserver(this);
+		//Game End condition
+	}
+
+
 	public void start() {
 		if(isGamePaused) {
 			unPause();

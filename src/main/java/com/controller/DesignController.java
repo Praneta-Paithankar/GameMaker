@@ -149,13 +149,13 @@ public class DesignController implements Serializable{
 		
 		
 		
-		Collider ballball = new Collider(elementBall, elementBall1, CollisionType.BOUNCE, CollisionType.BOUNCE, collisionChecker, null);
+		//sCollider ballball = new Collider(elementBall, elementBall1, CollisionType.BOUNCE, CollisionType.BOUNCE, collisionChecker, null);
 		
 		colliders.add(ballPaddle);
 		colliders.add(ballBrick1);
 		colliders.add(ballBrick2);
 		colliders.add(ballBrick3);
-		colliders.add(ballball);
+		//colliders.add(ballball);
 		colliders.add(ballPaddle1);
 		colliders.add(ballBrick11);
 		colliders.add(ballBrick21);

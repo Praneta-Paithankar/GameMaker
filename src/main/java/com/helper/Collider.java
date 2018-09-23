@@ -51,9 +51,11 @@ public class Collider implements Serializable {
 			}
 			command.execute();
 			controller.addCommand(command);
-			for(Command eventCommand : eventList) {
-				eventCommand.execute();
-				controller.addCommand(eventCommand);
+			if(eventList != null) {
+				for(Command eventCommand : eventList) {
+					eventCommand.execute();
+					controller.addCommand(eventCommand);
+				}
 			}
 		}
 	}
