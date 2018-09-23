@@ -10,13 +10,13 @@ import org.apache.log4j.Logger;
 
 import com.infrastruture.Event;
 
-public class Sound implements Event{
+public class SoundEvent implements Event{
 	
-	public static final Logger logger = Logger.getLogger(Sound.class);
+	public static final Logger logger = Logger.getLogger(SoundEvent.class);
 	private String filePath;
 	private Clip clip;
 	
-	public Sound(String filePath) {
+	public SoundEvent(String filePath) {
 		this.filePath = filePath;
 	}
 	

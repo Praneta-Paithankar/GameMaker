@@ -16,7 +16,7 @@ import com.dimension.Coordinate;
 import com.dimension.Dimensions;
 import com.helper.Collider;
 import com.helper.CollisionChecker;
-import com.helper.Sound;
+import com.helper.SoundEvent;
 import com.infrastruture.ActionType;
 import com.infrastruture.CollisionType;
 import com.infrastruture.Element;
@@ -121,7 +121,7 @@ public class DesignController implements Serializable{
 //		controlElements.put("REPLAY", ActionType.REPLAY);
 //		controlElements.put("CHANGELAYOUT", ActionType.CHANGELAYOUT);
 //		
-		Event ballBrickEvent = new Sound("explosion.wav");
+		Event ballBrickEvent = new SoundEvent("explosion.wav");
 		
 		CollisionChecker collisionChecker = new CollisionChecker();
 		Collider ballPaddle = new Collider(elementBall, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
