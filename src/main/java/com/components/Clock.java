@@ -19,8 +19,9 @@ public class Clock implements Element, Serializable{
 	protected static Logger log = Logger.getLogger(Clock.class);
 	private long milisecondsElapsed;
 	private Coordinate position;
-	public Clock() {
+	public Clock(Coordinate position) {
 		milisecondsElapsed = 0;
+		this.position = position;
 	}
 
 //	public Clock(Clock c) {

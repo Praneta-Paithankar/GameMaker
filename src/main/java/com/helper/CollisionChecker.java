@@ -62,6 +62,7 @@ public class CollisionChecker {
  	
 	}
 	
+	
 	public Direction checkCollisionBetweenGameElements(GameElement element1, GameElement element2) {
 		int element1PrevOffsetX = element1.getX() - element1.getVelX();
 		int element1PrevOffsetY = element1.getVelY() - element1.getVelY(); 
