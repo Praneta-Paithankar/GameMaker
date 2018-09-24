@@ -760,8 +760,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             public void focusLost(FocusEvent e) {
             	int tempWidth = Integer.parseInt(width2.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-            	int tempHeight = tempElement.getActualDimensions().getHeight();
-            	tempElement.setActualDimension(new Dimensions(tempWidth, tempHeight),"Rectangle");
+            	tempElement.setWidth(tempWidth);
             	that.preview.addGameElement(tempElement);
             }
         });
@@ -776,8 +775,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             public void focusLost(FocusEvent e) {
             	int tempHeight = Integer.parseInt(height2.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-            	int tempWidth = tempElement.getActualDimensions().getWidth();
-            	tempElement.setActualDimension(new Dimensions(tempWidth, tempHeight),"Rectangle");
+            	tempElement.setHeight(tempHeight);
             	that.preview.addGameElement(tempElement);
             }
         });
@@ -813,8 +811,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             public void focusLost(FocusEvent e) {
             	int tempX = Integer.parseInt(xCoor2.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-            	int tempY = tempElement.getActualCoordinate().getY();
-            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	tempElement.setX(tempX);
             	that.preview.addGameElement(tempElement);
             }
         });
@@ -829,8 +826,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             public void focusLost(FocusEvent e) {
             	int tempY = Integer.parseInt(yCoor2.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-            	int tempX = tempElement.getActualCoordinate().getX();
-            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	tempElement.setY(tempY);
             	that.preview.addGameElement(tempElement);	
             }
         });
@@ -1042,8 +1038,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             public void focusLost(FocusEvent e) {
             	int tempX = Integer.parseInt(xCoor.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-            	int tempY = tempElement.getActualCoordinate().getY();
-            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	tempElement.setX(tempX);
             	that.preview.addGameElement(tempElement);
             }
         });
@@ -1056,10 +1051,9 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 
             @Override
             public void focusLost(FocusEvent e) {
-            	int tempX = Integer.parseInt(xCoor.getText());
+            	int tempY = Integer.parseInt(yCoor.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-            	int tempY = tempElement.getActualCoordinate().getY();
-            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	tempElement.setY(tempY);
             	that.preview.addGameElement(tempElement);	
             }
         });
