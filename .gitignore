@@ -3,6 +3,7 @@ log/
 
 *.log
 *.class
+*.wav
 /target/
 
 # Eclipse
