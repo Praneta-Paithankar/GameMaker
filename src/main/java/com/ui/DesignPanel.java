@@ -225,50 +225,51 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		
 		if(firstTime) {
 			this.firstTime = false;
-		JPanel colliderButtons = new JPanel(new FlowLayout());
-		addColliderButton = new JButton("Add Collider");
-		addColliderButton.setEnabled(this.finished);
-		addColliderButton.addActionListener(this);
-		addColliderButton.setActionCommand("addCollider");
-		colliderButtons.add(addColliderButton);
-		collider.add(colliderButtons);
-		
-		
-		//control variable
-		tendToAddButton = new CustomButton();
-		
-		buttonBuildPanel = new JPanel();
-		buttonBuildPanel.setAlignmentX(LEFT_ALIGNMENT);
-		
-		controlElementPanel = new JPanel();
-		controlElementPanel.setAlignmentX(LEFT_ALIGNMENT);
-		controlElementPanel.setBackground(Color.LIGHT_GRAY);
-		controlElementPanel.setLayout(new BoxLayout(controlElementPanel,BoxLayout.Y_AXIS));
-		
-		
-		// for control tab			
-		JButton controlElementButton = new JButton("Button");
-		controlElementButton.setFont(new Font("Times", Font.PLAIN, 12));
-		controlElementButton.addActionListener(this);
-		controlElementButton.setActionCommand("ElementButton");
-		controlElementButton.setVisible(true);
-		controlElementButton.setAlignmentX(LEFT_ALIGNMENT);
-		controlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
-		controlElementPanel.add(controlElementButton);
-		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
-		
-		control.add(controlElementPanel);
-		
-		//for collider
-		colliderComfire = new JButton("colliderComfire");
-		colliderComfire.setActionCommand("colliderComfire");
-		colliderComfire.setVisible(true);
-		colliderComfire.setAlignmentY(TOP_ALIGNMENT);;
-		collider.add(colliderComfire);
-		end = new EndingConditions();
-		JPanel buildConditionPanel = new JPanel();
-		iniBuildConditionPanel(buildConditionPanel);
-		timeLine.add(buildConditionPanel);
+			JPanel colliderButtons = new JPanel(new FlowLayout());
+			addColliderButton = new JButton("Add Collider");
+			addColliderButton.setEnabled(this.finished);
+			addColliderButton.addActionListener(this);
+			addColliderButton.setActionCommand("addCollider");
+			colliderButtons.add(addColliderButton);
+			collider.add(colliderButtons);
+			
+			
+			//control variable
+			tendToAddButton = new CustomButton();
+			
+			buttonBuildPanel = new JPanel();
+			buttonBuildPanel.setAlignmentX(LEFT_ALIGNMENT);
+			
+			controlElementPanel = new JPanel();
+			controlElementPanel.setAlignmentX(LEFT_ALIGNMENT);
+			controlElementPanel.setBackground(Color.LIGHT_GRAY);
+			controlElementPanel.setLayout(new BoxLayout(controlElementPanel,BoxLayout.Y_AXIS));
+			
+			
+			// for control tab			
+			JButton controlElementButton = new JButton("Button");
+			controlElementButton.setFont(new Font("Times", Font.PLAIN, 12));
+			controlElementButton.addActionListener(this);
+			controlElementButton.setActionCommand("ElementButton");
+			controlElementButton.setVisible(true);
+			controlElementButton.setAlignmentX(LEFT_ALIGNMENT);
+			controlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
+			controlElementPanel.add(controlElementButton);
+			controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
+			
+			control.add(controlElementPanel);
+			
+			//for collider
+			colliderComfire = new JButton("colliderComfire");
+			colliderComfire.setActionCommand("colliderComfire");
+			colliderComfire.setVisible(true);
+			colliderComfire.setAlignmentY(TOP_ALIGNMENT);
+			colliderComfire.addActionListener(this);
+			collider.add(colliderComfire);
+			end = new EndingConditions();
+			JPanel buildConditionPanel = new JPanel();
+			iniBuildConditionPanel(buildConditionPanel);
+			timeLine.add(buildConditionPanel);
 		}
 		if(gameElement!= null) {
 			this.addElementSelect(gameElement);
@@ -331,13 +332,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		JPanel card = this.collider;
 		
 		ArrayList<EventType> eventList = new ArrayList<>();
-		
-
 	
         JPanel colliderCard = new JPanel(); //use FlowLayout
         colliderCard.setLayout(new BoxLayout(colliderCard,BoxLayout.Y_AXIS));
         colliderCard.setMaximumSize(new Dimension(Constants.DESIGN_PANEL_WIDTH, 125));
-        this.collider.setBackground(Color.GREEN);
         
         ArrayList<String> names = new ArrayList<>();
         for(GameElement e: gameElements) {
@@ -348,13 +346,13 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         primary.add(new JLabel("Primary Object: ", JLabel.LEFT));
         JComboBox primaryBox = new JComboBox(names.toArray());
 		int nameIndex = primaryBox.getSelectedIndex();
-		String name = names.get(nameIndex);
+		//String name = names.get(nameIndex);
 		primary.add(primaryBox);
 		colliderCard.add(primary);
 		
         JPanel secondary = new JPanel(); //use FlowLayout
 		secondary.add(new JLabel("Secondary Object: ", JLabel.LEFT));
-        names.remove(nameIndex);
+        //names.remove(nameIndex);
 		JComboBox secondBox = new JComboBox(names.toArray());
 		int secondIndex = secondBox.getSelectedIndex();
 		secondary.add(secondBox);
@@ -394,7 +392,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		colliders.add(new Collider(gameElements.get(nameIndex), gameElements.get(secondIndex),
 				(CollisionType) collisionTypes.getSelectedItem(), (CollisionType) collisionTypes2.getSelectedItem(), 
 				collisionChecker, colliderEventLists.get(eventListIndex - 1))); 
-		
+//		
 
 		Border redline = BorderFactory.createLineBorder(Color.gray);
 		TitledBorder border = BorderFactory.createTitledBorder(
@@ -406,7 +404,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		
 		this.revalidate();
 	    this.repaint();
-	}	
+	}
 
 	public ArrayList<Element> getElements(){
 		return elements;
@@ -760,8 +758,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             public void focusLost(FocusEvent e) {
             	int tempWidth = Integer.parseInt(width2.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-            	int tempHeight = tempElement.getActualDimensions().getHeight();
-            	tempElement.setActualDimension(new Dimensions(tempWidth, tempHeight),"Rectangle");
+            	tempElement.setWidth(tempWidth);
             	that.preview.addGameElement(tempElement);
             }
         });
@@ -776,8 +773,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             public void focusLost(FocusEvent e) {
             	int tempHeight = Integer.parseInt(height2.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-            	int tempWidth = tempElement.getActualDimensions().getWidth();
-            	tempElement.setActualDimension(new Dimensions(tempWidth, tempHeight),"Rectangle");
+            	tempElement.setHeight(tempHeight);
             	that.preview.addGameElement(tempElement);
             }
         });
@@ -813,8 +809,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             public void focusLost(FocusEvent e) {
             	int tempX = Integer.parseInt(xCoor2.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-            	int tempY = tempElement.getActualCoordinate().getY();
-            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	tempElement.setX(tempX);
             	that.preview.addGameElement(tempElement);
             }
         });
@@ -829,8 +824,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             public void focusLost(FocusEvent e) {
             	int tempY = Integer.parseInt(yCoor2.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-            	int tempX = tempElement.getActualCoordinate().getX();
-            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	tempElement.setY(tempY);
             	that.preview.addGameElement(tempElement);	
             }
         });
@@ -952,12 +946,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
       
         this.revalidate();
 	    this.repaint();
-	}
-	
-	
-
-	
-	
+	}	
 	
 	// This creates the part of the design panel responsible for circle only properties 
 	private void createCircleCard(JPanel card, GameElement gameElement ) {
@@ -1042,8 +1031,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             public void focusLost(FocusEvent e) {
             	int tempX = Integer.parseInt(xCoor.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-            	int tempY = tempElement.getActualCoordinate().getY();
-            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	tempElement.setX(tempX);
             	that.preview.addGameElement(tempElement);
             }
         });
@@ -1056,10 +1044,9 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 
             @Override
             public void focusLost(FocusEvent e) {
-            	int tempX = Integer.parseInt(xCoor.getText());
+            	int tempY = Integer.parseInt(yCoor.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-            	int tempY = tempElement.getActualCoordinate().getY();
-            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	tempElement.setY(tempY);
             	that.preview.addGameElement(tempElement);	
             }
         });
@@ -1239,7 +1226,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		controlElementPanel.add(addControlElementButton);
 		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
 		endingConfirm.addActionListener(driver);
-		colliderComfire.addActionListener(driver);
+	
 	}
 	
 
@@ -1342,11 +1329,16 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 			Command GameOver = new GameOverEvent(driver);
 			colliderEventLists.get(eventListIndex -1).add(GameOver);
 		}
+		if(e.getActionCommand().equals("colliderComfire")) {
+			this.collidersFinished();
+		}
+		
 		
 	}
 
-	
-	
+	private void collidersFinished(){
+		designController.addGameColliders(colliders);
+	}
 
 	private void graphicElementFinished() {
 		this.finished = true;
