@@ -79,6 +79,13 @@ public class CollisionChecker implements Serializable {
 		ElementCoordinates e1 = getElementCoordinates(element1);
 		ElementCoordinates e2 = getElementCoordinates(element2);
 		
+		if(element1.getGameElementShape() == GameElementShape.RECTANGLE) {
+			if((element1.getX() <= e2.getTopRightX()) || (e1.getTopRightX() >= element2.getX()))
+				return Direction.X;
+			if((element1.getY() <= e2.getBottomLeftY()) || (e1.getBottomLeftY() >= element2.getY()))
+				return Direction.Y;
+		}
+		
 		//Approaching from top right and going towards 
 		if((e1.getBottomRightX() >= element2.getX() && e1.getBottomRightY() <= element2.getY()) ||
 				(e1.getBottomLeftX() <= e2.getTopRightX() && e1.getBottomLeftY() <= e2.getTopRightY())) {

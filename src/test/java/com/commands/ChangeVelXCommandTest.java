@@ -1,9 +1,8 @@
 package com.commands;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.components.GameElement;
-import com.dimension.Coordinate;
 
 public class ChangeVelXCommandTest {
 
@@ -27,24 +25,14 @@ public class ChangeVelXCommandTest {
 	
 	@Test
 	void ShouldChangeElementDirectionWhenExecuteCalled() {
-		Coordinate cord = mock(Coordinate.class);
-		when(element.getCoordinate()).thenReturn(cord);
-		when(cord.getX()).thenReturn(40);
-		
 		changeVelXCommand.execute();
 		
-		verify(element, times(2)).getCoordinate();
-	
+		verify(element, times(1)).setVelX(anyInt());
 	}
 		
 	void ShouldChangeBallDirectionWhenUndoCalled (){
-		Coordinate cord = mock(Coordinate.class);
-		when(element.getCoordinate()).thenReturn(cord);
-		when(cord.getX()).thenReturn(40);
-		
 		changeVelXCommand.undo();
 		
-		verify(element, times(2)).getCoordinate();
-		
+		verify(element, times(1)).setVelX(anyInt());
 	}
 }
