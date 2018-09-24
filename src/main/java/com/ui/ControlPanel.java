@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
@@ -23,10 +24,14 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	private MainController driver;
 	private ArrayList<Element> elementList;
 	private ArrayList<CustomButton> buttons;
+	private JLabel timer;
+	private JLabel scoreBoard;
 	
 	public ControlPanel() {
 		this.elementList = new ArrayList<>();
 		setBorder("ControlPanel");
+		timer = new JLabel();
+		scoreBoard = new JLabel();
 		elementList = new ArrayList<>();
 		buttons = new ArrayList<>();
 		setLayoutBehavior(new FlowLayoutBehavior());
@@ -49,54 +54,7 @@ public class ControlPanel  extends AbstractPanel implements Element {
 	public void createButtons(MainController driver)
 	{
 		this.driver = driver;
-		
-//	    createReplay();
-//	    createUndo();
-//	    createStart();
-//	    createPause();
-//	    
-//	    createSave();
-//	    createLoad();
-//	    createLayout();
 	}
-	
-//	public void createReplay() {
-//		CustomButton replayButton = new CustomButton("Replay", "replay", 50,50,driver);
-//		this.add(replayButton);
-//
-//	}
-//	
-//	public void createUndo() {
-//		ControlPanelButton undoButton = new ControlPanelButton("Undo", "undo", driver);
-//		this.add(undoButton);
-//
-//	}
-//	
-//	public void createStart() {
-//		ControlPanelButton startButton = new ControlPanelButton("Start", "start", driver);
-//		this.add(startButton);
-//	}
-//	
-//	public void createPause() {
-//		ControlPanelButton pauseButton = new ControlPanelButton("Pause", "pause", driver);
-//		this.add(pauseButton);
-//	}
-//
-//	public void createLayout() {
-//		ControlPanelButton layoutButton = new ControlPanelButton("Layout", "layout", driver);
-//		this.add(layoutButton);
-//	}
-//
-//	public void createLoad() {
-//		ControlPanelButton layoutButton = new ControlPanelButton("Load", "load", driver);
-//		this.add(layoutButton);
-//	}
-//
-//	public void createSave() {
-//		ControlPanelButton layoutButton = new ControlPanelButton("Save", "save", driver);
-//		this.add(layoutButton);
-//	}
-
 
 
 	@Override
@@ -167,5 +125,13 @@ public class ControlPanel  extends AbstractPanel implements Element {
 
 	public void setButtons(ArrayList<CustomButton> buttons) {
 		this.buttons = buttons;
+	}
+
+	public JLabel getTimer() {
+		return timer;
+	}
+
+	public void setTimer(JLabel timer) {
+		this.timer = timer;
 	}
 }
