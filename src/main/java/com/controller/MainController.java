@@ -222,6 +222,8 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			}
 			val.undo();
 		}
+		gui.revalidate();
+		gui.draw(null);
 	}
 	
 	private void replayAction() {
