@@ -22,6 +22,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import com.infrastruture.EventType;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -227,64 +229,56 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	}
 	// Adds collider
 	private void addCollider() {
-//		//CollisionChecker collisionChecker = new CollisionChecker();
-//		Collider ballPaddle = new Collider(elementBall, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker);
-//		Collider ballBrick1 = new Collider(elementBall, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
-//		Collider ballBrick2 = new Collider(elementBall, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
-//		Collider ballBrick3 = new Collider(elementBall, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
-//		
-		//GameElement one =
-		//colliders = new Collider()
+		CollisionChecker collisionChecker = new CollisionChecker();
 		
 		// TODO Auto-generated method stub
+		List<GameElement> gameElements = new ArrayList<>();
+		gameElements = designController.getGraphicsElements();
 		JPanel card = this.collider;
-		card.add(new JLabel("Primary: ", JLabel.LEFT));
-        JPanel comboBoxPane2 = new JPanel(); //use FlowLayout
+		
+        JPanel colliderCard = new JPanel(); //use FlowLayout
+        colliderCard.setLayout(new BoxLayout(colliderCard,BoxLayout.Y_AXIS));
+        
+        
+        
         ArrayList<String> names = new ArrayList<>();
-        for(GameElement e: designController.getGraphicsElements()) {
+        for(GameElement e: gameElements) {
         	names.add(e.getName());
         }
         
-		JComboBox primaryBox = new JComboBox(names.toArray());
-		primaryBox.addActionListener(this);
-		primaryBox.setActionCommand("moveTypeChanged");
+        JPanel primary = new JPanel(); //use FlowLayout
+        primary.add(new JLabel("Primary: ", JLabel.LEFT));
+        JComboBox primaryBox = new JComboBox(names.toArray());
 		int nameIndex = primaryBox.getSelectedIndex();
 		String name = names.get(nameIndex);
-		comboBoxPane2.add(primaryBox);
-		card.add(comboBoxPane2);
+		primary.add(primaryBox);
+		colliderCard.add(primary);
 		
-		card.add(new JLabel("Secondary: ", JLabel.LEFT));
         JPanel secondary = new JPanel(); //use FlowLayout
+		secondary.add(new JLabel("Secondary: ", JLabel.LEFT));
         names.remove(nameIndex);
 		JComboBox secondBox = new JComboBox(names.toArray());
-		secondBox.addActionListener(this);
-		secondBox.setActionCommand("moveTypeChanged");
 		int secondIndex = secondBox.getSelectedIndex();
-		comboBoxPane2.add(secondBox);
-		card.add(comboBoxPane2);
+		secondary.add(secondBox);
+		colliderCard.add(secondary);
 		
-		card.add(new JLabel("Collision Types: ", JLabel.LEFT));
+		
         JPanel collisionType = new JPanel(); //use FlowLayout
-        names.remove(nameIndex);
+        collisionType.add(new JLabel("Collision Types: ", JLabel.LEFT));
 		JComboBox collisionTypes = new JComboBox(CollisionType.values());
-		collisionTypes.addActionListener(this);
-		collisionTypes.setActionCommand("moveTypeChanged");
-		int collisionIndex = secondBox.getSelectedIndex();
-		comboBoxPane2.add(collisionTypes);
-		card.add(comboBoxPane2);
+		int collisionIndex = collisionTypes.getSelectedIndex();
+		collisionType.add(collisionTypes);
+		colliderCard.add(collisionType);
 		
-		card.add(new JLabel("Collision Types: ", JLabel.LEFT));
         JPanel collisionEvent = new JPanel(); //use FlowLayout
-        names.remove(nameIndex);
+		collisionEvent.add(new JLabel("Collision Types: ", JLabel.LEFT));
 		JComboBox collisionEvents = new JComboBox(EventType.values());
-		collisionTypes.addActionListener(this);
-		collisionTypes.setActionCommand("moveTypeChanged");
-		int collisioEvents = secondBox.getSelectedIndex();
-		comboBoxPane2.add(collisionEvents);
-		card.add(comboBoxPane2);
+		int eventIndex = collisionTypes.getSelectedIndex();
+		collisionEvent.add(collisionEvents);
+		colliderCard.add(collisionEvents);
 		
-		
-		
+		//colliders.add(new Collider(gameElements.get(nameIndex), gameElements.get(secondIndex), (CollisionType) collisionTypes.getSelectedItem(), (EventType) collisionEvents.getSelectedItem(), collisionChecker); 
+		card.add(colliderCard);
 		
 		this.revalidate();
 	    this.repaint();
@@ -380,7 +374,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		//Where the GUI is assembled:
 		//Put the JComboBox in a JPanel to get a nicer look.
 		comboBoxPane = new JPanel(); //use FlowLayout
-		String comboBoxItems[] = { RECTANGLE, CIRCLE };
+		String comboBoxItems[] = {CIRCLE, RECTANGLE };
 		JComboBox cb = new JComboBox(comboBoxItems);
 		cb.setEditable(false);
 		cb.addItemListener(this);
