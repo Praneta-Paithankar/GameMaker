@@ -164,7 +164,6 @@ public class DesignController implements Serializable{
 		if(isScoreElement) {
 			scoreElementList.add(element);
 		}
-		System.out.println(elementListner);
 		if(elementListner == ElementListener.TIMER) {
 			timerElements.add(element);
 		}

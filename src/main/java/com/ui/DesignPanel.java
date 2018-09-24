@@ -260,19 +260,19 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		scoreField.getDocument().putProperty("owner", scoreField);
 		
 
-		JPanel scoreFieldHolder = new JPanel();
-		scoreFieldHolder.add(c1);
-		scoreFieldHolder.add(scorelabel);
-		scoreFieldHolder.add(scoreField);
-		
 		JPanel timerFieldHolder = new JPanel();
-		timerFieldHolder.add(c2);
+		timerFieldHolder.add(c1);
 		timerFieldHolder.add(timerlabel);
 		timerFieldHolder.add(timerField);
 		
-		buildConditionPanel.add(scoreFieldHolder);
+		JPanel scoreFieldHolder = new JPanel();
+		scoreFieldHolder.add(c2);
+		scoreFieldHolder.add(scorelabel);
+		scoreFieldHolder.add(scoreField);
+			
+		//buildConditionPanel.add(scoreFieldHolder);
 		buildConditionPanel.add(timerFieldHolder);
-		buildConditionPanel.add(c3);
+		//buildConditionPanel.add(c3);
 		control.add(controlElementPanel);
 	}
 	// Adds collider
