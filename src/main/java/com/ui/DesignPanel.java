@@ -29,6 +29,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -139,6 +141,15 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		tabbedPane.addTab("TimeLine", null, timeLine, null);
 		tabbedPane.addTab("Colliders", null, scroller2, null);
 		tabbedPane.setPreferredSize(new Dimension(Constants.DESIGN_PANEL_WIDTH, 500));
+		ChangeListener changeListenerFortag = new ChangeListener() {
+		      public void stateChanged(ChangeEvent changeEvent) {
+		        JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+		        preview.removeAll();
+		        preview.setElements(new ArrayList<Element>());
+		        refresh(preview);
+		      }
+		    };
+		tabbedPane.addChangeListener(changeListenerFortag);
 		this.add(tabbedPane);
 		
 		// Create Preview Panel, which show the preview of the element
