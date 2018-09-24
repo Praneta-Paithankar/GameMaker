@@ -102,7 +102,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JTextField yVel;
 	private JCheckBox chkScoreElement;
     private JComboBox listnerCombo;
-	
+
 	public DesignPanel() {
 		this.firstTime = true;
 		this.colliders = new ArrayList<>();
@@ -405,7 +405,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		//Where the GUI is assembled:
 		//Put the JComboBox in a JPanel to get a nicer look.
 		comboBoxPane = new JPanel(); //use FlowLayout
-		String comboBoxItems[] = { RECTANGLE, CIRCLE };
+		String comboBoxItems[] = {  CIRCLE ,RECTANGLE};
 		JComboBox cb = new JComboBox(comboBoxItems);
 		cb.setEditable(false);
 		cb.addItemListener(this);
@@ -883,10 +883,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.firstTime = false;
 		GameElement temp = (GameElement)this.preview.getElements().get(0);
 		temp.pushToBoard();
-		System.out.println(chkScoreElement.isSelected());
-		System.out.println(ElementListener.valueOf(listnerCombo.getSelectedItem().toString()));
-        that.designCard.add(listnerCombo);
-		//designController.addGameElement(temp, chkScoreElement.isSelected(), ElementListener.valueOf(listnerCombo.getSelectedItem().toString()));
+
+		designController.addGameElement(temp, chkScoreElement.isSelected(), ElementListener.valueOf(listnerCombo.getSelectedItem().toString()));
 		try {
 			this.graphic.removeAll();
 		} catch(Exception e) {
