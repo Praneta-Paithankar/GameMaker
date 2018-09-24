@@ -243,12 +243,12 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		
 		control.add(controlElementPanel);
 		
-		//for collider
-		colliderComfire = new JButton("colliderComfire");
-		colliderComfire.setActionCommand("colliderComfire");
-		colliderComfire.setVisible(true);
-		colliderComfire.setAlignmentY(TOP_ALIGNMENT);;
-		collider.add(colliderComfire);
+//		//for collider
+//		colliderComfire = new JButton("colliderComfire");
+//		colliderComfire.setActionCommand("colliderComfire");
+//		colliderComfire.setVisible(true);
+//		colliderComfire.setAlignmentY(TOP_ALIGNMENT);;
+//		collider.add(colliderComfire);
 		end = new EndingConditions();
 		JPanel buildConditionPanel = new JPanel();
 		iniBuildConditionPanel(buildConditionPanel);
@@ -320,7 +320,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         JPanel colliderCard = new JPanel(); //use FlowLayout
         colliderCard.setLayout(new BoxLayout(colliderCard,BoxLayout.Y_AXIS));
         colliderCard.setMaximumSize(new Dimension(Constants.DESIGN_PANEL_WIDTH, 125));
-        this.collider.setBackground(Color.GREEN);
         
         ArrayList<String> names = new ArrayList<>();
         for(GameElement e: gameElements) {
@@ -331,13 +330,13 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         primary.add(new JLabel("Primary Object: ", JLabel.LEFT));
         JComboBox primaryBox = new JComboBox(names.toArray());
 		int nameIndex = primaryBox.getSelectedIndex();
-		String name = names.get(nameIndex);
+		//String name = names.get(nameIndex);
 		primary.add(primaryBox);
 		colliderCard.add(primary);
 		
         JPanel secondary = new JPanel(); //use FlowLayout
 		secondary.add(new JLabel("Secondary Object: ", JLabel.LEFT));
-        names.remove(nameIndex);
+        //names.remove(nameIndex);
 		JComboBox secondBox = new JComboBox(names.toArray());
 		int secondIndex = secondBox.getSelectedIndex();
 		secondary.add(secondBox);
@@ -374,10 +373,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		colliderCard.add(c2);
 		colliderCard.add(c3);
 		
-		colliders.add(new Collider(gameElements.get(nameIndex), gameElements.get(secondIndex),
-				(CollisionType) collisionTypes.getSelectedItem(), (CollisionType) collisionTypes2.getSelectedItem(), 
-				collisionChecker, colliderEventLists.get(eventListIndex - 1))); 
-		
+//		colliders.add(new Collider(gameElements.get(nameIndex), gameElements.get(secondIndex),
+//				(CollisionType) collisionTypes.getSelectedItem(), (CollisionType) collisionTypes2.getSelectedItem(), 
+//				collisionChecker, colliderEventLists.get(eventListIndex - 1))); 
+//		
 
 		Border redline = BorderFactory.createLineBorder(Color.gray);
 		TitledBorder border = BorderFactory.createTitledBorder(
@@ -449,9 +448,9 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		int width = 200;
 		int height = 200;
 		// Initial Shape
-		GameElement g = new GameElement(new Dimensions(Constants.PREVIEW_RADIUS), new Coordinate(Constants.PREVIEW_X_START, Constants.PREVIEW_Y_START), "null", MoveType.LEFTRIGHT,20,0,"Oval");
+		GameElement g = new GameElement(new Dimensions(Constants.PREVIEW_RADIUS*2, Constants.PREVIEW_RADIUS*2), new Coordinate(Constants.PREVIEW_X_START, Constants.PREVIEW_Y_START), "New", MoveType.LEFTRIGHT,20,0,"Rectangle");
         g.setColor(Color.BLACK);
-        g.setDraw(new DrawOvalColor());
+        g.setDraw(new DrawRectangularColorShape());
         g.setVisible(true);
         
 		if(gameElement != null) {
@@ -465,23 +464,26 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.finishedButton.setEnabled(!this.finished);
 		
 		//Create the "cards".
-		JPanel circleCard = new JPanel();
-		createCircleCard(circleCard, g);
+//		JPanel circleCard = new JPanel();
+//		createCircleCard(circleCard, g);
 		
 		JPanel rectangleCard = new JPanel();
+		rectangleCard.setLayout(new BoxLayout(rectangleCard, BoxLayout.Y_AXIS));
+		rectangleCard.setMaximumSize(new Dimension(Constants.DESIGN_PANEL_WIDTH, 100));
 		createRectangleCard(rectangleCard, g);
 		
 		//Create the panel that contains the "cards".
-		cards = new JPanel(new CardLayout());
+		// cards = new JPanel(new CardLayout());
+		cards = new JPanel();
 		
-		cards.setPreferredSize(new Dimension(250,200));
-		cards.add(circleCard, CIRCLE);
-		cards.add(rectangleCard, RECTANGLE);
-
+		cards.setMaximumSize(new Dimension(Constants.DESIGN_PANEL_WIDTH, 100));
+//		cards.add(circleCard, CIRCLE);
+//		cards.add(rectangleCard, RECTANGLE);
+		cards.add(rectangleCard);
 		//Where the GUI is assembled:
 		//Put the JComboBox in a JPanel to get a nicer look.
 		comboBoxPane = new JPanel(); //use FlowLayout
-		String comboBoxItems[] = {  CIRCLE ,RECTANGLE};
+		String comboBoxItems[] = {"Rectanlge", "Circle"};
 		JComboBox cb = new JComboBox(comboBoxItems);
 		cb.setEditable(false);
 		cb.addItemListener(this);
@@ -691,31 +693,31 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	
 	
 	// This creates the part of the design panel responsible for rectangle only properties
-	private void createRectangleCard(JPanel card, GameElement gameElement ) {
-		String nameLabel = "Rectangle"+elements.size();
-		String widthLabel = "100";
-		String heightLabel = "100";
-		String xLabel = "0";
-		String yLabel = "0";
+	private void createRectangleCard(JPanel card2, GameElement gameElement ) {
+		String nameLabel2 = "Rectangle"+elements.size();
+		String widthLabel2 = "100";
+		String heightLabel2 = "100";
+		String xLabel2 = "0";
+		String yLabel2 = "0";
 		if(this.pushedElement) {
-			nameLabel = gameElement.getName();
-			widthLabel = String.valueOf(gameElement.getWidth());
-			heightLabel = String.valueOf(gameElement.getHeight());
+			nameLabel2 = gameElement.getName();
+			widthLabel2 = String.valueOf(gameElement.getWidth());
+			heightLabel2 = String.valueOf(gameElement.getHeight());
 		} else {
 			gameElement.setName("Rectangle"+elements.size());
 		}
 		
 		// TODO Auto-generated method stub
-		card.add(new JLabel("Object Name: ", JLabel.LEFT));
-		final JTextField name2 = new JTextField(nameLabel, 20);
-		card.add(name2);
-		card.add(new JLabel("               "));
-		card.add(new JLabel("Width: ", JLabel.LEFT));
-		final JTextField width2 = new JTextField(widthLabel, 4);
-		card.add(width2);
-		card.add(new JLabel("Height: ", JLabel.LEFT));
-		final JTextField height2 = new JTextField(heightLabel, 4);
-		card.add(height2);
+		card2.add(new JLabel("Object Name: ", JLabel.LEFT));
+		final JTextField name2 = new JTextField(nameLabel2, 20);
+		card2.add(name2);
+		card2.add(new JLabel("               "));
+		card2.add(new JLabel("Width: ", JLabel.LEFT));
+		final JTextField width2 = new JTextField(widthLabel2, 4);
+		card2.add(width2);
+		card2.add(new JLabel("Height: ", JLabel.LEFT));
+		final JTextField height2 = new JTextField(heightLabel2, 4);
+		card2.add(height2);
 		// Used for updating the coordinates
 		name2.addFocusListener(new FocusListener() {
             @Override
@@ -770,8 +772,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.moveState2 = MoveType.FREE; 
 		int moveIndex2 = 0;
 		if(this.pushedElement) {
-			xLabel = String.valueOf(gameElement.getX());
-			yLabel = String.valueOf(gameElement.getY());
+			xLabel2 = String.valueOf(gameElement.getX());
+			yLabel2 = String.valueOf(gameElement.getY());
 			xVelLabel = String.valueOf(gameElement.getVelX());
 			yVelLabel = String.valueOf(gameElement.getVelY());
 			ArrayList<MoveType> temp = new ArrayList<>(Arrays.asList(MoveType.values()));
@@ -779,12 +781,12 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 			moveIndex2 = temp.indexOf(gameElement.getMoveType());
 			System.out.println(temp + " " + gameElement.getMoveType() + " mIn" + moveIndex2);
 		}
-		card.add(new JLabel("X-Position: ", JLabel.LEFT));
-		final JTextField xCoor2 = new JTextField(xLabel, 4);
-		card.add(xCoor2);
-		card.add(new JLabel("Y-Position: ", JLabel.LEFT));
-		final JTextField yCoor2 = new JTextField(yLabel, 4);
-		card.add(yCoor2);
+		card2.add(new JLabel("X-Position: ", JLabel.LEFT));
+		final JTextField xCoor2 = new JTextField(xLabel2, 4);
+		card2.add(xCoor2);
+		card2.add(new JLabel("Y-Position: ", JLabel.LEFT));
+		final JTextField yCoor2 = new JTextField(yLabel2, 4);
+		card2.add(yCoor2);
 		// Used for updating the coordinates
 		xCoor2.addFocusListener(new FocusListener() {
             @Override
@@ -821,7 +823,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		
 		JButton btn12 = new JButton("Choose Color");
 	
-		card.add(btn12);
+		card2.add(btn12);
 	
 		btn12.setAlignmentY(BOTTOM_ALIGNMENT);
 		
@@ -841,7 +843,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         });
         
         JButton btnImage2 = new JButton("Choose Image");
-        card.add(btnImage2);
+        card2.add(btnImage2);
   
         btnImage2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -868,22 +870,22 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             }
         });
         
-        card.add(new JLabel("Movement Type: ", JLabel.LEFT));
-        JPanel comboBoxPane2 = new JPanel(); //use FlowLayout
+        card2.add(new JLabel("Movement Type: ", JLabel.LEFT));
+        JPanel comboBoxPane22 = new JPanel(); //use FlowLayout
         MoveType comboBoxItems[] = MoveType.values();
-		JComboBox moveTypeBox = new JComboBox(comboBoxItems);
-		moveTypeBox.addActionListener(this);
-		moveTypeBox.setActionCommand("moveTypeChanged");
-		moveTypeBox.setSelectedIndex(moveIndex2);
-		comboBoxPane2.add(moveTypeBox);
-		card.add(comboBoxPane2);
+		JComboBox moveTypeBox2 = new JComboBox(comboBoxItems);
+		moveTypeBox2.addActionListener(this);
+		moveTypeBox2.setActionCommand("moveTypeChanged");
+		moveTypeBox2.setSelectedIndex(moveIndex2);
+		comboBoxPane22.add(moveTypeBox2);
+		card2.add(comboBoxPane22);
 		
-		card.add(new JLabel("   X-Velocity: ", JLabel.LEFT));
+		card2.add(new JLabel("   X-Velocity: ", JLabel.LEFT));
 		xVel2 = new JTextField(xVelLabel, 4);
-		card.add(xVel2);
-		card.add(new JLabel("Y-Velocity: ", JLabel.LEFT));
+		card2.add(xVel2);
+		card2.add(new JLabel("Y-Velocity: ", JLabel.LEFT));
 		yVel2 = new JTextField(yVelLabel, 4);
-		card.add(yVel2);
+		card2.add(yVel2);
 		xVel2.setEnabled(this.moveState == MoveType.FOURWAY || this.moveState == MoveType.FREE || this.moveState == MoveType.LEFTRIGHT);
 		yVel2.setEnabled(this.moveState == MoveType.FOURWAY || this.moveState == MoveType.FREE || this.moveState == MoveType.UPDOWN);
 		
@@ -916,7 +918,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             	that.preview.addGameElement(tempElement);	
             }
         });
-		this.designCard = card;
+		
 
 	
         chkScoreElement = new JCheckBox("Score Element");
@@ -928,10 +930,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 				chkScoreElement.setSelected(true);
 			}
 		});
-        that.designCard.add(chkScoreElement);
+        card2.add(chkScoreElement);
         
         listnerCombo = new JComboBox(ElementListener.values());
-        that.designCard.add(listnerCombo);
+        card2.add(listnerCombo);
       
         this.revalidate();
 	    this.repaint();
@@ -1145,7 +1147,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             	that.preview.addGameElement(tempElement);	
             }
         });
-		this.designCard = card;
 		JButton btnCollider = new JButton("Add Collider");
 		
 		
@@ -1173,12 +1174,12 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 				chkScoreElement.setSelected(true);
 			}
 		});
-        that.designCard.add(chkScoreElement);
+        card.add(chkScoreElement);
         
         listnerCombo = new JComboBox(ElementListener.values());
-        that.designCard.add(listnerCombo);
+        card.add(listnerCombo);
       
-        this.designCard.add(btnCollider);
+        card.add(btnCollider);
         this.revalidate();
 	    this.repaint();
 	}
@@ -1222,7 +1223,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		controlElementPanel.add(addControlElementButton);
 		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
 				
-		colliderComfire.addActionListener(driver);
+//		colliderComfire.addActionListener(driver);
 	}
 	
 
@@ -1335,6 +1336,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.finished = true;
 		this.firstTime = false;
 		GameElement temp = (GameElement)this.preview.getElements().get(0);
+		System.out.println("!! Num Eles" + this.preview.getElements().size());
 		temp.pushToBoard();
 		designController.addGameElement(temp, chkScoreElement.isSelected(), ElementListener.valueOf(listnerCombo.getSelectedItem().toString()));
 		try {
@@ -1357,6 +1359,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		} catch(Exception e) {
 			System.out.println("No cards/combo to remove");
 		}
+		this.pushedElement = true;
 		this.preview.addGameElement(temp);
 		init(temp);
 	}
