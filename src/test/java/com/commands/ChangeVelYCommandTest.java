@@ -4,6 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,24 +28,16 @@ public class ChangeVelYCommandTest {
 	
 	@Test
 	void ShouldChangeElementDirectionWhenExecuteCalled() {
-		Coordinate cord = mock(Coordinate.class);
-		when(element.getCoordinate()).thenReturn(cord);
-		when(cord.getY()).thenReturn(40);
-		
 		changeVelYCommand.execute();
 		
-		verify(element, times(2)).getCoordinate();
+		verify(element, times(1)).setVelY(anyInt());
 	
 	}
 		
 	void ShouldChangeBallDirectionWhenUndoCalled (){
-		Coordinate cord = mock(Coordinate.class);
-		when(element.getCoordinate()).thenReturn(cord);
-		when(cord.getY()).thenReturn(40);
-		
 		changeVelYCommand.undo();
 		
-		verify(element, times(2)).getCoordinate();
+		verify(element, times(1)).setVelY(anyInt());
 		
 	}
 }

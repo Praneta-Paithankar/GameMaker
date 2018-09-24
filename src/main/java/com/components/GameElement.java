@@ -19,6 +19,7 @@ import com.infrastruture.Action;
 import com.infrastruture.Constants;
 import com.infrastruture.Drawable;
 import com.infrastruture.Element;
+import com.infrastruture.GameElementShape;
 import com.infrastruture.MoveType;
 
 public class GameElement implements Element,Serializable{
@@ -38,6 +39,8 @@ public class GameElement implements Element,Serializable{
 	private MoveType moveType;
     private int initialvelX;
     private int initialvelY;
+    
+    private GameElementShape gameElementShape;
 	private Dimensions actualDimension;
 	private Coordinate actualCoordinate;
 	private Rectangle2D rectBounds;
@@ -297,7 +300,11 @@ public class GameElement implements Element,Serializable{
 		this.name = name;
 	}
 
+	public GameElementShape getGameElementShape() {
+		return gameElementShape;
+	}
 
-	
-
+	public void setGameElementShape(GameElementShape gameElementShape) {
+		this.gameElementShape = gameElementShape;
+	}
 }

@@ -4,6 +4,8 @@ package com.ui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Checkbox;
+import java.awt.CheckboxGroup;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -71,6 +73,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JScrollPane scroller2;
 	private JPanel graphic;
 	private JPanel control;
+	private JPanel timeLine;
 	private JPanel collider;
 	private JPanel cards;
 	private boolean firstTime;
@@ -91,6 +94,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JLabel tendToAddLabel;
 	private JPanel buttonBuildPanel;
 	private JPanel controlElementPanel;
+	private EndingConditions end;
 	private JButton addGraphicElementButton;
 	private JButton addColliderButton;
 	private JButton finishedButton;
@@ -125,11 +129,16 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		control.setBackground(Color.LIGHT_GRAY);
 		control.setLayout(new BoxLayout(control,BoxLayout.Y_AXIS));
 		
+		timeLine = new JPanel();
+		timeLine.setBackground(Color.LIGHT_GRAY);
+		timeLine.setLayout(new BoxLayout(timeLine,BoxLayout.Y_AXIS));
+		
 		// Tabbed pane holds the two different interfaces 
 
 		tabbedPane = new JTabbedPane(); 
 		tabbedPane.addTab("Graphic", null, scroller, null);
 		tabbedPane.addTab("Control", null, control, null);
+		tabbedPane.addTab("TimeLine", null, timeLine, null);
 		tabbedPane.addTab("Colliders", null, scroller2, null);
 		tabbedPane.setPreferredSize(new Dimension(Constants.DESIGN_PANEL_WIDTH, 500));
 		this.add(tabbedPane);
@@ -211,21 +220,59 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		controlElementPanel.add(controlElementButton);
 		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
 		
-		JButton controlElementLabel = new JButton("Label");
-		controlElementLabel.setFont(new Font("Times", Font.PLAIN, 12));
-		controlElementLabel.addActionListener(this);
-		controlElementLabel.setActionCommand("ElementLabel");
-		controlElementLabel.setVisible(true);
-		controlElementLabel.setAlignmentX(LEFT_ALIGNMENT);
-		controlElementLabel.setAlignmentY(BOTTOM_ALIGNMENT);
-		controlElementPanel.add(controlElementLabel);
-		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
-		
 		control.add(controlElementPanel);
 		}
 		if(gameElement!= null) {
 			this.addElementSelect(gameElement);
 		}
+		end = new EndingConditions();
+		JPanel buildConditionPanel = new JPanel();
+		iniBuildConditionPanel(buildConditionPanel);
+		timeLine.add(buildConditionPanel);
+	}
+	
+	public void iniBuildConditionPanel(JPanel buildConditionPanel) {
+		buildConditionPanel.setLayout(new BoxLayout(buildConditionPanel, BoxLayout.Y_AXIS));
+		JCheckBox c1 = new JCheckBox("Timer");
+		JCheckBox c2 = new JCheckBox("Score");
+		JCheckBox c3 = new JCheckBox("Collision");
+		c1.setActionCommand("timerCondition");
+		c1.addActionListener(this);
+		c2.setActionCommand("scoreCondition");
+		c2.addActionListener(this);
+		c3.setActionCommand("collisionCondition");
+		c3.addActionListener(this);
+		c1.setAlignmentY(LEFT_ALIGNMENT);
+		c2.setAlignmentY(LEFT_ALIGNMENT);
+		c3.setAlignmentY(LEFT_ALIGNMENT);
+		
+		JLabel timerlabel = new JLabel("Timer reachs : ");
+		JTextField timerField = new JTextField("", 10);
+		timerField.setName("timerField");
+		timerField.getDocument().addDocumentListener(this);
+		timerField.getDocument().putProperty("owner", timerField);
+		
+		JLabel scorelabel = new JLabel("Score reachs : ");
+		JTextField scoreField = new JTextField("",10);
+		scoreField.setName("scoreField");
+		scoreField.getDocument().addDocumentListener(this);
+		scoreField.getDocument().putProperty("owner", scoreField);
+		
+
+		JPanel scoreFieldHolder = new JPanel();
+		scoreFieldHolder.add(c1);
+		scoreFieldHolder.add(scorelabel);
+		scoreFieldHolder.add(scoreField);
+		
+		JPanel timerFieldHolder = new JPanel();
+		timerFieldHolder.add(c2);
+		timerFieldHolder.add(timerlabel);
+		timerFieldHolder.add(timerField);
+		
+		buildConditionPanel.add(scoreFieldHolder);
+		buildConditionPanel.add(timerFieldHolder);
+		buildConditionPanel.add(c3);
+		control.add(controlElementPanel);
 	}
 	// Adds collider
 	private void addCollider() {
@@ -711,6 +758,28 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	{
 		this.driver = driver;
 		//get driver , add buttons for adding control element
+		
+		JButton controlElementTimer = new JButton("Add Timer");
+		controlElementTimer.setFont(new Font("Times", Font.PLAIN, 12));
+		controlElementTimer.addActionListener(driver);
+		controlElementTimer.setActionCommand("AddTimer");
+		controlElementTimer.setVisible(true);
+		controlElementTimer.setAlignmentX(LEFT_ALIGNMENT);
+		controlElementTimer.setAlignmentY(BOTTOM_ALIGNMENT);
+		controlElementPanel.add(controlElementTimer);
+		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
+		
+		JButton controlElementScore = new JButton("Add Score");
+		controlElementScore.setFont(new Font("Times", Font.PLAIN, 12));
+		controlElementScore.addActionListener(driver);
+		controlElementScore.setActionCommand("AddScore");
+		controlElementScore.setVisible(true);
+		controlElementScore.setAlignmentX(LEFT_ALIGNMENT);
+		controlElementScore.setAlignmentY(BOTTOM_ALIGNMENT);
+		controlElementPanel.add(controlElementScore);
+		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
+		
+		
 		JButton addControlElementButton = new JButton("AddControlElement");
 		addControlElementButton.addActionListener(driver);
 		addControlElementButton.setActionCommand("AddControlElement");
@@ -793,6 +862,18 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		if(e.getActionCommand().equals("addCollider")) {
 			System.out.println("Fire");
 			this.addCollider();
+		}
+		if(e.getActionCommand().equals("timerCondition")) {
+			JCheckBox check = (JCheckBox)e.getSource();
+			end.setC1(check.isSelected());
+		}
+		if(e.getActionCommand().equals("scoreCondiiton")) {
+			JCheckBox check = (JCheckBox)e.getSource();
+			end.setC2(check.isSelected());
+		}
+		if(e.getActionCommand().equals("collisionCondition")) {
+			JCheckBox check = (JCheckBox)e.getSource();
+			end.setC3(check.isSelected());
 		}
 		
 	}
@@ -980,8 +1061,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		return null;
 	}
 
-	
-
 	@Override
 	public void changedUpdate(DocumentEvent e) {
 		//System.out.println("changed");
@@ -1047,6 +1126,43 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	        } 
 			tendToAddButton.setPreferredSize(new Dimension(width , (int)tendToAddButton.getPreferredSize().getHeight()));
 			tendToAddButton.revalidate();
+		}
+		if(owner.getName().equals("timerField")) {
+			int time = 0;
+	        try 
+	        { 
+	            // checking valid integer using parseInt() method 
+				if(content.equals("")) {
+					time = 0;
+				}
+				else{
+					time = Integer.parseInt(content);
+				} 
+	        }  
+	        catch (NumberFormatException notNumE)  
+	        { 
+	            System.out.println(" is not a valid integer number"); 
+	        } 
+			end.setTimeCount(time);		
+		}
+		
+		if(owner.getName().equals("scoreField")) {
+			int score = 0;
+	        try 
+	        { 
+	            // checking valid integer using parseInt() method 
+				if(content.equals("")) {
+					score = 0;
+				}
+				else{
+					score = Integer.parseInt(content);
+				} 
+	        }  
+	        catch (NumberFormatException notNumE)  
+	        { 
+	            System.out.println(" is not a valid integer number"); 
+	        } 
+			end.setScoreCount(score);
 		}
 		this.validate();
 	}
