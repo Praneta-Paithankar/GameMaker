@@ -233,7 +233,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	}
 	
 	public void iniBuildConditionPanel(JPanel buildConditionPanel) {
-		
+		buildConditionPanel.setLayout(new BoxLayout(buildConditionPanel, BoxLayout.Y_AXIS));
 		JCheckBox c1 = new JCheckBox("Timer");
 		JCheckBox c2 = new JCheckBox("Score");
 		JCheckBox c3 = new JCheckBox("Collision");
@@ -254,18 +254,24 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		timerField.getDocument().putProperty("owner", timerField);
 		
 		JLabel scorelabel = new JLabel("Score reachs : ");
-		JTextField scoreField = new JTextField("", 10);
-		timerField.setName("scoreField");
-		timerField.getDocument().addDocumentListener(this);
-		timerField.getDocument().putProperty("owner", scoreField);
-
+		JTextField scoreField = new JTextField("",10);
+		scoreField.setName("scoreField");
+		scoreField.getDocument().addDocumentListener(this);
+		scoreField.getDocument().putProperty("owner", scoreField);
 		
-		buildConditionPanel.add(c1);
-		buildConditionPanel.add(timerlabel);
-		buildConditionPanel.add(timerField);
-		buildConditionPanel.add(c2);
-		buildConditionPanel.add(scorelabel);
-		buildConditionPanel.add(scoreField);
+
+		JPanel scoreFieldHolder = new JPanel();
+		scoreFieldHolder.add(c1);
+		scoreFieldHolder.add(scorelabel);
+		scoreFieldHolder.add(scoreField);
+		
+		JPanel timerFieldHolder = new JPanel();
+		timerFieldHolder.add(c2);
+		timerFieldHolder.add(timerlabel);
+		timerFieldHolder.add(timerField);
+		
+		buildConditionPanel.add(scoreFieldHolder);
+		buildConditionPanel.add(timerFieldHolder);
 		buildConditionPanel.add(c3);
 		control.add(controlElementPanel);
 	}
