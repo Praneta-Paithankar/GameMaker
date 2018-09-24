@@ -54,7 +54,7 @@ public class GUI extends JFrame implements Element{
 
 
 	private void initializeUI() {
-		
+	   this.designPanel.setFrame(this);
 	   setSize(Constants.FRAME_WIDTH,Constants.FRAME_HEIGHT);
 	   setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	   setResizable(false);	
@@ -111,6 +111,10 @@ public class GUI extends JFrame implements Element{
 	public void setFileReader(FileReader fileReader) {
 		this.fileReader = fileReader;
 	}		
+	
+	public MainPanel getMainPanel() {
+		return this.mainPanel;
+	}
 
 	public void modifyLayout() {
 		toggleLayout = !toggleLayout;

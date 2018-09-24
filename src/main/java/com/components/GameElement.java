@@ -2,6 +2,9 @@ package com.components;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,6 +16,7 @@ import org.apache.log4j.Logger;
 import com.dimension.Coordinate;
 import com.dimension.Dimensions;
 import com.infrastruture.Action;
+import com.infrastruture.Constants;
 import com.infrastruture.Drawable;
 import com.infrastruture.Element;
 import com.infrastruture.GameElementShape;
@@ -35,11 +39,19 @@ public class GameElement implements Element,Serializable{
 	private MoveType moveType;
     private int initialvelX;
     private int initialvelY;
+    
     private GameElementShape gameElementShape;
-
-	public GameElement(Dimensions dimension, Coordinate coordinate, String name, MoveType moveType,int velX, int velY) {
+	private Dimensions actualDimension;
+	private Coordinate actualCoordinate;
+	private Rectangle2D rectBounds;
+	private Ellipse2D ovalBounds;
+	private String shapeType;
+	
+	public GameElement(Dimensions dimension, Coordinate coordinate, String name, MoveType moveType,int velX, int velY, String type) {
 		this.dimension = dimension;
+		this.actualDimension = dimension;
 		this.coordinate = coordinate;
+		this.actualCoordinate = coordinate;
 		this.startingPosition = new Coordinate(coordinate.getX(), coordinate.getY());
 		this.color = Color.BLACK;
 		this.moveType = moveType;
@@ -48,6 +60,79 @@ public class GameElement implements Element,Serializable{
 		this.initialvelY = velY;
 		this.velX = velX;
 		this.velY = velY;
+		this.ovalBounds = new Ellipse2D.Double();
+		this.rectBounds = new Rectangle2D.Float();
+		this.shapeType = type;
+	}
+	
+	public void setActualDimension(Dimensions d, String type) {
+		// used to set the actual dimensions, this functionality allows a dynamic update of the object
+		if(d.getWidth() > Constants.PREVIEW_RADIUS * 2.5 && d.getHeight() > Constants.PREVIEW_RADIUS * 2) {
+			this.dimension = type.equals("Oval") ? new Dimensions(Constants.PREVIEW_RADIUS) : new Dimensions(Constants.PREVIEW_RADIUS*2, Constants.PREVIEW_RADIUS*2);
+			
+		} else if(d.getWidth() > Constants.PREVIEW_RADIUS * 2.5 && type.equals("Rectangle")) {
+			this.dimension = new Dimensions((int)(Constants.PREVIEW_RADIUS*2.5), d.getHeight());
+		} else if(d.getHeight() > Constants.PREVIEW_RADIUS * 2 && type.equals("Rectangle")) {
+			this.dimension = new Dimensions(d.getWidth(), Constants.PREVIEW_RADIUS*2);
+		} else {
+			this.dimension = d;
+		}
+		this.actualDimension = d;
+		
+	}
+	
+	public void pushToBoard() {
+		// This method replaces the preview values with the actual values
+		// Also swaps the two, in case we want to show the object in preview window again
+		System.out.print("Game Element - 73 - Pushing");
+		Dimensions tempD = this.actualDimension;
+		Coordinate tempC = this.actualCoordinate;
+		this.actualDimension = this.dimension;
+		this.actualCoordinate = this.coordinate;
+		this.dimension = tempD;
+		this.coordinate = tempC;
+	}
+	
+	public void pushToPreview() {
+		// This method replaces the preview values with the actual values
+		// Also swaps the two, in case we want to show the object in gamePanel window again
+		System.out.print("Game Element - 73 - Pushing");
+		Dimensions tempD = this.dimension;
+		Coordinate tempC = this.coordinate;
+		this.dimension = this.actualDimension;
+		this.coordinate = new Coordinate(Constants.PREVIEW_X_START,Constants.PREVIEW_Y_START);
+		this.actualDimension = tempD;
+		this.actualCoordinate = tempC;
+		
+		
+	}
+
+	
+	public Rectangle2D getRectBounds() {
+		return new Rectangle2D.Float(coordinate.getX(), coordinate.getY(), dimension.getWidth(), dimension.getHeight());
+	}
+
+	public String getShapeType() {
+		return this.shapeType;
+	}
+	
+	public void setShapeType(String type) {
+		this.shapeType = type;
+	}
+	
+	public void setActualCoordinate(Coordinate coordinate) {
+		// TODO Auto-generated method stub
+		this.actualCoordinate = coordinate;
+	}
+	
+	public Coordinate getActualCoordinate() {
+		// TODO Auto-generated method stub
+		return this.actualCoordinate;
+	}
+	
+	public Dimensions getActualDimensions() {
+		// TODO Auto-generated method stub
+		return this.actualDimension;
 	}
 	
 	public MoveType getMoveType() {
@@ -83,7 +168,7 @@ public class GameElement implements Element,Serializable{
 	}
 	
 	public int getX() {
-		return coordinate.getX();
+		return actualCoordinate.getX();
 	}
 	
 	public void setX(int x) {
@@ -91,7 +176,7 @@ public class GameElement implements Element,Serializable{
 	}
 	
 	public int getY() {
-		return coordinate.getY();
+		return actualCoordinate.getY();
 	}
 	
 	public void setY(int y) {

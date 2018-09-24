@@ -20,11 +20,13 @@ public class DrawOvalImage implements Drawable,Serializable{
 	public void draw(GameElement element, Graphics g) {
 		Dimensions dimension = element.getPosition();
 		Coordinate coordinate = element.getCoordinate();
-		
+	
 		Graphics2D g2d = (Graphics2D) g.create();
+		Image dimg = element.getImage().getScaledInstance(dimension.getWidth(), dimension.getHeight(),
+		        Image.SCALE_SMOOTH);
 		g2d.setClip(new Ellipse2D.Float(coordinate.getX(), coordinate.getY(), dimension.getWidth(), dimension.getWidth()));
 		
-		g2d.drawImage(element.getImage(), coordinate.getX(), coordinate.getY(),dimension.getWidth(), dimension.getHeight(), null); 
+		g2d.drawImage(dimg, coordinate.getX(), coordinate.getY(),dimension.getWidth(), dimension.getHeight(), null); 
 		g2d.dispose();
 	}
 }
