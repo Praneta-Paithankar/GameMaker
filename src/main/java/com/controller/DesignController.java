@@ -25,6 +25,7 @@ import com.infrastruture.CollisionType;
 import com.infrastruture.Command;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
+import com.infrastruture.ElementListener;
 import com.infrastruture.Event;
 import com.infrastruture.GameElementShape;
 import com.infrastruture.MoveType;
@@ -58,6 +59,13 @@ public class DesignController implements Serializable{
 		colliders = new ArrayList<>();
 		scoreElementList = new ArrayList<>();
 		setTimerConstraintSpecified(false);
+		clock = new Clock(new Coordinate(0, 0));
+		scoreBoard = new ScoreBoard(new Coordinate(0, 0));
+		keyboardElements.put(KeyEvent.VK_LEFT, new ArrayList<GameElement>());
+		keyboardElements.put(KeyEvent.VK_RIGHT, new ArrayList<GameElement>());
+		keyboardElements.put(KeyEvent.VK_UP, new ArrayList<GameElement>());
+		keyboardElements.put(KeyEvent.VK_DOWN, new ArrayList<GameElement>());
+		
 	}
 	
 	public List<GameElement> getKeyboardElementsBasedKeys(int key)
@@ -76,126 +84,65 @@ public class DesignController implements Serializable{
 	public void addGameElement() {
 
 		// gui.getData();
-		GameElement elementPaddle = new GameElement(new Dimensions(80,10), new Coordinate(300, 350), "Paddle", MoveType.LEFTRIGHT,20,0, "Rectangle");
-		elementPaddle.setColor(Color.GREEN);
-		elementPaddle.setDraw(new DrawRectangularColorShape());
-		elementPaddle.setVisible(true);
-		elementPaddle.setGameElementShape(GameElementShape.RECTANGLE);
-		
-		GameElement elementBall =  new GameElement(new Dimensions(15), new Coordinate(50, 50), "Ball", MoveType.FREE,2,2, "Oval");
-		elementBall.setColor(Color.RED);
-		elementBall.setDraw(new DrawOvalColor());
-		elementBall.setVisible(true);
-		elementBall.setGameElementShape(GameElementShape.CIRCLE);
-		
-		GameElement elementBall1 =  new GameElement(new Dimensions(15), new Coordinate(100, 100), "Ball", MoveType.FREE,1,1, "Oval");
-		elementBall1.setColor(Color.BLACK);
-		elementBall1.setDraw(new DrawOvalColor());
-
-		elementBall1.setVelX(-1);
-		elementBall1.setVelY(-1);
-
-		elementBall1.setVisible(true);
-		elementBall1.setGameElementShape(GameElementShape.CIRCLE);
-		
-		GameElement elementBrick1 = new GameElement(new Dimensions(50, 25), new Coordinate(250, 90), "Brick", MoveType.FIXED,0,0, "Rectangle");
-		elementBrick1.setColor(Color.BLUE);
-		elementBrick1.setDraw(new DrawRectangularColorShape());
-		elementBrick1.setVisible(true);
-		elementBrick1.setGameElementShape(GameElementShape.RECTANGLE);
-		
-		GameElement elementBrick2 = new GameElement(new Dimensions(50, 25), new Coordinate(563, 79), "Brick", MoveType.FIXED,0,0, "Rectangle");
-		elementBrick2.setColor(Color.BLUE);
-		elementBrick2.setDraw(new DrawRectangularColorShape());
-		elementBrick2.setVisible(true);
-		elementBrick2.setGameElementShape(GameElementShape.RECTANGLE);
-
-
-		GameElement elementBrick3 = new GameElement(new Dimensions(70, 50), new Coordinate(563, 79), "Brick", MoveType.LEFTRIGHT,1,0, "Rectangle");
-
-		elementBrick3.setColor(Color.BLUE);
-		elementBrick3.setDraw(new DrawRectangularColorShape());
-		elementBrick3.setVisible(true);
-		elementBrick3.setGameElementShape(GameElementShape.RECTANGLE);
-		
-		
-		scoreElementList.add(elementBrick1);
-		scoreElementList.add(elementBrick2);
-		scoreElementList.add(elementBrick3);
-		
-		// add element into elements
-		graphicsElements.add(elementPaddle);
-		graphicsElements.add(elementBall);
-		graphicsElements.add(elementBall1);
-		graphicsElements.add(elementBrick1);
-		graphicsElements.add(elementBrick2);
-		graphicsElements.add(elementBrick3);
-		
-		timerElements.add(elementBall);
-		timerElements.add(elementBall1);
-		timerElements.add(elementBrick3);
-	
-		
-		keyboardElements.put(KeyEvent.VK_LEFT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
-		keyboardElements.put(KeyEvent.VK_RIGHT, new ArrayList<GameElement>(Arrays.asList(elementPaddle)));
-		
-//		controlElements.put("START", ActionType.P);
-//		controlElements.put("PAUSE", ActionType.PAUSE);
-//		controlElements.put("UNDO", ActionType.UNDO);
-//		controlElements.put("SAVE", ActionType.SAVE);
-//		controlElements.put("LOAD", ActionType.LOAD);
-//		controlElements.put("REPLAY", ActionType.REPLAY);
-//		controlElements.put("CHANGELAYOUT", ActionType.CHANGELAYOUT);
+//		GameElement elementPaddle = new GameElement(new Dimensions(80,10), new Coordinate(300, 350), "Paddle", MoveType.LEFTRIGHT,20,0, "Rectangle");
+//		elementPaddle.setColor(Color.GREEN);
+//		elementPaddle.setDraw(new DrawRectangularColorShape());
+//		elementPaddle.setVisible(true);
+//		elementPaddle.setGameElementShape(GameElementShape.RECTANGLE);
 //		
-		Command soundEvent = new SoundEvent("explosion.wav");
-		Command scoreUpdate = new ScoreEvent(scoreBoard);
-		Command GameOver = new GameOverEvent(mainController);
-		
-		ArrayList<Command> eventList= new ArrayList<>(Arrays.asList(soundEvent, scoreUpdate));
-		ArrayList<Command> eventList1= new ArrayList<>(Arrays.asList(soundEvent, scoreUpdate,GameOver));
-		
-		CollisionChecker collisionChecker = new CollisionChecker();
-		Collider ballPaddle = new Collider(elementBall, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
-		Collider ballBrick1 = new Collider(elementBall, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
-		Collider ballBrick2 = new Collider(elementBall, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
-		Collider ballBrick3 = new Collider(elementBall, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList1);
-		
-		Collider ballPaddle1 = new Collider(elementBall1, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
-		Collider ballBrick11 = new Collider(elementBall1, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
-		Collider ballBrick21 = new Collider(elementBall1, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
-		Collider ballBrick31 = new Collider(elementBall1, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
-		Collider brickbrick = new Collider(elementBrick3, elementBrick2, CollisionType.BOUNCE, CollisionType.BOUNCE, collisionChecker, null);
-
-		
-		
-		Collider ballball = new Collider(elementBall, elementBall1, CollisionType.BOUNCE, CollisionType.BOUNCE, collisionChecker, null);
-		
-		colliders.add(ballPaddle);
-		colliders.add(ballBrick1);
-		colliders.add(ballBrick2);
-		colliders.add(ballBrick3);
-		colliders.add(ballball);
-		colliders.add(ballPaddle1);
-		colliders.add(ballBrick11);
-		colliders.add(ballBrick21);
-		colliders.add(brickbrick);
+//		//scoreElement , graphics ele
 //		
 //		
-		// add elements into gamePanel
-		mainJframe.getGamePanel().addComponent(elementPaddle);
-		mainJframe.getGamePanel().addComponent(elementBall);
-		mainJframe.getGamePanel().addComponent(elementBall1);
-		mainJframe.getGamePanel().addComponent(elementBrick1);
-		mainJframe.getGamePanel().addComponent(elementBrick3);
-		mainJframe.getGamePanel().addComponent(elementBrick2);
-		
-	
-
-		mainJframe.revalidate();
-		mainJframe.repaint();
-		timerConstraintSpecified = true;
-		timeConstraintinmilliSeconds = 10000;
-		// update timer Elements or KeyboardElements
+//		
+////		controlElements.put("START", ActionType.P);
+////		controlElements.put("PAUSE", ActionType.PAUSE);
+////		controlElements.put("UNDO", ActionType.UNDO);
+////		controlElements.put("SAVE", ActionType.SAVE);
+////		controlElements.put("LOAD", ActionType.LOAD);
+////		controlElements.put("REPLAY", ActionType.REPLAY);
+////		controlElements.put("CHANGELAYOUT", ActionType.CHANGELAYOUT);
+////		
+//		Command soundEvent = new SoundEvent("explosion.wav");
+//		Command scoreUpdate = new ScoreEvent(scoreBoard);
+//		Command GameOver = new GameOverEvent(mainController);
+//		
+//		ArrayList<Command> eventList= new ArrayList<>(Arrays.asList(soundEvent, scoreUpdate));
+//		ArrayList<Command> eventList1= new ArrayList<>(Arrays.asList(soundEvent, scoreUpdate,GameOver));
+//		
+//		CollisionChecker collisionChecker = new CollisionChecker();
+//		Collider ballPaddle = new Collider(elementBall, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
+//		Collider ballBrick1 = new Collider(elementBall, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
+//		Collider ballBrick2 = new Collider(elementBall, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList);
+//		Collider ballBrick3 = new Collider(elementBall, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, eventList1);
+//		
+//		Collider ballPaddle1 = new Collider(elementBall1, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker, null);
+//		Collider ballBrick11 = new Collider(elementBall1, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
+//		Collider ballBrick21 = new Collider(elementBall1, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
+//		Collider ballBrick31 = new Collider(elementBall1, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker, null);
+//		Collider brickbrick = new Collider(elementBrick3, elementBrick2, CollisionType.BOUNCE, CollisionType.BOUNCE, collisionChecker, null);
+//
+//		
+//		
+//		Collider ballball = new Collider(elementBall, elementBall1, CollisionType.BOUNCE, CollisionType.BOUNCE, collisionChecker, null);
+//		
+//		colliders.add(ballPaddle);
+//		colliders.add(ballBrick1);
+//		colliders.add(ballBrick2);
+//		colliders.add(ballBrick3);
+//		colliders.add(ballball);
+//		colliders.add(ballPaddle1);
+//		colliders.add(ballBrick11);
+//		colliders.add(ballBrick21);
+//		colliders.add(brickbrick);
+////		
+////		
+//		// add elements into gamePanel
+//		mainJframe.getGamePanel().addComponent(elementPaddle);
+//		mainJframe.revalidate();
+//		mainJframe.repaint();
+//		timerConstraintSpecified = true;
+//		timeConstraintinmilliSeconds = 10000;
+//		// update timer Elements or KeyboardElements
 	}
 
 	public void addTimer() {
@@ -213,7 +160,33 @@ public class DesignController implements Serializable{
 		mainJframe.getControlPanel().addComponent(scoreBoard);
 	}
 	// To be used if we export some of the logic from the view to the controller
-	public void addGameElement(GameElement element) {
+	public void addGameElement(GameElement element, boolean isScoreElement, ElementListener elementListner) {
+		if(isScoreElement) {
+			scoreElementList.add(element);
+		}
+		System.out.println(elementListner);
+		if(elementListner == ElementListener.TIMER) {
+			timerElements.add(element);
+		}
+		if(elementListner == ElementListener.KEY) {
+			if(element.getMoveType() == MoveType.LEFTRIGHT) {
+				keyboardElements.get(KeyEvent.VK_LEFT).add(element);
+				keyboardElements.get(KeyEvent.VK_RIGHT).add(element);
+			}
+			if(element.getMoveType() == MoveType.UPDOWN) {
+				keyboardElements.get(KeyEvent.VK_UP).add(element);
+				keyboardElements.get(KeyEvent.VK_DOWN).add(element);
+			}
+			if(element.getMoveType() == MoveType.FOURWAY) {
+				keyboardElements.get(KeyEvent.VK_LEFT).add(element);
+				keyboardElements.get(KeyEvent.VK_RIGHT).add(element);
+				keyboardElements.get(KeyEvent.VK_UP).add(element);
+				keyboardElements.get(KeyEvent.VK_DOWN).add(element);
+			}
+
+		}
+		// add element into elements
+		graphicsElements.add(element);
 		mainJframe.getGamePanel().addComponent(element);
 		mainJframe.revalidate();
 		mainJframe.repaint();
@@ -233,6 +206,8 @@ public class DesignController implements Serializable{
 		}
 	    mainJframe.getControlPanel().revalidate();
 	}
+	
+	
 	
 	public void pushToPreview(GameElement temp) {
 		// TODO Auto-generated method stub

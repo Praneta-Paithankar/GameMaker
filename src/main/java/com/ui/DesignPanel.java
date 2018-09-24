@@ -51,6 +51,7 @@ import com.infrastruture.ActionType;
 import com.infrastruture.CollisionType;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
+import com.infrastruture.ElementListener;
 import com.infrastruture.MoveType;
 import com.strategy.DrawOvalColor;
 import com.strategy.DrawOvalImage;
@@ -99,8 +100,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private boolean pushedElement;
 	private JTextField xVel;
 	private JTextField yVel;
-	
-	public DesignPanel() {
+	private JCheckBox chkScoreElement;
+    private JComboBox listnerCombo;
+
+    public DesignPanel() {
 		this.firstTime = true;
 		this.colliders = new ArrayList<>();
 		setBorder("Design Center"); // Method call for setting the border
@@ -402,7 +405,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		//Where the GUI is assembled:
 		//Put the JComboBox in a JPanel to get a nicer look.
 		comboBoxPane = new JPanel(); //use FlowLayout
-		String comboBoxItems[] = { RECTANGLE, CIRCLE };
+		String comboBoxItems[] = {  CIRCLE ,RECTANGLE};
 		JComboBox cb = new JComboBox(comboBoxItems);
 		cb.setEditable(false);
 		cb.addItemListener(this);
@@ -589,6 +592,20 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         	    that.repaint();
             }
         });
+        
+        chkScoreElement = new JCheckBox("Score Element");
+        chkScoreElement.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				chkScoreElement.setSelected(true);
+			}
+		});
+        that.designCard.add(chkScoreElement);
+        
+        listnerCombo = new JComboBox(ElementListener.values());
+        that.designCard.add(listnerCombo);
         
       
         this.designCard.add(btnCollider);
@@ -867,7 +884,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.firstTime = false;
 		GameElement temp = (GameElement)this.preview.getElements().get(0);
 		temp.pushToBoard();
-		designController.addGameElement(temp);
+
+		designController.addGameElement(temp, chkScoreElement.isSelected(), ElementListener.valueOf(listnerCombo.getSelectedItem().toString()));
 		try {
 			this.graphic.removeAll();
 		} catch(Exception e) {
