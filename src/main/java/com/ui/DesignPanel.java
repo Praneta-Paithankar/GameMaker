@@ -22,7 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import com.infrastruture.EventType;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -244,6 +244,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         for(GameElement e: designController.getGraphicsElements()) {
         	names.add(e.getName());
         }
+        
 		JComboBox primaryBox = new JComboBox(names.toArray());
 		primaryBox.addActionListener(this);
 		primaryBox.setActionCommand("moveTypeChanged");
@@ -261,6 +262,30 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		int secondIndex = secondBox.getSelectedIndex();
 		comboBoxPane2.add(secondBox);
 		card.add(comboBoxPane2);
+		
+		card.add(new JLabel("Collision Types: ", JLabel.LEFT));
+        JPanel collisionType = new JPanel(); //use FlowLayout
+        names.remove(nameIndex);
+		JComboBox collisionTypes = new JComboBox(CollisionType.values());
+		collisionTypes.addActionListener(this);
+		collisionTypes.setActionCommand("moveTypeChanged");
+		int collisionIndex = secondBox.getSelectedIndex();
+		comboBoxPane2.add(collisionTypes);
+		card.add(comboBoxPane2);
+		
+		card.add(new JLabel("Collision Types: ", JLabel.LEFT));
+        JPanel collisionEvent = new JPanel(); //use FlowLayout
+        names.remove(nameIndex);
+		JComboBox collisionEvents = new JComboBox(EventType.values());
+		collisionTypes.addActionListener(this);
+		collisionTypes.setActionCommand("moveTypeChanged");
+		int collisioEvents = secondBox.getSelectedIndex();
+		comboBoxPane2.add(collisionEvents);
+		card.add(comboBoxPane2);
+		
+		
+		
+		
 		this.revalidate();
 	    this.repaint();
 	}	
