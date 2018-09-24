@@ -51,6 +51,7 @@ import com.infrastruture.ActionType;
 import com.infrastruture.CollisionType;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
+import com.infrastruture.ElementListener;
 import com.infrastruture.MoveType;
 import com.strategy.DrawOvalColor;
 import com.strategy.DrawOvalImage;
@@ -99,6 +100,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private boolean pushedElement;
 	private JTextField xVel;
 	private JTextField yVel;
+	private JCheckBox chkScoreElement;
+    private JComboBox listnerCombo;
 	
 	public DesignPanel() {
 		this.firstTime = true;
@@ -584,6 +587,19 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             }
         });
         
+        chkScoreElement = new JCheckBox("Score Element");
+        chkScoreElement.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				chkScoreElement.setSelected(true);
+			}
+		});
+        that.designCard.add(chkScoreElement);
+        
+        listnerCombo = new JComboBox(ElementListener.values());
+        that.designCard.add(listnerCombo);
       
         this.designCard.add(btnCollider);
         this.revalidate();
@@ -861,7 +877,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.firstTime = false;
 		GameElement temp = (GameElement)this.preview.getElements().get(0);
 		temp.pushToBoard();
-		designController.addGameElement(temp);
+		System.out.println(chkScoreElement.isSelected());
+		System.out.println(ElementListener.valueOf(listnerCombo.getSelectedItem().toString()));
+        that.designCard.add(listnerCombo);
+		//designController.addGameElement(temp, chkScoreElement.isSelected(), ElementListener.valueOf(listnerCombo.getSelectedItem().toString()));
 		try {
 			this.graphic.removeAll();
 		} catch(Exception e) {
