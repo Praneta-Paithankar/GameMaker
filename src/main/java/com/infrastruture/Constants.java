@@ -16,8 +16,11 @@ public class Constants {
 	public final static int CONTROL_PANEL_WIDTH =  150;
 	public final static int CONTROL_PANEL_HEIGHT =  800;
 	public static final int PREVIEW_PANEL_HEIGHT = 265;
+	public final static int PREVIEW_X_START =  60;
+	public final static int PREVIEW_Y_START = 50;
+	public final static int PREVIEW_RADIUS = 265/3;
 	
-
+	
 	public final static int TIMER_COUNT = 25;
 	
 	public final static int BRICK_NO = 4;
@@ -43,6 +46,9 @@ public class Constants {
 	public final static int PADDLE_HEIGHT = 40;
 	public final static int PADDLE_DELTA_X = 20;
 	public final static Color PADDLE_COLOR = new Color(91,33,91);
-	
+	public static final int TimerX = 30;
+	public static final int TimerY = 500;
+	public static final int ScoreX = 30;
+	public static final int ScoreY = 600;
 	
 }

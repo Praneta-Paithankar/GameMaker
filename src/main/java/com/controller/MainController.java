@@ -74,6 +74,14 @@ public class MainController implements Observer, KeyListener, ActionListener{
 			designController.addControlElement();
 			gui.changeFocus();
 		}
+		if(commandText.equals("AddTimer")) {
+			designController.addTimer();
+			gui.changeFocus();
+		}
+		if(commandText.equals("AddScore")) {
+			designController.addScore();
+			gui.changeFocus();
+		}
 		ActionType actionType = designController.getActionTypeBasedOnButtonCommand(commandText);
 		if(actionType != null) {
 			if(actionType == ActionType.PLAY) {

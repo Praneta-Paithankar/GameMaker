@@ -23,6 +23,7 @@ import com.helper.CollisionChecker;
 import com.infrastruture.ActionType;
 import com.infrastruture.CollisionType;
 import com.infrastruture.Command;
+import com.infrastruture.Constants;
 import com.infrastruture.Element;
 import com.infrastruture.Event;
 import com.infrastruture.GameElementShape;
@@ -75,46 +76,48 @@ public class DesignController implements Serializable{
 	public void addGameElement() {
 
 		// gui.getData();
-		GameElement elementPaddle = new GameElement(new Dimensions(80,10), new Coordinate(300, 350), "Paddle", MoveType.LEFTRIGHT,20,0);
-		elementPaddle.setColor(Color.BLACK);
+		GameElement elementPaddle = new GameElement(new Dimensions(80,10), new Coordinate(300, 350), "Paddle", MoveType.LEFTRIGHT,20,0, "Rectangle");
+		elementPaddle.setColor(Color.GREEN);
 		elementPaddle.setDraw(new DrawRectangularColorShape());
 		elementPaddle.setVisible(true);
 		elementPaddle.setGameElementShape(GameElementShape.RECTANGLE);
 		
-		GameElement elementBall =  new GameElement(new Dimensions(15), new Coordinate(50, 50), "Ball", MoveType.FREE,2,2);
+		GameElement elementBall =  new GameElement(new Dimensions(15), new Coordinate(50, 50), "Ball", MoveType.FREE,2,2, "Oval");
 		elementBall.setColor(Color.RED);
 		elementBall.setDraw(new DrawOvalColor());
 		elementBall.setVisible(true);
 		elementBall.setGameElementShape(GameElementShape.CIRCLE);
 		
-		GameElement elementBall1 =  new GameElement(new Dimensions(15), new Coordinate(100, 100), "Ball", MoveType.FREE,1,1);
+		GameElement elementBall1 =  new GameElement(new Dimensions(15), new Coordinate(100, 100), "Ball", MoveType.FREE,1,1, "Oval");
 		elementBall1.setColor(Color.BLACK);
 		elementBall1.setDraw(new DrawOvalColor());
+
 		elementBall1.setVelX(-1);
 		elementBall1.setVelY(-1);
+
 		elementBall1.setVisible(true);
 		elementBall1.setGameElementShape(GameElementShape.CIRCLE);
 		
-		GameElement elementBrick1 = new GameElement(new Dimensions(50, 25), new Coordinate(250, 90), "Brick", MoveType.FIXED,0,0);
+		GameElement elementBrick1 = new GameElement(new Dimensions(50, 25), new Coordinate(250, 90), "Brick", MoveType.FIXED,0,0, "Rectangle");
 		elementBrick1.setColor(Color.BLUE);
 		elementBrick1.setDraw(new DrawRectangularColorShape());
 		elementBrick1.setVisible(true);
 		elementBrick1.setGameElementShape(GameElementShape.RECTANGLE);
 		
-		GameElement elementBrick2 = new GameElement(new Dimensions(50, 25), new Coordinate(563, 79), "Brick", MoveType.FIXED,0,0);
+		GameElement elementBrick2 = new GameElement(new Dimensions(50, 25), new Coordinate(563, 79), "Brick", MoveType.FIXED,0,0, "Rectangle");
 		elementBrick2.setColor(Color.BLUE);
 		elementBrick2.setDraw(new DrawRectangularColorShape());
 		elementBrick2.setVisible(true);
 		elementBrick2.setGameElementShape(GameElementShape.RECTANGLE);
 
-		GameElement elementBrick3 = new GameElement(new Dimensions(50, 25), new Coordinate(613, 89), "Brick", MoveType.LEFTRIGHT,1,0);
+
+		GameElement elementBrick3 = new GameElement(new Dimensions(70, 50), new Coordinate(563, 79), "Brick", MoveType.LEFTRIGHT,1,0, "Rectangle");
+
 		elementBrick3.setColor(Color.BLUE);
 		elementBrick3.setDraw(new DrawRectangularColorShape());
 		elementBrick3.setVisible(true);
 		elementBrick3.setGameElementShape(GameElementShape.RECTANGLE);
 		
-		clock = new Clock(new Coordinate(30, 60));
-		scoreBoard = new ScoreBoard(new Coordinate(30,500));
 		
 		scoreElementList.add(elementBrick1);
 		scoreElementList.add(elementBrick2);
@@ -185,8 +188,8 @@ public class DesignController implements Serializable{
 		mainJframe.getGamePanel().addComponent(elementBrick1);
 		mainJframe.getGamePanel().addComponent(elementBrick3);
 		mainJframe.getGamePanel().addComponent(elementBrick2);
-		mainJframe.getControlPanel().addComponent(scoreBoard);
-		mainJframe.getControlPanel().addComponent(clock);
+		
+	
 
 		mainJframe.revalidate();
 		mainJframe.repaint();
@@ -194,7 +197,27 @@ public class DesignController implements Serializable{
 		timeConstraintinmilliSeconds = 10000;
 		// update timer Elements or KeyboardElements
 	}
-	
+
+	public void addTimer() {
+		// TODO Auto-generated method stub
+		clock = new Clock(new Coordinate(Constants.TimerX, Constants.TimerY));
+		mainJframe.getControlPanel().addComponent(clock);
+		mainJframe.revalidate();
+		mainJframe.repaint();
+		
+	}
+
+	public void addScore() {
+		// TODO Auto-generated method stub
+		scoreBoard = new ScoreBoard(new Coordinate(Constants.ScoreX,600));
+		mainJframe.getControlPanel().addComponent(scoreBoard);
+	}
+	// To be used if we export some of the logic from the view to the controller
+	public void addGameElement(GameElement element) {
+		mainJframe.getGamePanel().addComponent(element);
+		mainJframe.revalidate();
+		mainJframe.repaint();
+	}
 	
 	public void addControlElement() {
 		
@@ -209,6 +232,13 @@ public class DesignController implements Serializable{
 			  mainJframe.getControlPanel().addButtons(button);
 		}
 	    mainJframe.getControlPanel().revalidate();
+	}
+	
+	public void pushToPreview(GameElement temp) {
+		// TODO Auto-generated method stub
+		temp.pushToPreview();
+		this.mainJframe.getDesignPanel().pushToPreview(temp);
+		
 	}
 
 	public List<GameElement> getTimerElements() {
@@ -265,6 +295,8 @@ public class DesignController implements Serializable{
 	public void setMainController(MainController mainController) {
 		this.mainController = mainController;
 	}
+
+	
 	
 	public ScoreBoard getScoreBoard() {
 		return scoreBoard;
@@ -298,7 +330,4 @@ public class DesignController implements Serializable{
 	public void setTimeConstraintinmilliSeconds(long timeConstraintinmilliSeconds) {
 		this.timeConstraintinmilliSeconds = timeConstraintinmilliSeconds;
 	}
-
-	
-
 }

@@ -1,6 +1,7 @@
 package com.commands;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,12 +26,16 @@ class TimerCommandTest {
 	
 	@Test
 	void shouldIncrementTimeOnExecute() {
-
+		when(clock.getMilisecondsElapsed()).thenReturn((long) 10);
+		timerCommand.execute();
+		verify(clock).setMilisecondsElapsed(anyLong());
 	}
 	
 	@Test
 	void shouldDecrementTimeOnUndo() {
-		
+		when(clock.getMilisecondsElapsed()).thenReturn((long) 10);
+		timerCommand.execute();
+		verify(clock).setMilisecondsElapsed(anyLong());
 	}
 	
 	
