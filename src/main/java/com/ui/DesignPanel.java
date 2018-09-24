@@ -82,7 +82,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JPanel graphic;
 	private JPanel control;
 	private JPanel timeLine;
-	private JPanel collider;
+	private JPanel colliderPanel;
 	private JPanel cards;
 	private boolean firstTime;
 	private JPanel comboBoxPane;
@@ -91,6 +91,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JFrame frame;
 	private ArrayList<Element> elements;
 	private ArrayList<Collider> colliders;
+	private Collider collider;
 
 	final static String CIRCLE = "Circle Shape";
     final static String RECTANGLE = "Rectangle Shape";
@@ -126,6 +127,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private MoveType moveState2;
 
 	public DesignPanel() {
+		collider = new Collider();
 		colliderEventLists = new ArrayList<>();
 		this.firstTime = true;
 		this.eventListIndex = 0;
@@ -143,12 +145,12 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		graphic.setBackground(Color.LIGHT_GRAY);
 		graphic.setLayout(new BoxLayout(graphic, BoxLayout.Y_AXIS));
 		
-		collider = new JPanel();
-		scroller2 = new JScrollPane(collider,
+		colliderPanel = new JPanel();
+		scroller2 = new JScrollPane(colliderPanel,
 	            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 	            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		collider.setBackground(Color.LIGHT_GRAY);
-		collider.setLayout(new BoxLayout(collider,BoxLayout.Y_AXIS));
+		colliderPanel.setBackground(Color.LIGHT_GRAY);
+		colliderPanel.setLayout(new BoxLayout(colliderPanel,BoxLayout.Y_AXIS));
 		
 		control  = new JPanel();
 		control.setBackground(Color.LIGHT_GRAY);
@@ -233,7 +235,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 			addColliderButton.addActionListener(this);
 			addColliderButton.setActionCommand("addCollider");
 			colliderButtons.add(addColliderButton);
-			collider.add(colliderButtons);
+			colliderPanel.add(colliderButtons);
 			
 			
 			//control variable
@@ -267,7 +269,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 			colliderComfire.setVisible(true);
 			colliderComfire.setAlignmentY(TOP_ALIGNMENT);
 			colliderComfire.addActionListener(this);
-			collider.add(colliderComfire);
+			colliderPanel.add(colliderComfire);
 			end = new EndingConditions();
 			JPanel buildConditionPanel = new JPanel();
 			iniBuildConditionPanel(buildConditionPanel);
@@ -331,7 +333,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		// TODO Auto-generated method stub
 		List<GameElement> gameElements = new ArrayList<>();
 		gameElements = designController.getGraphicsElements();
-		JPanel card = this.collider;
+		JPanel card = this.colliderPanel;
 		
 		ArrayList<EventType> eventList = new ArrayList<>();
 
@@ -347,33 +349,40 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         JPanel primary = new JPanel(); //use FlowLayout
         primary.add(new JLabel("Primary Object: ", JLabel.LEFT));
         JComboBox primaryBox = new JComboBox(names.toArray());
-		int nameIndex = primaryBox.getSelectedIndex();
-		//String name = names.get(nameIndex);
+		primaryBox.addActionListener(this);
+		primaryBox.setActionCommand("primaryBox");
 		primary.add(primaryBox);
 		colliderCard.add(primary);
+		collider.setElement1(designController.getGraphicsElements().get(0));  //set default
 		
         JPanel secondary = new JPanel(); //use FlowLayout
 		secondary.add(new JLabel("Secondary Object: ", JLabel.LEFT));
         //names.remove(nameIndex);
 		JComboBox secondBox = new JComboBox(names.toArray());
-		int secondIndex = secondBox.getSelectedIndex();
+		secondBox.addActionListener(this);
+		secondBox.setActionCommand("secondBox");
 		secondary.add(secondBox);
 		colliderCard.add(secondary);
+		collider.setElement2(designController.getGraphicsElements().get(0));  // set default
 		
 		
         JPanel collisionType = new JPanel(); //use FlowLayout
         collisionType.add(new JLabel("Primary Collision Type: ", JLabel.LEFT));
 		JComboBox collisionTypes = new JComboBox(CollisionType.values());
-		int collisionIndex = collisionTypes.getSelectedIndex();
+		collisionTypes.addActionListener(this);
+		collisionTypes.setActionCommand("collisionTypes");
 		collisionType.add(collisionTypes);
 		colliderCard.add(collisionType);
+		collider.setCollisionType1((CollisionType)collisionTypes.getSelectedItem()); // set default
 		
         JPanel collisionType2 = new JPanel(); //use FlowLayout
         collisionType2.add(new JLabel("Primary Collision Type: ", JLabel.LEFT));
 		JComboBox collisionTypes2 = new JComboBox(CollisionType.values());
-		int collisionIndex2 = collisionTypes.getSelectedIndex();
+		collisionTypes2.addActionListener(this);
+		collisionTypes2.setActionCommand("collisionTypes2");
 		collisionType2.add(collisionTypes2);
 		colliderCard.add(collisionType2);
+		collider.setCollisionType2((CollisionType)collisionTypes2.getSelectedItem()); //set default 
 	
 		JCheckBox c1 = new JCheckBox("Sound");
 		JCheckBox c2 = new JCheckBox("Score");
@@ -389,12 +398,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		c3.setAlignmentY(LEFT_ALIGNMENT);
 		colliderCard.add(c1);
 		colliderCard.add(c2);
-		colliderCard.add(c3);
-		
-		colliders.add(new Collider(gameElements.get(nameIndex), gameElements.get(secondIndex),
-				(CollisionType) collisionTypes.getSelectedItem(), (CollisionType) collisionTypes2.getSelectedItem(), 
-				collisionChecker, colliderEventLists.get(eventListIndex - 1))); 
-//		
+		colliderCard.add(c3);		
 
 		Border redline = BorderFactory.createLineBorder(Color.gray);
 		TitledBorder border = BorderFactory.createTitledBorder(
@@ -1311,28 +1315,55 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		}
 		if(e.getActionCommand().equals("scoreEvent")) {
 			JCheckBox check = (JCheckBox)e.getSource();
-			Command scoreTemp = new ScoreEvent(designController.getScoreBoard());
-			 colliderEventLists.get(eventListIndex-1).add(scoreTemp);
+			if(check.isSelected()) {
+				Command scoreTemp = new ScoreEvent(designController.getScoreBoard());
+				colliderEventLists.get(eventListIndex-1).add(scoreTemp);
+			}
 		}
 		if(e.getActionCommand().equals("soundEvent")) {
 			JCheckBox check = (JCheckBox)e.getSource();
-			JFileChooser fc = new JFileChooser();
-            BufferedImage img = null;
-            int result = fc.showOpenDialog(null);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
-                String sname = file.getAbsolutePath(); //THIS WAS THE PROBLEM
-            }
-            Command soundTemp = new SoundEvent("explosion.wav");
-            colliderEventLists.get(eventListIndex-1).add(soundTemp);
+			if(check.isSelected()) {
+				JFileChooser fc = new JFileChooser();
+	            BufferedImage img = null;
+	            int result = fc.showOpenDialog(null);
+	            if (result == JFileChooser.APPROVE_OPTION) {
+	                File file = fc.getSelectedFile();
+	                String sname = file.getAbsolutePath(); //THIS WAS THE PROBLEM
+	            }
+	            Command soundTemp = new SoundEvent("explosion.wav");
+	            colliderEventLists.get(eventListIndex-1).add(soundTemp);
+			}
 		}
 		if(e.getActionCommand().equals("gameOverEvent")) {
 			JCheckBox check = (JCheckBox)e.getSource();
-			Command GameOver = new GameOverEvent(driver);
-			colliderEventLists.get(eventListIndex -1).add(GameOver);
+			if(check.isSelected()) {
+				Command GameOver = new GameOverEvent(driver);
+				colliderEventLists.get(eventListIndex -1).add(GameOver);
+			}
 		}
 		if(e.getActionCommand().equals("colliderComfire")) {
+			collider.setEventList(this.colliderEventLists.get(eventListIndex - 1));
+			colliders.add(collider);
 			this.collidersFinished();
+			System.out.println("collider add");
+		}
+		if(e.getActionCommand().equals("primaryBox")) {
+			JComboBox primaryBox = (JComboBox) e.getSource();
+			List<GameElement> gameElements = designController.getGraphicsElements();
+			collider.setElement1(gameElements.get(primaryBox.getSelectedIndex()));
+		}
+		if(e.getActionCommand().equals("secondBox")) {
+			JComboBox secondBox = (JComboBox) e.getSource();
+			List<GameElement> gameElements = designController.getGraphicsElements();
+			collider.setElement2(gameElements.get(secondBox.getSelectedIndex()));
+		}
+		if(e.getActionCommand().equals("collisionTypes")) {
+			JComboBox collisionTypes = (JComboBox) e.getSource();
+			collider.setCollisionType1(((CollisionType)collisionTypes.getSelectedItem()));
+		}
+		if(e.getActionCommand().equals("collisionTypes2")) {
+			JComboBox collisionTypes2 = (JComboBox) e.getSource();
+			collider.setCollisionType2(((CollisionType)collisionTypes2.getSelectedItem()));
 		}
 		
 		

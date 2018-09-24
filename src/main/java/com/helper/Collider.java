@@ -26,6 +26,10 @@ public class Collider implements Serializable {
 	private CollisionChecker collisionChecker;
 	private ArrayList<Command> eventList;
 	
+	public Collider() {
+		
+	}
+	
 	public Collider(GameElement element1, GameElement element2, CollisionType collisionType1, CollisionType collisionType2,CollisionChecker collisionChecker, ArrayList<Command> eventList) {
 		this.element1 = element1;
 		this.element2 = element2;
@@ -94,4 +98,54 @@ public class Collider implements Serializable {
 			controller.addCommand(changeVelYCommand);
 		}
 	}
+
+	public GameElement getElement1() {
+		return element1;
+	}
+
+	public void setElement1(GameElement element1) {
+		this.element1 = element1;
+	}
+
+	public GameElement getElement2() {
+		return element2;
+	}
+
+	public void setElement2(GameElement element2) {
+		this.element2 = element2;
+	}
+
+	public CollisionType getCollisionType1() {
+		return collisionType1;
+	}
+
+	public void setCollisionType1(CollisionType collisionType1) {
+		this.collisionType1 = collisionType1;
+	}
+
+	public CollisionType getCollisionType2() {
+		return collisionType2;
+	}
+
+	public void setCollisionType2(CollisionType collisionType2) {
+		this.collisionType2 = collisionType2;
+	}
+
+	public CollisionChecker getCollisionChecker() {
+		return collisionChecker;
+	}
+
+	public void setCollisionChecker(CollisionChecker collisionChecker) {
+		this.collisionChecker = collisionChecker;
+	}
+
+	public ArrayList<Command> getEventList() {
+		return eventList;
+	}
+
+	public void setEventList(ArrayList<Command> eventList) {
+		this.eventList = eventList;
+	}
+	
+	
 }
