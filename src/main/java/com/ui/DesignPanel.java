@@ -92,6 +92,10 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
     private JPanel designCard;
 	private CustomButton tendToAddButton;
 	private JLabel tendToAddLabel;
+	
+	//timeline tag
+	JButton endingConfirm;
+	
 	private JPanel buttonBuildPanel;
 	private JPanel controlElementPanel;
 	private EndingConditions end;
@@ -266,21 +270,26 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		scoreField.setName("scoreField");
 		scoreField.getDocument().addDocumentListener(this);
 		scoreField.getDocument().putProperty("owner", scoreField);
-		
 
-		JPanel scoreFieldHolder = new JPanel();
-		scoreFieldHolder.add(c1);
-		scoreFieldHolder.add(scorelabel);
-		scoreFieldHolder.add(scoreField);
-		
+		endingConfirm = new JButton("That is ending condition!");
+		endingConfirm.setActionCommand("endingConfirm");
+		endingConfirm.setVisible(true);
+
+	
 		JPanel timerFieldHolder = new JPanel();
-		timerFieldHolder.add(c2);
+		timerFieldHolder.add(c1);
 		timerFieldHolder.add(timerlabel);
 		timerFieldHolder.add(timerField);
-		
-		buildConditionPanel.add(scoreFieldHolder);
+
+		JPanel scoreFieldHolder = new JPanel();
+		scoreFieldHolder.add(c2);
+		scoreFieldHolder.add(scorelabel);
+		scoreFieldHolder.add(scoreField);
+	
 		buildConditionPanel.add(timerFieldHolder);
-		buildConditionPanel.add(c3);
+		buildConditionPanel.add(scoreFieldHolder);
+		//buildConditionPanel.add(c3);
+		buildConditionPanel.add(endingConfirm);
 		control.add(controlElementPanel);
 	}
 	// Adds collider
@@ -780,6 +789,9 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		addControlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
 		controlElementPanel.add(addControlElementButton);
 		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
+		
+		//add listerner 
+		endingConfirm.addActionListener(this);
 //	    createReplay();
 //	    createUndo();
 //	    createStart();
