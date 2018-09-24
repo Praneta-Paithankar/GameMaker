@@ -88,6 +88,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
     private DesignPanel that = this;
     private String type;
     private MoveType moveState;
+    
     //control tag var
     private JPanel designCard;
 	private CustomButton tendToAddButton;
@@ -791,7 +792,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
 		
 		//add listerner 
-		endingConfirm.addActionListener(this);
+		endingConfirm.addActionListener(driver);
 //	    createReplay();
 //	    createUndo();
 //	    createStart();
@@ -1176,6 +1177,18 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		j.repaint();
 		
 	}
+
+
+	public EndingConditions getEnd() {
+		return end;
+	}
+
+
+	public void setEnd(EndingConditions end) {
+		this.end = end;
+	}
+	
+	
 
 
 }
