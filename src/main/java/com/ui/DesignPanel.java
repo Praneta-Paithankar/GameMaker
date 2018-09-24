@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -41,8 +42,11 @@ import com.controller.DesignController;
 import com.controller.MainController;
 import com.dimension.Coordinate;
 import com.dimension.Dimensions;
+import com.helper.Collider;
+import com.helper.CollisionChecker;
 //import com.helper.ActionType;
 import com.infrastruture.ActionType;
+import com.infrastruture.CollisionType;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
 import com.infrastruture.MoveType;
@@ -50,7 +54,7 @@ import com.strategy.DrawOvalColor;
 import com.strategy.DrawOvalImage;
 import com.strategy.DrawRectangularColorShape;
 import com.strategy.DrawRectangularImage;
-
+import com.helper.Collider;
 
 
 @SuppressWarnings("serial")
@@ -62,29 +66,39 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private PreviewPanel preview;
 	private DesignController designController;
 	private JScrollPane scroller;
+	private JScrollPane scroller2;
 	private JPanel graphic;
 	private JPanel control;
+	private JPanel collider;
 	private JPanel cards;
+	private boolean firstTime;
 	private JPanel comboBoxPane;
 	private JFileChooser jFileChooser;
 	private boolean finished;
 	private JFrame frame;
 	private ArrayList<Element> elements;
+	private ArrayList<Collider> colliders;
 	final static String CIRCLE = "Circle Shape";
     final static String RECTANGLE = "Rectangle Shape";
     private DesignPanel that = this;
     private String type;
+    private MoveType moveState;
     //control tag var
-    
+    private JPanel designCard;
 	private CustomButton tendToAddButton;
 	private JLabel tendToAddLabel;
 	private JPanel buttonBuildPanel;
 	private JPanel controlElementPanel;
 	private JButton addGraphicElementButton;
+	private JButton addColliderButton;
 	private JButton finishedButton;
 	private boolean pushedElement;
+	private JTextField xVel;
+	private JTextField yVel;
 	
 	public DesignPanel() {
+		this.firstTime = true;
+		this.colliders = new ArrayList<>();
 		setBorder("Design Center"); // Method call for setting the border
 		setLayoutBehavior(new FlowLayoutBehavior());
 		setBackground(Color.DARK_GRAY);
@@ -98,6 +112,12 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		graphic.setBackground(Color.LIGHT_GRAY);
 		graphic.setLayout(new BoxLayout(graphic, BoxLayout.Y_AXIS));
 		
+		collider = new JPanel();
+		scroller2 = new JScrollPane(collider,
+	            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+	            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		collider.setBackground(Color.LIGHT_GRAY);
+		collider.setLayout(new BoxLayout(collider,BoxLayout.Y_AXIS));
 		
 		control  = new JPanel();
 		control.setBackground(Color.LIGHT_GRAY);
@@ -107,12 +127,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 
 		tabbedPane = new JTabbedPane(); 
 		tabbedPane.addTab("Graphic", null, scroller, null);
-
-//		
-//		tabbedPane = new JTabbedPane();
-//		tabbedPane.addTab("Graphic", null, graphic, null);
-
 		tabbedPane.addTab("Control", null, control, null);
+		tabbedPane.addTab("Colliders", null, scroller2, null);
 		tabbedPane.setPreferredSize(new Dimension(Constants.DESIGN_PANEL_WIDTH, 500));
 		this.add(tabbedPane);
 		
@@ -139,26 +155,35 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	public void init(GameElement gameElement) {
 		this.finished = gameElement== null;
 		this.pushedElement = gameElement!= null;
+		this.moveState = gameElement == null ? MoveType.FREE : gameElement.getMoveType();
 		// This button adds a new combo box to select basic shape of the 	
 		//for graphic tab
 		JPanel baseButtons = new JPanel(new FlowLayout());
 		addGraphicElementButton = new JButton("Add Element");
 		addGraphicElementButton.setEnabled(this.finished);
+		addGraphicElementButton.addActionListener(this);
+		addGraphicElementButton.setActionCommand("addElement");
+		
 		finishedButton = new JButton("Finished");
 		finishedButton.setEnabled(!this.finished);
-		
-		
 		finishedButton.addActionListener(this);
 		finishedButton.setActionCommand("finishedElement");
 		
 		//graphic.add(Box.createRigidArea(new Dimension(5,5)));
 		
-		addGraphicElementButton.addActionListener(this);
-		addGraphicElementButton.setActionCommand("addElement");
-		addGraphicElementButton.setVisible(true);
+		
 		baseButtons.add(addGraphicElementButton);
 		baseButtons.add(finishedButton);
 		graphic.add(baseButtons);
+		
+		if(firstTime) {
+		JPanel colliderButtons = new JPanel(new FlowLayout());
+		addColliderButton = new JButton("Add Collider");
+		addColliderButton.setEnabled(this.finished);
+		addColliderButton.addActionListener(this);
+		addColliderButton.setActionCommand("addCollider");
+		colliderButtons.add(addColliderButton);
+		collider.add(colliderButtons);
 		
 		
 		//control variable
@@ -195,11 +220,51 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
 		
 		control.add(controlElementPanel);
+		}
 		if(gameElement!= null) {
 			this.addElementSelect(gameElement);
 		}
 	}
-	
+	// Adds collider
+	private void addCollider() {
+//		//CollisionChecker collisionChecker = new CollisionChecker();
+//		Collider ballPaddle = new Collider(elementBall, elementPaddle, CollisionType.BOUNCE, CollisionType.FIXED, collisionChecker);
+//		Collider ballBrick1 = new Collider(elementBall, elementBrick1, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
+//		Collider ballBrick2 = new Collider(elementBall, elementBrick2, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
+//		Collider ballBrick3 = new Collider(elementBall, elementBrick3, CollisionType.BOUNCE, CollisionType.EXPLODE, collisionChecker);
+//		
+		//GameElement one =
+		//colliders = new Collider()
+		
+		// TODO Auto-generated method stub
+		JPanel card = this.collider;
+		card.add(new JLabel("Primary: ", JLabel.LEFT));
+        JPanel comboBoxPane2 = new JPanel(); //use FlowLayout
+        ArrayList<String> names = new ArrayList<>();
+        for(GameElement e: designController.getGraphicsElements()) {
+        	names.add(e.getName());
+        }
+		JComboBox primaryBox = new JComboBox(names.toArray());
+		primaryBox.addActionListener(this);
+		primaryBox.setActionCommand("moveTypeChanged");
+		int nameIndex = primaryBox.getSelectedIndex();
+		String name = names.get(nameIndex);
+		comboBoxPane2.add(primaryBox);
+		card.add(comboBoxPane2);
+		
+		card.add(new JLabel("Secondary: ", JLabel.LEFT));
+        JPanel secondary = new JPanel(); //use FlowLayout
+        names.remove(nameIndex);
+		JComboBox secondBox = new JComboBox(names.toArray());
+		secondBox.addActionListener(this);
+		secondBox.setActionCommand("moveTypeChanged");
+		int secondIndex = secondBox.getSelectedIndex();
+		comboBoxPane2.add(secondBox);
+		card.add(comboBoxPane2);
+		this.revalidate();
+	    this.repaint();
+	}	
+
 	public ArrayList<Element> getElements(){
 		return elements;
 	}
@@ -262,18 +327,20 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         g.setColor(Color.BLACK);
         g.setDraw(new DrawOvalColor());
         g.setVisible(true);
+        
 		if(gameElement != null) {
 			index = gameElement.getShapeType().equals("Oval") ? 0 : 1;
 			g = gameElement;
 		}
-		
+		this.preview.addGameElement(g);
 		//Where the components controlled by the CardLayout are initialized:
 		this.finished = false; // Prevents user adding another element until finished
 		this.addGraphicElementButton.setEnabled(this.finished);
 		this.finishedButton.setEnabled(!this.finished);
+		
 		//Create the "cards".
 		JPanel circleCard = new JPanel();
-		createCircleCard(circleCard, gameElement);
+		createCircleCard(circleCard, g);
 		
 		JPanel rectangleCard = new JPanel();
 		createRectangleCard(rectangleCard, g);
@@ -288,7 +355,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		//Where the GUI is assembled:
 		//Put the JComboBox in a JPanel to get a nicer look.
 		comboBoxPane = new JPanel(); //use FlowLayout
-		String comboBoxItems[] = { CIRCLE, RECTANGLE };
+		String comboBoxItems[] = { RECTANGLE, CIRCLE };
 		JComboBox cb = new JComboBox(comboBoxItems);
 		cb.setEditable(false);
 		cb.addItemListener(this);
@@ -306,12 +373,19 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private void createGraphicCard(JPanel card, GameElement gameElement ) {
 		String xLabel = "0";
 		String yLabel = "0";
+		String xVelLabel = "0";
+		String yVelLabel = "0";
+		this.moveState = MoveType.FREE; 
 		int moveIndex = 0;
 		if(this.pushedElement) {
 			xLabel = String.valueOf(gameElement.getX());
 			yLabel = String.valueOf(gameElement.getY());
+			xVelLabel = String.valueOf(gameElement.getVelX());
+			yVelLabel = String.valueOf(gameElement.getVelY());
 			ArrayList<MoveType> temp = new ArrayList<>(Arrays.asList(MoveType.values()));
+			
 			moveIndex = temp.indexOf(gameElement.getMoveType());
+			System.out.println(temp + " " + gameElement.getMoveType() + " mIn" + moveIndex);
 		}
 		card.add(new JLabel("X-Position: ", JLabel.LEFT));
 		final JTextField xCoor = new JTextField(xLabel, 4);
@@ -395,24 +469,88 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	                    }
 	                    tempElement.setImage(img);
 	                    that.preview.addGameElement(tempElement);
-	                    System.out.println(img);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
+        
         card.add(new JLabel("Movement Type: ", JLabel.LEFT));
         JPanel comboBoxPane2 = new JPanel(); //use FlowLayout
         MoveType comboBoxItems[] = MoveType.values();
 		JComboBox moveTypeBox = new JComboBox(comboBoxItems);
+		moveTypeBox.addActionListener(this);
 		moveTypeBox.setActionCommand("moveTypeChanged");
 		moveTypeBox.setSelectedIndex(moveIndex);
 		comboBoxPane2.add(moveTypeBox);
 		card.add(comboBoxPane2);
+		
+		card.add(new JLabel("   X-Velocity: ", JLabel.LEFT));
+		xVel = new JTextField(xVelLabel, 4);
+		card.add(xVel);
+		card.add(new JLabel("Y-Velocity: ", JLabel.LEFT));
+		yVel = new JTextField(yVelLabel, 4);
+		card.add(yVel);
+		xVel.setEnabled(this.moveState == MoveType.FOURWAY || this.moveState == MoveType.FREE || this.moveState == MoveType.LEFTRIGHT);
+		yVel.setEnabled(this.moveState == MoveType.FOURWAY || this.moveState == MoveType.FREE || this.moveState == MoveType.UPDOWN);
+		
+		xVel.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempXVel = Integer.parseInt(xVel.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	tempElement.setVelX(tempXVel);
+            	that.preview.addGameElement(tempElement);
+            }
+        });
+		
+		yVel.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempYVel = Integer.parseInt(yVel.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	tempElement.setVelY(tempYVel);
+            	that.preview.addGameElement(tempElement);	
+            }
+        });
+		this.designCard = card;
+		JButton btnCollider = new JButton("Add Collider");
+		
+		
+	
+		btnCollider.setAlignmentY(BOTTOM_ALIGNMENT);
+		
+        btnCollider.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+            	JPanel collider = new JPanel();
+        		System.out.println(that.designCard);
+        		collider.setLayout(new GridLayout());
+        		collider.add(new JButton("   X-Velocity: "));
+        		that.designCard.add(collider);
+        		that.revalidate();
+        	    that.repaint();
+            }
+        });
+        
+      
+        this.designCard.add(btnCollider);
         this.revalidate();
 	    this.repaint();
 	}
+	
+	
+	
 	// This creates the part of the design panel responsible for rectangle only properties
 	private void createRectangleCard(JPanel card, GameElement gameElement ) {
 		String nameLabel = "Rectangle"+elements.size();
@@ -424,6 +562,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 			nameLabel = gameElement.getName();
 			widthLabel = String.valueOf(gameElement.getWidth());
 			heightLabel = String.valueOf(gameElement.getHeight());
+		} else {
+			gameElement.setName("Rectangle"+elements.size());
 		}
 		
 		// TODO Auto-generated method stub
@@ -487,6 +627,12 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         });
 		createGraphicCard(card, gameElement);
 	}
+	
+	
+
+	
+	
+	
 	// This creates the part of the design panel responsible for circle only properties 
 	private void createCircleCard(JPanel card, GameElement gameElement ) {
 		// TODO Auto-generated method stub
@@ -496,6 +642,8 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 			nameLabel = gameElement.getName();
 			radiusLabel = String.valueOf(gameElement.getWidth()/2);
 			
+		} else {
+			gameElement.setName("Circle"+elements.size());
 		}
 		card.add(new JLabel("Object Name: ", JLabel.LEFT));
 		final JTextField name = new JTextField(nameLabel, 20);
@@ -565,7 +713,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	// This changes the card shown for creating circle vs rectangle and changes preview window
 	public void itemStateChanged(ItemEvent evt) {
 	    
-	    System.out.println(evt.getItem());
 	    if(evt.getItem() == CIRCLE) {
 	    	CardLayout cl = (CardLayout)(cards.getLayout());
 		    cl.show(cards, (String)evt.getItem());
@@ -610,21 +757,38 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		}
 		if(e.getActionCommand().equals("moveTypeChanged")) {
 			JComboBox boxAction = (JComboBox) e.getSource();
-			GameElement tempElement =(GameElement) that.preview.getElements().get(0);
-			tempElement.setMoveType((MoveType)boxAction.getSelectedItem());
+			try {
+				GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+				tempElement.setMoveType((MoveType)boxAction.getSelectedItem());
+				this.moveState = (MoveType)boxAction.getSelectedItem();
+				xVel.setEnabled(this.moveState == MoveType.FOURWAY || this.moveState == MoveType.FREE || this.moveState == MoveType.LEFTRIGHT);
+				yVel.setEnabled(this.moveState == MoveType.FOURWAY || this.moveState == MoveType.FREE || this.moveState == MoveType.UPDOWN);
+				this.revalidate();
+				this.repaint();
+			} catch (Exception e1) {
+				// do nothing
+			}
+			
+			System.out.println("L 664: " + this.moveState);
+		}
+		if(e.getActionCommand().equals("addCollider")) {
+			System.out.println("Fire");
+			this.addCollider();
 		}
 		
 	}
 
 	
+	
+
 	private void graphicElementFinished() {
 		this.finished = true;
+		this.firstTime = false;
 		GameElement temp = (GameElement)this.preview.getElements().get(0);
 		temp.pushToBoard();
 		designController.addGameElement(temp);
 		try {
-			this.graphic.remove(cards);
-			this.graphic.remove(comboBoxPane);
+			this.graphic.removeAll();
 		} catch(Exception e) {
 			// Do nothing
 		}
@@ -632,6 +796,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.preview.setElements(new ArrayList<Element>());
 		this.addGraphicElementButton.setEnabled(this.finished);
 		this.finishedButton.setEnabled(!this.finished);
+		this.init(null);
 	}
 
 	
