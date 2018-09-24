@@ -115,12 +115,15 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private boolean pushedElement;
 	private JTextField xVel;
 	private JTextField yVel;
+	private JTextField xVel2;
+	private JTextField yVel2;
 	private List<ArrayList<Command>> colliderEventLists;
 	private int eventListIndex;
 	JButton colliderComfire;
 	
 	private JCheckBox chkScoreElement;
     private JComboBox listnerCombo;
+	private MoveType moveState2;
 
 	public DesignPanel() {
 		colliderEventLists = new ArrayList<>();
@@ -199,6 +202,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.finished = gameElement== null;
 		this.pushedElement = gameElement!= null;
 		this.moveState = gameElement == null ? MoveType.FREE : gameElement.getMoveType();
+		this.moveState2 = gameElement == null ? MoveType.FREE : gameElement.getMoveType();
 		// This button adds a new combo box to select basic shape of the 	
 		//for graphic tab
 		JPanel baseButtons = new JPanel(new FlowLayout());
@@ -220,6 +224,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		graphic.add(baseButtons);
 		
 		if(firstTime) {
+			this.firstTime = false;
 		JPanel colliderButtons = new JPanel(new FlowLayout());
 		addColliderButton = new JButton("Add Collider");
 		addColliderButton.setEnabled(this.finished);
@@ -260,15 +265,15 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		colliderComfire.setVisible(true);
 		colliderComfire.setAlignmentY(TOP_ALIGNMENT);;
 		collider.add(colliderComfire);
-		
-		}
-		if(gameElement!= null) {
-			this.addElementSelect(gameElement);
-		}
 		end = new EndingConditions();
 		JPanel buildConditionPanel = new JPanel();
 		iniBuildConditionPanel(buildConditionPanel);
 		timeLine.add(buildConditionPanel);
+		}
+		if(gameElement!= null) {
+			this.addElementSelect(gameElement);
+		}
+		
 	}
 	
 	public void iniBuildConditionPanel(JPanel buildConditionPanel) {
@@ -719,17 +724,17 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		
 		// TODO Auto-generated method stub
 		card.add(new JLabel("Object Name: ", JLabel.LEFT));
-		final JTextField name = new JTextField(nameLabel, 20);
-		card.add(name);
+		final JTextField name2 = new JTextField(nameLabel, 20);
+		card.add(name2);
 		card.add(new JLabel("               "));
 		card.add(new JLabel("Width: ", JLabel.LEFT));
-		final JTextField width = new JTextField(widthLabel, 4);
-		card.add(width);
+		final JTextField width2 = new JTextField(widthLabel, 4);
+		card.add(width2);
 		card.add(new JLabel("Height: ", JLabel.LEFT));
-		final JTextField height = new JTextField(heightLabel, 4);
-		card.add(height);
+		final JTextField height2 = new JTextField(heightLabel, 4);
+		card.add(height2);
 		// Used for updating the coordinates
-		name.addFocusListener(new FocusListener() {
+		name2.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                
@@ -737,7 +742,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 
             @Override
             public void focusLost(FocusEvent e) {
-            	String tempName = name.getText();
+            	String tempName = name2.getText();
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
             	
             	tempElement.setName(tempName);
@@ -745,7 +750,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             }
         });
 		
-		width.addFocusListener(new FocusListener() {
+		width2.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                
@@ -753,7 +758,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 
             @Override
             public void focusLost(FocusEvent e) {
-            	int tempWidth = Integer.parseInt(width.getText());
+            	int tempWidth = Integer.parseInt(width2.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
             	int tempHeight = tempElement.getActualDimensions().getHeight();
             	tempElement.setActualDimension(new Dimensions(tempWidth, tempHeight),"Rectangle");
@@ -761,7 +766,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             }
         });
 		
-		height.addFocusListener(new FocusListener() {
+		height2.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                
@@ -769,14 +774,184 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 
             @Override
             public void focusLost(FocusEvent e) {
-            	int tempHeight = Integer.parseInt(height.getText());
+            	int tempHeight = Integer.parseInt(height2.getText());
             	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
             	int tempWidth = tempElement.getActualDimensions().getWidth();
             	tempElement.setActualDimension(new Dimensions(tempWidth, tempHeight),"Rectangle");
             	that.preview.addGameElement(tempElement);
             }
         });
-		createGraphicCard(card, gameElement);
+		//createGraphicCard(card, gameElement);
+		String xVelLabel = "0";
+		String yVelLabel = "0";
+		this.moveState2 = MoveType.FREE; 
+		int moveIndex2 = 0;
+		if(this.pushedElement) {
+			xLabel = String.valueOf(gameElement.getX());
+			yLabel = String.valueOf(gameElement.getY());
+			xVelLabel = String.valueOf(gameElement.getVelX());
+			yVelLabel = String.valueOf(gameElement.getVelY());
+			ArrayList<MoveType> temp = new ArrayList<>(Arrays.asList(MoveType.values()));
+			
+			moveIndex2 = temp.indexOf(gameElement.getMoveType());
+			System.out.println(temp + " " + gameElement.getMoveType() + " mIn" + moveIndex2);
+		}
+		card.add(new JLabel("X-Position: ", JLabel.LEFT));
+		final JTextField xCoor2 = new JTextField(xLabel, 4);
+		card.add(xCoor2);
+		card.add(new JLabel("Y-Position: ", JLabel.LEFT));
+		final JTextField yCoor2 = new JTextField(yLabel, 4);
+		card.add(yCoor2);
+		// Used for updating the coordinates
+		xCoor2.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempX = Integer.parseInt(xCoor2.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	int tempY = tempElement.getActualCoordinate().getY();
+            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	that.preview.addGameElement(tempElement);
+            }
+        });
+		
+		yCoor2.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempY = Integer.parseInt(yCoor2.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	int tempX = tempElement.getActualCoordinate().getX();
+            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	that.preview.addGameElement(tempElement);	
+            }
+        });
+		
+		
+		JButton btn12 = new JButton("Choose Color");
+	
+		card.add(btn12);
+	
+		btn12.setAlignmentY(BOTTOM_ALIGNMENT);
+		
+        btn12.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+                Color newColor = JColorChooser.showDialog(
+                     frame,
+                     "Choose Color",
+                     frame.getBackground());
+                if(newColor != null){
+                    tempElement.setColor(newColor);
+                    that.preview.addGameElement(tempElement);
+                }
+                
+            }
+        });
+        
+        JButton btnImage2 = new JButton("Choose Image");
+        card.add(btnImage2);
+  
+        btnImage2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                JFileChooser fc = new JFileChooser();
+                BufferedImage img = null;
+                int result = fc.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    String sname = file.getAbsolutePath(); //THIS WAS THE PROBLEM
+                    try {
+	                    img = ImageIO.read(new File(sname));
+	                    GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+	                    if(that.type.equals("Oval")) {
+	                    	tempElement.setDraw(new DrawOvalImage());
+	                    } else {
+	                    	tempElement.setDraw(new DrawRectangularImage());
+	                    }
+	                    tempElement.setImage(img);
+	                    that.preview.addGameElement(tempElement);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        
+        card.add(new JLabel("Movement Type: ", JLabel.LEFT));
+        JPanel comboBoxPane2 = new JPanel(); //use FlowLayout
+        MoveType comboBoxItems[] = MoveType.values();
+		JComboBox moveTypeBox = new JComboBox(comboBoxItems);
+		moveTypeBox.addActionListener(this);
+		moveTypeBox.setActionCommand("moveTypeChanged");
+		moveTypeBox.setSelectedIndex(moveIndex2);
+		comboBoxPane2.add(moveTypeBox);
+		card.add(comboBoxPane2);
+		
+		card.add(new JLabel("   X-Velocity: ", JLabel.LEFT));
+		xVel2 = new JTextField(xVelLabel, 4);
+		card.add(xVel2);
+		card.add(new JLabel("Y-Velocity: ", JLabel.LEFT));
+		yVel2 = new JTextField(yVelLabel, 4);
+		card.add(yVel2);
+		xVel2.setEnabled(this.moveState == MoveType.FOURWAY || this.moveState == MoveType.FREE || this.moveState == MoveType.LEFTRIGHT);
+		yVel2.setEnabled(this.moveState == MoveType.FOURWAY || this.moveState == MoveType.FREE || this.moveState == MoveType.UPDOWN);
+		
+		xVel2.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempXVel = Integer.parseInt(xVel2.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	tempElement.setVelX(tempXVel);
+            	that.preview.addGameElement(tempElement);
+            }
+        });
+		
+		yVel2.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempYVel = Integer.parseInt(yVel2.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	tempElement.setVelY(tempYVel);
+            	that.preview.addGameElement(tempElement);	
+            }
+        });
+		this.designCard = card;
+
+	
+        chkScoreElement = new JCheckBox("Score Element");
+        chkScoreElement.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				chkScoreElement.setSelected(true);
+			}
+		});
+        that.designCard.add(chkScoreElement);
+        
+        listnerCombo = new JComboBox(ElementListener.values());
+        that.designCard.add(listnerCombo);
+      
+        this.revalidate();
+	    this.repaint();
 	}
 	
 	
@@ -833,7 +1008,196 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	
 		card.add(radius);
 		
-		createGraphicCard(card, gameElement);
+		//createGraphicCard(card, gameElement);
+		String xLabel = "0";
+		String yLabel = "0";
+		String xVelLabel = "0";
+		String yVelLabel = "0";
+		this.moveState = MoveType.FREE; 
+		int moveIndex = 0;
+		if(this.pushedElement) {
+			xLabel = String.valueOf(gameElement.getX());
+			yLabel = String.valueOf(gameElement.getY());
+			xVelLabel = String.valueOf(gameElement.getVelX());
+			yVelLabel = String.valueOf(gameElement.getVelY());
+			ArrayList<MoveType> temp = new ArrayList<>(Arrays.asList(MoveType.values()));
+			
+			moveIndex = temp.indexOf(gameElement.getMoveType());
+			System.out.println(temp + " " + gameElement.getMoveType() + " mIn" + moveIndex);
+		}
+		card.add(new JLabel("X-Position: ", JLabel.LEFT));
+		final JTextField xCoor = new JTextField(xLabel, 4);
+		card.add(xCoor);
+		card.add(new JLabel("Y-Position: ", JLabel.LEFT));
+		final JTextField yCoor = new JTextField(yLabel, 4);
+		card.add(yCoor);
+		// Used for updating the coordinates
+		xCoor.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempX = Integer.parseInt(xCoor.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	int tempY = tempElement.getActualCoordinate().getY();
+            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	that.preview.addGameElement(tempElement);
+            }
+        });
+		
+		yCoor.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempX = Integer.parseInt(xCoor.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	int tempY = tempElement.getActualCoordinate().getY();
+            	tempElement.setActualCoordinate(new Coordinate(tempX, tempY));
+            	that.preview.addGameElement(tempElement);	
+            }
+        });
+		
+		
+		JButton btn1 = new JButton("Choose Color");
+	
+		card.add(btn1);
+	
+		btn1.setAlignmentY(BOTTOM_ALIGNMENT);
+		
+        btn1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+                Color newColor = JColorChooser.showDialog(
+                     frame,
+                     "Choose Color",
+                     frame.getBackground());
+                if(newColor != null){
+                    tempElement.setColor(newColor);
+                    that.preview.addGameElement(tempElement);
+                }
+                
+            }
+        });
+        
+        JButton btnImage = new JButton("Choose Image");
+        card.add(btnImage);
+  
+        btnImage.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                JFileChooser fc = new JFileChooser();
+                BufferedImage img = null;
+                int result = fc.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    String sname = file.getAbsolutePath(); //THIS WAS THE PROBLEM
+                    try {
+	                    img = ImageIO.read(new File(sname));
+	                    GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+	                    if(that.type.equals("Oval")) {
+	                    	tempElement.setDraw(new DrawOvalImage());
+	                    } else {
+	                    	tempElement.setDraw(new DrawRectangularImage());
+	                    }
+	                    tempElement.setImage(img);
+	                    that.preview.addGameElement(tempElement);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        
+        card.add(new JLabel("Movement Type: ", JLabel.LEFT));
+        JPanel comboBoxPane2 = new JPanel(); //use FlowLayout
+        MoveType comboBoxItems[] = MoveType.values();
+		JComboBox moveTypeBox = new JComboBox(comboBoxItems);
+		moveTypeBox.addActionListener(this);
+		moveTypeBox.setActionCommand("moveTypeChanged");
+		moveTypeBox.setSelectedIndex(moveIndex);
+		comboBoxPane2.add(moveTypeBox);
+		card.add(comboBoxPane2);
+		
+		card.add(new JLabel("   X-Velocity: ", JLabel.LEFT));
+		xVel = new JTextField(xVelLabel, 4);
+		card.add(xVel);
+		card.add(new JLabel("Y-Velocity: ", JLabel.LEFT));
+		yVel = new JTextField(yVelLabel, 4);
+		card.add(yVel);
+		xVel.setEnabled(this.moveState == MoveType.FOURWAY || this.moveState == MoveType.FREE || this.moveState == MoveType.LEFTRIGHT);
+		yVel.setEnabled(this.moveState == MoveType.FOURWAY || this.moveState == MoveType.FREE || this.moveState == MoveType.UPDOWN);
+		
+		xVel.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempXVel = Integer.parseInt(xVel.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	tempElement.setVelX(tempXVel);
+            	that.preview.addGameElement(tempElement);
+            }
+        });
+		
+		yVel.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+               
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            	int tempYVel = Integer.parseInt(yVel.getText());
+            	GameElement tempElement =(GameElement) that.preview.getElements().get(0);
+            	tempElement.setVelY(tempYVel);
+            	that.preview.addGameElement(tempElement);	
+            }
+        });
+		this.designCard = card;
+		JButton btnCollider = new JButton("Add Collider");
+		
+		
+	
+		btnCollider.setAlignmentY(BOTTOM_ALIGNMENT);
+		
+        btnCollider.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+            	JPanel collider = new JPanel();
+        		System.out.println(that.designCard);
+        		collider.setLayout(new GridLayout());
+        		collider.add(new JButton("   X-Velocity: "));
+        		that.designCard.add(collider);
+        		that.revalidate();
+        	    that.repaint();
+            }
+        });
+        
+        chkScoreElement = new JCheckBox("Score Element");
+        chkScoreElement.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				chkScoreElement.setSelected(true);
+			}
+		});
+        that.designCard.add(chkScoreElement);
+        
+        listnerCombo = new JComboBox(ElementListener.values());
+        that.designCard.add(listnerCombo);
+      
+        this.designCard.add(btnCollider);
+        this.revalidate();
+	    this.repaint();
 	}
 
 	public void setFrame(JFrame frame) {
