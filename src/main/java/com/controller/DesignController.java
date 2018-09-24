@@ -192,6 +192,12 @@ public class DesignController implements Serializable{
 		mainJframe.repaint();
 	}
 	
+	public void addGameColliders(ArrayList<Collider> colliders) {
+		if(colliders != null) {
+			this.colliders = colliders;
+		}
+	}
+	
 	public void addControlElement() {
 		
 		JComponent component = mainJframe.getDesignPanel().getControlElement();
