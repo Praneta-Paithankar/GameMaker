@@ -103,7 +103,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private JCheckBox chkScoreElement;
     private JComboBox listnerCombo;
 
-    public DesignPanel() {
+	public DesignPanel() {
 		this.firstTime = true;
 		this.colliders = new ArrayList<>();
 		setBorder("Design Center"); // Method call for setting the border
@@ -606,7 +606,6 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         
         listnerCombo = new JComboBox(ElementListener.values());
         that.designCard.add(listnerCombo);
-        
       
         this.designCard.add(btnCollider);
         this.revalidate();
