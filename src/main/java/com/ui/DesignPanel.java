@@ -200,6 +200,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		graphic.add(baseButtons);
 		
 		if(firstTime) {
+			this.firstTime = false;
 		JPanel colliderButtons = new JPanel(new FlowLayout());
 		addColliderButton = new JButton("Add Collider");
 		addColliderButton.setEnabled(this.finished);
@@ -240,15 +241,15 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		colliderComfire.setVisible(true);
 		colliderComfire.setAlignmentY(TOP_ALIGNMENT);;
 		collider.add(colliderComfire);
-		
-		}
-		if(gameElement!= null) {
-			this.addElementSelect(gameElement);
-		}
 		end = new EndingConditions();
 		JPanel buildConditionPanel = new JPanel();
 		iniBuildConditionPanel(buildConditionPanel);
 		timeLine.add(buildConditionPanel);
+		}
+		if(gameElement!= null) {
+			this.addElementSelect(gameElement);
+		}
+		
 	}
 	
 	public void iniBuildConditionPanel(JPanel buildConditionPanel) {
@@ -956,7 +957,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		GameElement temp = (GameElement)this.preview.getElements().get(0);
 		temp.pushToBoard();
 		// bool, string
-//		designController.addGameElement(temp, isScore, listener);
+		designController.addGameElement(temp);
 		try {
 			this.graphic.removeAll();
 		} catch(Exception e) {
