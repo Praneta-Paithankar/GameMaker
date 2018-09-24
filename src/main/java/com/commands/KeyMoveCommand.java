@@ -37,12 +37,12 @@ public class KeyMoveCommand implements Command{
 			}
 			break;
 		case UP:
-			if(element.getY() - element.getVelY() <= 0) {
-				element.setY(element.getX() - element.getVelX());
+			if(element.getY() - element.getVelY() >= 0) {
+				element.setY(element.getY() - element.getVelY());
 			}
 			break;
 		case DOWN:
-			if(element.getY() + element.getHeight()+ element.getVelY() >= Constants.GAME_PANEL_HEIGHT) {
+			if(element.getY() + element.getHeight()+ element.getVelY() <= Constants.GAME_PANEL_HEIGHT) {
 				element.setY(element.getY() + element.getVelY());
 			}
 			break;
