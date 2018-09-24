@@ -305,7 +305,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		JButton controlElementTimer = new JButton("Add Timer");
 		controlElementTimer.setFont(new Font("Times", Font.PLAIN, 12));
 		controlElementTimer.addActionListener(driver);
-		controlElementTimer.setActionCommand("ElementLabel");
+		controlElementTimer.setActionCommand("AddTimer");
 		controlElementTimer.setVisible(true);
 		controlElementTimer.setAlignmentX(LEFT_ALIGNMENT);
 		controlElementTimer.setAlignmentY(BOTTOM_ALIGNMENT);
@@ -315,7 +315,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		JButton controlElementScore = new JButton("Add Score");
 		controlElementScore.setFont(new Font("Times", Font.PLAIN, 12));
 		controlElementScore.addActionListener(driver);
-		controlElementScore.setActionCommand("ElementLabel");
+		controlElementScore.setActionCommand("AddScore");
 		controlElementScore.setVisible(true);
 		controlElementScore.setAlignmentX(LEFT_ALIGNMENT);
 		controlElementScore.setAlignmentY(BOTTOM_ALIGNMENT);

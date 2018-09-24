@@ -43,6 +43,9 @@ public class Constants {
 	public final static int PADDLE_HEIGHT = 40;
 	public final static int PADDLE_DELTA_X = 20;
 	public final static Color PADDLE_COLOR = new Color(91,33,91);
-	
+	public static final int TimerX = 30;
+	public static final int TimerY = 500;
+	public static final int ScoreX = 30;
+	public static final int ScoreY = 600;
 	
 }

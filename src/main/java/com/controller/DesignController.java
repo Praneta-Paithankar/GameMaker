@@ -23,6 +23,7 @@ import com.helper.CollisionChecker;
 import com.infrastruture.ActionType;
 import com.infrastruture.CollisionType;
 import com.infrastruture.Command;
+import com.infrastruture.Constants;
 import com.infrastruture.Element;
 import com.infrastruture.Event;
 import com.infrastruture.GameElementShape;
@@ -113,8 +114,6 @@ public class DesignController implements Serializable{
 		elementBrick3.setVisible(true);
 		elementBrick3.setGameElementShape(GameElementShape.RECTANGLE);
 		
-		clock = new Clock(new Coordinate(30, 60));
-		scoreBoard = new ScoreBoard(new Coordinate(30,500));
 		
 		scoreElementList.add(elementBrick1);
 		scoreElementList.add(elementBrick2);
@@ -185,8 +184,8 @@ public class DesignController implements Serializable{
 		mainJframe.getGamePanel().addComponent(elementBrick1);
 		mainJframe.getGamePanel().addComponent(elementBrick3);
 		mainJframe.getGamePanel().addComponent(elementBrick2);
-		mainJframe.getControlPanel().addComponent(scoreBoard);
-		mainJframe.getControlPanel().addComponent(clock);
+		
+	
 
 		mainJframe.revalidate();
 		mainJframe.repaint();
@@ -194,7 +193,22 @@ public class DesignController implements Serializable{
 		timeConstraintinmilliSeconds = 10000;
 		// update timer Elements or KeyboardElements
 	}
-	
+	public void addTimer() {
+		// TODO Auto-generated method stub
+		clock = new Clock(new Coordinate(Constants.TimerX, Constants.TimerY));
+		mainJframe.getControlPanel().addComponent(clock);
+		mainJframe.revalidate();
+		mainJframe.repaint();
+		
+	}
+
+	public void addScore() {
+		// TODO Auto-generated method stub
+		scoreBoard = new ScoreBoard(new Coordinate(Constants.ScoreX,600));
+		mainJframe.getControlPanel().addComponent(scoreBoard);
+		mainJframe.revalidate();
+		mainJframe.repaint();
+	}
 	
 	public void addControlElement() {
 		
@@ -298,6 +312,8 @@ public class DesignController implements Serializable{
 	public void setTimeConstraintinmilliSeconds(long timeConstraintinmilliSeconds) {
 		this.timeConstraintinmilliSeconds = timeConstraintinmilliSeconds;
 	}
+
+	
 
 	
 
