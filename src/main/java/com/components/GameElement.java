@@ -69,7 +69,6 @@ public class GameElement implements Element,Serializable{
 		// used to set the actual dimensions, this functionality allows a dynamic update of the object
 		if(d.getWidth() > Constants.PREVIEW_RADIUS * 2.5 && d.getHeight() > Constants.PREVIEW_RADIUS * 2) {
 			this.dimension = type.equals("Oval") ? new Dimensions(Constants.PREVIEW_RADIUS) : new Dimensions(Constants.PREVIEW_RADIUS*2, Constants.PREVIEW_RADIUS*2);
-			
 		} else if(d.getWidth() > Constants.PREVIEW_RADIUS * 2.5 && type.equals("Rectangle")) {
 			this.dimension = new Dimensions((int)(Constants.PREVIEW_RADIUS*2.5), d.getHeight());
 		} else if(d.getHeight() > Constants.PREVIEW_RADIUS * 2 && type.equals("Rectangle")) {
@@ -84,7 +83,6 @@ public class GameElement implements Element,Serializable{
 	public void pushToBoard() {
 		// This method replaces the preview values with the actual values
 		// Also swaps the two, in case we want to show the object in preview window again
-		System.out.print("Game Element - 73 - Pushing");
 		Dimensions tempD = this.actualDimension;
 		Coordinate tempC = this.actualCoordinate;
 		this.actualDimension = this.dimension;
