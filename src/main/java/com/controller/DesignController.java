@@ -161,6 +161,7 @@ public class DesignController implements Serializable{
 	}
 	// To be used if we export some of the logic from the view to the controller
 	public void addGameElement(GameElement element, boolean isScoreElement, ElementListener elementListner) {
+		System.out.println("X : "+ element.getX() + " y : "+ element.getY());
 		if(isScoreElement) {
 			scoreElementList.add(element);
 		}
