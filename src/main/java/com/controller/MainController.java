@@ -66,10 +66,6 @@ public class MainController implements Observer, KeyListener, ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		String commandText= event.getActionCommand();
-		if(commandText.equals("create")) {
-			designController.addGameElement();
-			designController.addControlElement();
-		}
 		if(commandText.equals("AddControlElement")) {
 			designController.addControlElement();
 			gui.changeFocus();

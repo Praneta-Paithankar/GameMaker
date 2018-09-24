@@ -68,7 +68,7 @@ public class GameMaker {
 		
 		MainController driver = new MainController(gui,observable,controller,new CollisionChecker()); // maybe keep this checker);
 		controller.setMainController(driver);
-		controller.addGameElement();
+//		controller.addGameElement();
 		gamePanel.setDesignController(controller);
 		designPanel.setController(controller);
 		gui.addDriver(driver);
