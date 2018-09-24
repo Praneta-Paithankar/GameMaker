@@ -31,6 +31,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -95,10 +97,15 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
     private DesignPanel that = this;
     private String type;
     private MoveType moveState;
+    
     //control tag var
     private JPanel designCard;
 	private CustomButton tendToAddButton;
 	private JLabel tendToAddLabel;
+	
+	//timeline tag
+	JButton endingConfirm;
+	
 	private JPanel buttonBuildPanel;
 	private JPanel controlElementPanel;
 	private EndingConditions end;
@@ -156,6 +163,15 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		tabbedPane.addTab("TimeLine", null, timeLine, null);
 		tabbedPane.addTab("Colliders", null, scroller2, null);
 		tabbedPane.setPreferredSize(new Dimension(Constants.DESIGN_PANEL_WIDTH, 500));
+		ChangeListener changeListenerFortag = new ChangeListener() {
+		      public void stateChanged(ChangeEvent changeEvent) {
+		        JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+		        preview.removeAll();
+		        preview.setElements(new ArrayList<Element>());
+		        refresh(preview);
+		      }
+		    };
+		tabbedPane.addChangeListener(changeListenerFortag);
 		this.add(tabbedPane);
 		
 		// Create Preview Panel, which show the preview of the element
@@ -281,18 +297,19 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		scoreField.setName("scoreField");
 		scoreField.getDocument().addDocumentListener(this);
 		scoreField.getDocument().putProperty("owner", scoreField);
-		
 
+		endingConfirm = new JButton("That is ending condition!");
+		endingConfirm.setActionCommand("endingConfirm");
+		endingConfirm.setVisible(true);
 		JPanel timerFieldHolder = new JPanel();
 		timerFieldHolder.add(c1);
 		timerFieldHolder.add(timerlabel);
 		timerFieldHolder.add(timerField);
-		
 		JPanel scoreFieldHolder = new JPanel();
 		scoreFieldHolder.add(c2);
 		scoreFieldHolder.add(scorelabel);
 		scoreFieldHolder.add(scoreField);
-			
+		buildConditionPanel.add(endingConfirm);
 		//buildConditionPanel.add(scoreFieldHolder);
 		buildConditionPanel.add(timerFieldHolder);
 		//buildConditionPanel.add(c3);
@@ -857,7 +874,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		addControlElementButton.setAlignmentY(BOTTOM_ALIGNMENT);
 		controlElementPanel.add(addControlElementButton);
 		controlElementPanel.add(Box.createRigidArea(new Dimension(5,5)));
-				
+		endingConfirm.addActionListener(driver);
 		colliderComfire.addActionListener(driver);
 	}
 	
@@ -1263,8 +1280,15 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		return colliders;
 	}
 
+	public EndingConditions getEnd() {
+		return end;
+	}
 
-	public void setColliders(ArrayList<Collider> colliders) {
+	public void setEnd(EndingConditions end) {
+		this.end = end;
+	}
+
+  public void setColliders(ArrayList<Collider> colliders) {
 		this.colliders = colliders;
 	}
 }
