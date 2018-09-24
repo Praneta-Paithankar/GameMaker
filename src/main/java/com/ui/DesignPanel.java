@@ -57,6 +57,7 @@ import com.infrastruture.CollisionType;
 import com.infrastruture.Command;
 import com.infrastruture.Constants;
 import com.infrastruture.Element;
+import com.infrastruture.ElementListener;
 import com.infrastruture.MoveType;
 import com.strategy.DrawOvalColor;
 import com.strategy.DrawOvalImage;
@@ -111,6 +112,9 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	private int eventListIndex;
 	JButton colliderComfire;
 	
+	private JCheckBox chkScoreElement;
+    private JComboBox listnerCombo;
+
 	public DesignPanel() {
 		colliderEventLists = new ArrayList<>();
 		this.firstTime = true;
@@ -279,19 +283,19 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		scoreField.getDocument().putProperty("owner", scoreField);
 		
 
-		JPanel scoreFieldHolder = new JPanel();
-		scoreFieldHolder.add(c1);
-		scoreFieldHolder.add(scorelabel);
-		scoreFieldHolder.add(scoreField);
-		
 		JPanel timerFieldHolder = new JPanel();
-		timerFieldHolder.add(c2);
+		timerFieldHolder.add(c1);
 		timerFieldHolder.add(timerlabel);
 		timerFieldHolder.add(timerField);
 		
-		buildConditionPanel.add(scoreFieldHolder);
+		JPanel scoreFieldHolder = new JPanel();
+		scoreFieldHolder.add(c2);
+		scoreFieldHolder.add(scorelabel);
+		scoreFieldHolder.add(scoreField);
+			
+		//buildConditionPanel.add(scoreFieldHolder);
 		buildConditionPanel.add(timerFieldHolder);
-		buildConditionPanel.add(c3);
+		//buildConditionPanel.add(c3);
 		control.add(controlElementPanel);
 	}
 	// Adds collider
@@ -472,7 +476,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		//Where the GUI is assembled:
 		//Put the JComboBox in a JPanel to get a nicer look.
 		comboBoxPane = new JPanel(); //use FlowLayout
-		String comboBoxItems[] = {CIRCLE, RECTANGLE };
+		String comboBoxItems[] = {  CIRCLE ,RECTANGLE};
 		JComboBox cb = new JComboBox(comboBoxItems);
 		cb.setEditable(false);
 		cb.addItemListener(this);
@@ -660,6 +664,19 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
             }
         });
         
+        chkScoreElement = new JCheckBox("Score Element");
+        chkScoreElement.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				chkScoreElement.setSelected(true);
+			}
+		});
+        that.designCard.add(chkScoreElement);
+        
+        listnerCombo = new JComboBox(ElementListener.values());
+        that.designCard.add(listnerCombo);
       
         this.designCard.add(btnCollider);
         this.revalidate();
@@ -955,8 +972,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		this.firstTime = false;
 		GameElement temp = (GameElement)this.preview.getElements().get(0);
 		temp.pushToBoard();
-		// bool, string
-//		designController.addGameElement(temp, isScore, listener);
+		designController.addGameElement(temp, chkScoreElement.isSelected(), ElementListener.valueOf(listnerCombo.getSelectedItem().toString()));
 		try {
 			this.graphic.removeAll();
 		} catch(Exception e) {
