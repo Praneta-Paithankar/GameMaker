@@ -200,7 +200,9 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 	public void init(GameElement gameElement) {
 		
 		this.finished = gameElement== null;
-		this.pushedElement = gameElement!= null;
+		this.pushedElement = ( gameElement != null);
+		if(this.finished)
+
 		this.moveState = gameElement == null ? MoveType.FREE : gameElement.getMoveType();
 		this.moveState2 = gameElement == null ? MoveType.FREE : gameElement.getMoveType();
 		// This button adds a new combo box to select basic shape of the 	
@@ -331,9 +333,7 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
 		JPanel card = this.collider;
 		
 		ArrayList<EventType> eventList = new ArrayList<>();
-		
-
-	
+			
         JPanel colliderCard = new JPanel(); //use FlowLayout
         colliderCard.setLayout(new BoxLayout(colliderCard,BoxLayout.Y_AXIS));
         colliderCard.setMaximumSize(new Dimension(Constants.DESIGN_PANEL_WIDTH, 125));
@@ -348,13 +348,13 @@ public class DesignPanel extends AbstractPanel implements DocumentListener , Ele
         primary.add(new JLabel("Primary Object: ", JLabel.LEFT));
         JComboBox primaryBox = new JComboBox(names.toArray());
 		int nameIndex = primaryBox.getSelectedIndex();
-		String name = names.get(nameIndex);
+		//String name = names.get(nameIndex);
 		primary.add(primaryBox);
 		colliderCard.add(primary);
 		
         JPanel secondary = new JPanel(); //use FlowLayout
 		secondary.add(new JLabel("Secondary Object: ", JLabel.LEFT));
-        names.remove(nameIndex);
+        //names.remove(nameIndex);
 		JComboBox secondBox = new JComboBox(names.toArray());
 		int secondIndex = secondBox.getSelectedIndex();
 		secondary.add(secondBox);
