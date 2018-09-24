@@ -330,9 +330,4 @@ public class DesignController implements Serializable{
 	public void setTimeConstraintinmilliSeconds(long timeConstraintinmilliSeconds) {
 		this.timeConstraintinmilliSeconds = timeConstraintinmilliSeconds;
 	}
-
-	
-
-	
-
 }
